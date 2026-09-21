@@ -1,3 +1,10 @@
-我的线路(1080P+台标+不卡顿)$https://fastly.jsdelivr.net/gh/qiujianwei-iptv/iptv-live@main/tvbox.json
-饭太硬$https://fastly.jsdelivr.net/gh/qist/tvbox@master/fty.json
+我的集合线路(饭太硬+潇洒)$https://fastly.jsdelivr.net/gh/qiujianwei-iptv/iptv-live@main/tvbox.json
+饭太硬官方$http://饭太硬.top/tv
+王二小$http://tvbox.王二小放牛娃.xyz
+摸鱼儿$http://我不是.摸鱼儿.top
+潇洒镜像$https://fastly.jsdelivr.net/gh/qist/tvbox@master/xiaosa/api.json
+饭太硬镜像$https://fastly.jsdelivr.net/gh/qist/tvbox@master/fty.json
 qist自用(OK影视)$https://fastly.jsdelivr.net/gh/qist/tvbox@master/jsm.json
+俊于$http://home.jundie.top:81/top98.json
+巧技$http://pandown.pro/tvbox/tvbox.json
+霜辉月明PY$https://fastly.jsdelivr.net/gh/lm317379829/PyramidStore@pyramid/py.json
