@@ -1,6 +1,7 @@
 央视频道,#genre#
 CCTV-1,http://63.141.230.178:82/gslb/zbdq5.m3u8?id=cctv1hd
 CCTV-1,http://38.75.136.137:98/gslb/dsdqbv/cctv1hd.m3u8?auth=test20251009
+CCTV-1,http://204.12.221.218:8181/3m1080p/cctv1.m3u8
 CCTV-1,http://74.91.26.218:82/live/cctv1hd.m3u8
 CCTV-10,http://38.75.136.137:98/gslb/dsdqbv/cctv10hd.m3u8?auth=test20251009
 CCTV-10,http://74.91.26.218:82/live/cctv10hd.m3u8
@@ -8,6 +9,8 @@ CCTV-10,http://204.12.221.218:8181/3m1080p/cctv10.m3u8
 CCTV-10,http://bztv.tvbus.cc:8081/cdnlive/cctv10.m3u8
 CCTV-11,http://74.91.26.218:82/live/cctv11hd.m3u8
 CCTV-11,http://38.75.136.137:98/gslb/dsdqbv/cctv11hd.m3u8?auth=test20251009
+CCTV-11,http://198.204.228.26/live/cctv11hd.m3u8
+CCTV-11,http://204.12.221.218:8181/3m1080p/cctv11.m3u8
 CCTV-12,http://107.150.60.122/live/cctv12hd.m3u8
 CCTV-12,http://38.75.136.137:98/gslb/dsdqpub/cctv12hd.m3u8?auth=testpub
 CCTV-12,http://74.91.26.218:82/live/cctv12hd.m3u8
@@ -45,6 +48,7 @@ CCTV-5,http://207.56.13.146:81/cdnlive/cctv5.m3u8
 CCTV-5,http://112.30.73.119:9901/tsfile/live/0005_2.m3u8?key=txiptv&playlive=0&authid=0
 CCTV-5,http://38.75.136.137:98/gslb/dsdqpub/cctv5p.m3u8?auth=testpub
 CCTV-5+,http://38.75.136.137:98/gslb/dsdqbv/cctv5p.m3u8?auth=test20251009
+CCTV-5+,http://223.78.65.165:9901/tsfile/live/0006_1.m3u8?key=txiptv&playlive=1&authid=0
 CCTV-5+,http://120.76.248.139/live/bfgd/4200000246.m3u8
 CCTV-6,http://74.91.26.218:82/live/cctv6hd.m3u8
 CCTV-6,http://198.204.228.26/live/cctv6hd.m3u8
@@ -267,8 +271,6 @@ CHC家庭影院,http://198.204.228.26/live/chcjt.m3u8
 天津体育,http://63.141.230.178:82/gslb/zbdq5.m3u8?id=tjtv5
 天津体育,http://38.75.136.137:98/gslb/dsdqpub/tjtv5.m3u8?auth=testpub
 天元围棋,http://204.12.221.218:8181/3m1080p/gztywq.m3u8
-少儿频道,#genre#
-福州少儿,http://live.zohi.tv/video/s10001-fztv-4/index.m3u8
 纪录频道,#genre#
 白山公共,http://stream8.jlntv.cn/baishan2/playlist.m3u8?zjild
 地理中国,http://newcntv.qcloudcdn.com/asp/hls/1200/0303000a/3/default/c6baf6f74bb944aeacee1065ea72c798/1200.m3u8
@@ -294,6 +296,7 @@ CCTV-1,http://153.0.171.163:9901/tsfile/live/0001_1.m3u8?key=txiptv&playlive=1&a
 CCTV-10,http://112.46.105.20:8009/hls/506/index.m3u8
 CCTV-10,http://yjj888.f3322.net:9901/tsfile/live/0010_3.m3u8?key=txiptv&playlive=0&authid=0
 CCTV-10,http://153.0.171.163:9901/tsfile/live/1009_1.m3u8?key=txiptv&playlive=1&authid=0
+CCTV-10,http://198.204.228.26/live/cctv10hd.m3u8
 CCTV-11,http://yjj888.f3322.net:9901/tsfile/live/0011_2.m3u8?key=txiptv&playlive=0&authid=0
 CCTV-11,http://153.0.171.163:9901/tsfile/live/1010_1.m3u8?key=txiptv&playlive=1&authid=0
 CCTV-11,http://38.75.136.137:98/gslb/dsdqpub/cctv11hd.m3u8?auth=testpub
@@ -407,7 +410,6 @@ CCTV-央视高网,http://dassby.qqff.top:99/live/高尔夫网球/index.m3u8
 CCTV央视台球,http://bztv.tvbus.cc:8081/cdnlive/ystq.m3u8
 CCTV央视台球,http://dassby.qqff.top:99/live/央视台球/index.m3u8
 CCTV央视文化精品,http://207.56.13.146:81/cdnlive/ysjp.m3u8
-CHC动作电影,http://69.30.245.50/live/chcdz.m3u8
 CHC动作电影,http://192.151.150.154/live/chcdz.m3u8
 CHC动作电影,http://120.238.84.45:9901/tsfile/live/1094_1.m3u8?key=txiptv&playlive=1&authid=0
 CHC家庭影院,http://38.75.136.137:98/gslb/dsdqpub/chcjt.m3u8?auth=testpub
@@ -431,6 +433,7 @@ CHC影迷电影,http://222.134.19.49:8090/952383261
 洪金宝,http://173.208.234.146/live/vlhjb.m3u8
 湖北卫视,http://38.75.136.137:98/gslb/dsdqpub/hbwshd.m3u8?auth=testpub
 湖北卫视,http://yjj888.f3322.net:9901/tsfile/live/0132_2.m3u8?key=txiptv&playlive=0&authid=0
+湖南卫视,http://38.75.136.137:98/gslb/dsdqpub/hnwshd.m3u8?auth=testpub
 湖南卫视,http://yjj888.f3322.net:9901/tsfile/live/0128_2.m3u8?key=txiptv&playlive=0&authid=0
 黄百鸣,http://74.91.26.218:82/live/vlhbm.m3u8
 江苏卫视,http://yjj888.f3322.net:9901/tsfile/live/0127_2.m3u8?key=txiptv&playlive=0&authid=0
@@ -525,8 +528,6 @@ CHC影迷电影,http://222.134.19.49:8090/952383261
 厦门卫视,http://107.150.60.122/live/xmws.m3u8
 厦门卫视,http://198.204.228.26/live/xmws.m3u8
 厦门卫视,http://63.141.230.178:82/gslb/zbdq5.m3u8?id=xmws
-河南频道,#genre#
-河南都市,http://1.94.31.214/php/hntv.php?id=hnds
 甘肃频道,#genre#
 白银综合,http://play.kankanlive.com/live/1720408089419110.m3u8
 嘉峪关综合,http://play.kankanlive.com/live/1720583434627241.m3u8
