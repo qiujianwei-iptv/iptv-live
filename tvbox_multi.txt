@@ -1,0 +1,3 @@
+我的线路(1080P+台标+不卡顿)$https://fastly.jsdelivr.net/gh/qiujianwei-iptv/iptv-live@main/tvbox.json
+饭太硬$https://fastly.jsdelivr.net/gh/qist/tvbox@master/fty.json
+qist自用(OK影视)$https://fastly.jsdelivr.net/gh/qist/tvbox@master/jsm.json
