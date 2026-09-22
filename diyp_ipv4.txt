@@ -1,6 +1,7 @@
 央视频道,#genre#
-CCTV-1,http://112.46.105.20:8009/hls/501/index.m3u8
-CCTV-1,http://yjj888.f3322.net:9901/tsfile/live/0001_1.m3u8?key=txiptv&playlive=0&authid=0
+CCTV-1,http://63.141.230.178:82/gslb/zbdq5.m3u8?id=cctv1hd
+CCTV-1,http://204.12.221.218:8181/3m1080p/cctv1.m3u8
+CCTV-1,http://38.75.136.137:98/gslb/dsdqbv/cctv1hd.m3u8?auth=test20251009
 CCTV-3,http://112.30.73.119:229/tsfile/live/0003_2.m3u8?key=txiptv&playlive=0&authid=0
 CCTV-4,http://38.75.136.137:98/gslb/dsdqpub/cctv4k.m3u8?auth=testpub
 CCTV-5,http://gmxw.7766.org:808/hls/93/index.m3u8
