@@ -1,7 +1,6 @@
-# 央视网官方直播源(1080P)
+# 央视视频官网直播源(1080P)
 # 来源: tv.cctv.com 央视官网 CDN, 最高1920x1080
+# 自动测活: 每日检测各频道官方直连可用性
 # 更新: 2026-09-22
-# 注: 部分频道需家庭宽带网络可访问
-
 CCTV-1,https://ldncctvwbcdcnc.v.wscdns.com/ldncctvwbcd/cdrmldcctv1_1_1080P/playlist.m3u8?wsApp=HLS
 CCTV-13,https://ldncctvwbcdcnc.v.wscdns.com/ldncctvwbcd/cdrmldcctv13_1_1080P/playlist.m3u8?wsApp=HLS
