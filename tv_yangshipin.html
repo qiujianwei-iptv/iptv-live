@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
@@ -6,110 +6,83 @@
 <title>央视频 TV 壳</title>
 <style>
   * { margin:0; padding:0; box-sizing:border-box; }
-  html,body { width:100%; height:100%; overflow:hidden; background:#0a0f1e; font-family:system-ui,"Microsoft YaHei",sans-serif; color:#e8eefc; user-select:none; }
-  #frame { position:fixed; inset:0; border:none; width:100%; height:100%; z-index:1; background:#000; }
-  #bar { position:fixed; top:0; left:0; right:0; height:64px; z-index:10;
-    display:flex; align-items:center; gap:14px; padding:0 22px;
-    background:linear-gradient(180deg,rgba(8,12,26,.92),rgba(8,12,26,.55) 70%,transparent);
-    opacity:0; transition:opacity .3s; pointer-events:none; }
-  #bar.show { opacity:1; pointer-events:auto; }
-  #bar .logo { font-size:20px; font-weight:800; letter-spacing:2px; color:#4f7cff; }
-  #bar .name { font-size:14px; color:#c9d6f2; }
-  #bar .sp { flex:1; }
-  #bar .hint { font-size:12px; color:#7d9bff; letter-spacing:1px; }
-  #landing { position:fixed; inset:0; z-index:5; display:flex; flex-direction:column;
-    align-items:center; justify-content:center; gap:18px; text-align:center; padding:30px; }
-  #landing .big { font-size:30px; font-weight:800; color:#e8eefc; letter-spacing:3px; }
-  #landing .sub { font-size:15px; color:#8fa3cc; line-height:1.9; }
-  .btns { display:flex; gap:20px; }
-  #landing .btn { padding:14px 34px; border-radius:12px; border:none; cursor:pointer;
-    background:rgba(79,124,255,.85); color:#fff; font-size:18px; font-weight:700; letter-spacing:2px; }
-  #landing .btn.alt { background:rgba(79,124,255,.18); border:1px solid rgba(120,160,255,.4); }
-  #landing .btn:hover { background:#5d8bff; }
-  #landing .btn.alt:hover { background:rgba(79,124,255,.32); }
-  #landing .tip { font-size:13px; color:#5c719e; max-width:760px; line-height:1.9; }
-  #spin { position:fixed; left:50%; top:50%; width:46px; height:46px; margin:-23px 0 0 -23px;
-    z-index:6; border-radius:50%; border:3px solid rgba(79,124,255,.18);
-    border-top-color:#4f7cff; animation:sp .8s linear infinite; display:none; }
+  html,body { width:100%; height:100%; overflow:hidden; background:linear-gradient(160deg,#0a0f1e,#12203c); font-family:system-ui,"Microsoft YaHei",sans-serif; color:#e8eefc; user-select:none; }
+  #wrap { position:fixed; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:22px; text-align:center; padding:26px; z-index:2; }
+  #wrap .big { font-size:34px; font-weight:800; letter-spacing:4px; color:#fff; }
+  #wrap .big span { color:#4f7cff; }
+  #wrap .sub { font-size:15px; color:#8fa3cc; letter-spacing:1px; }
+  #wrap .go { display:flex; gap:18px; margin-top:8px; }
+  #wrap .btn { padding:16px 40px; border-radius:14px; border:none; cursor:pointer;
+    background:linear-gradient(135deg,#4f7cff,#6a5cff); color:#fff; font-size:19px; font-weight:700; letter-spacing:3px;
+    box-shadow:0 8px 30px rgba(79,124,255,.35); }
+  #wrap .btn:hover { filter:brightness(1.12); }
+  #wrap .btn.alt { background:rgba(79,124,255,.16); border:1px solid rgba(120,160,255,.45); box-shadow:none; font-size:15px; letter-spacing:2px; padding:14px 28px; }
+  #wrap .tip { font-size:13px; color:#5c719e; max-width:720px; line-height:2; margin-top:6px; }
+  #wrap .tip b { color:#7d9bff; }
+  #loading { position:fixed; inset:0; z-index:3; display:none; flex-direction:column; align-items:center; justify-content:center; gap:16px; background:#0a0f1e; }
+  #loading.on { display:flex; }
+  #loading .sp { width:48px; height:48px; border-radius:50%; border:3px solid rgba(79,124,255,.18); border-top-color:#4f7cff; animation:sp .8s linear infinite; }
   @keyframes sp { to { transform:rotate(360deg); } }
-  #spin.on { display:block; }
-  #keys { position:fixed; left:50%; bottom:26px; transform:translateX(-50%); z-index:11;
-    background:rgba(10,16,32,.82); border:1px solid rgba(120,160,255,.22);
-    border-radius:12px; padding:10px 20px; font-size:12px; color:#9db4e8;
-    opacity:0; transition:opacity .3s; pointer-events:none; letter-spacing:1px;
-    text-align:center; line-height:1.8; }
-  #keys.show { opacity:1; }
-  #keys b { color:#fff; }
+  #loading .txt { font-size:14px; color:#8fa3cc; letter-spacing:1px; }
 </style>
 </head>
 <body>
-  <iframe id="frame" src="" allow="autoplay; encrypted-media" allowfullscreen></iframe>
 
-  <div id="landing">
-    <div class="big">央视频 TV 壳</div>
-    <div class="sub">官方央视频网页播放器 · 电视遥控器适配</div>
-    <div class="btns">
-      <button class="btn" id="btn-open">进 入 直 播</button>
-      <button class="btn alt" id="btn-direct">直接打开官网</button>
+  <div id="wrap">
+    <div class="big">央视频 <span>TV</span></div>
+    <div class="sub">官方直播 · 高清稳定 · 电视遥控器适配</div>
+    <div class="go">
+      <button class="btn" id="btn-enter">进 入 直 播</button>
+      <button class="btn alt" id="btn-frame">内嵌模式</button>
     </div>
     <div class="tip">
-      ①「进入直播」：在壳页面内嵌央视频官方页面（推荐）。<br>
-      ②「直接打开」：跳转到官方网页全屏播放（嵌入被拦截时用）。<br>
-      ③ 播放页内：方向键移动焦点、确认键选中、数字键切台；遥控器【菜单/返回】键随时呼出提示。
+      ① 点「进入直播」→ 打开<b>央视频官方网页</b>，频道列表完整、画质最高。<br>
+      ② 电视遥控器：<b>方向键</b>移动焦点 · <b>确认键</b>选中播放 · <b>数字键</b>直接选台。<br>
+      ③ 若某频道黑屏，按遥控器【返回】回频道列表重选即可。
     </div>
   </div>
 
-  <div id="spin"></div>
-  <div id="keys"><b>提示</b> 方向键/数字键切换频道 · 确认键选中 · 遥控器【菜单键】呼出本提示</div>
-  <div id="bar">
-    <span class="logo">央视频 TV</span>
-    <span class="name">官方直播 · 网页壳</span>
-    <span class="sp"></span>
-    <span class="hint">方向键 切换 · 确认 选中 · 菜单键 提示</span>
-  </div>
+  <div id="loading"><div class="sp"></div><div class="txt">正在打开央视频官方直播…</div></div>
 
 <script>
 (function(){
-  var CANDIDATES = [
-    'https://tv.yangshipin.cn/',
-    'https://tv.yangshipin.cn/tv/home',
-    'https://tv.cctv.com/live/'
-  ];
-  var iframe = document.getElementById('frame');
-  var landing = document.getElementById('landing');
-  var spin = document.getElementById('spin');
-  var bar = document.getElementById('bar');
-  var keys = document.getElementById('keys');
-  var barT = null, keysT = null, timer = null;
-  var started = false;
+  var HOME = 'https://tv.yangshipin.cn/';
+  var CH = 'https://tv.yangshipin.cn/tv/home';
+  var entered = false;
 
-  function flashBar(){ bar.classList.add('show'); clearTimeout(barT); barT = setTimeout(function(){ bar.classList.remove('show'); }, 4000); }
-  function flashKeys(){ keys.classList.add('show'); clearTimeout(keysT); keysT = setTimeout(function(){ keys.classList.remove('show'); }, 6000); }
-
-  function tryEnter(idx){
-    if (idx >= CANDIDATES.length) { spin.classList.remove('on'); return; }
-    clearTimeout(timer);
-    spin.classList.add('on');
-    iframe.onload = function(){ spin.classList.remove('on'); landing.style.display='none'; flashBar(); };
-    iframe.onerror = function(){ spin.classList.remove('on'); tryEnter(idx+1); };
-    iframe.src = CANDIDATES[idx];
-    timer = setTimeout(function(){ if (landing.style.display !== 'none') { tryEnter(idx+1); } }, 15000);
+  function goJump(u){
+    entered = true;
+    var ld = document.getElementById('loading');
+    ld.classList.add('on');
+    window.location.href = u;
+    setTimeout(function(){
+      ld.querySelector('.txt').textContent = '未跳转成功，请检查浏览器设置或返回后重试';
+    }, 8000);
   }
 
-  document.getElementById('btn-open').addEventListener('click', function(){ started=true; tryEnter(0); });
-  document.getElementById('btn-direct').addEventListener('click', function(){ window.location.href = CANDIDATES[0]; });
+  function goFrame(){
+    entered = true;
+    var w = document.getElementById('wrap');
+    w.style.display = 'none';
+    var f = document.createElement('iframe');
+    f.style.cssText = 'position:fixed;inset:0;width:100%;height:100%;border:0;z-index:1;background:#000;';
+    f.src = HOME;
+    f.setAttribute('allow','autoplay; encrypted-media');
+    f.setAttribute('allowfullscreen','');
+    document.body.appendChild(f);
+  }
 
+  document.getElementById('btn-enter').addEventListener('click', function(){ goJump(HOME); });
+  document.getElementById('btn-frame').addEventListener('click', function(){ goFrame(); });
+
+  var btn = document.getElementById('btn-enter');
+  try { btn.focus(); } catch (e) {}
   document.addEventListener('keydown', function(e){
-    if (e.key === 'ContextMenu' || e.key === 'Menu' || e.key === 'F10' || e.key === 'Escape') {
-      e.preventDefault(); flashKeys(); flashBar();
-    }
-    if (e.key === 'ArrowUp' || e.key === 'ArrowDown' || e.key === 'ArrowLeft' || e.key === 'ArrowRight' || e.key === 'Enter') {
-      flashBar();
-    }
+    if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); goJump(HOME); }
   });
 
-  /* 自动进入 */
-  setTimeout(function(){ if (!started) { started=true; tryEnter(0); } }, 2500);
+  /* 5 秒未操作自动进入 */
+  setTimeout(function(){ if (!entered) { goJump(HOME); } }, 5000);
 })();
 </script>
 </body>
