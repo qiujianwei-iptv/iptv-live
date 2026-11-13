@@ -33,8 +33,8 @@ TIMEOUT = 60
 
 # 这些站点是入口/配置页，不该参与搜索
 NO_SEARCH_APIS = {"csp_Config", "csp_MyDriveGuard"}
-# 「我的云盘」入口并入「配置中心」，不再单独保留（用户 2026-11-13 确认只留配置中心）
-DROP_ENTRY_APIS = {"csp_MyDriveGuard"}
+# 「配置中心」与「我的云盘」保持各自独立入口（用户 2026-11-13 要求恢复合并前的状态）
+DROP_ENTRY_APIS = set()
 
 # 站点数低于这个值就认为上游异常，不覆盖线上文件
 MIN_SITES = 60
