@@ -35,7 +35,23 @@ TIMEOUT = 60
 NO_SEARCH_APIS = {"csp_Config", "csp_MyDriveGuard"}
 
 # 站点数低于这个值就认为上游异常，不覆盖线上文件
-MIN_SITES = 120
+MIN_SITES = 60
+
+# 这些关键词出现在站点 key 或 name 里就整条屏蔽（不想要的片源类型）
+BLOCKED_KEYWORDS = [
+    "新片", "预告", "磁力", "荐片", "体育", "呦呦", "蜻蜓", "听书", "戏曲",
+    "儿童", "音乐", "哔哩", "课堂", "教育", "教学", "养生", "动漫", "看球",
+    "直播", "小说", "弹幕",
+]
+
+
+def is_blocked(site):
+    """站点 key / name 命中屏蔽词则返回命中的那个词"""
+    text = f"{site.get('key', '')} {site.get('name', '')}".lower()
+    for kw in BLOCKED_KEYWORDS:
+        if kw.lower() in text:
+            return kw
+    return None
 
 
 def aes_cbc_decrypt(key, data):
@@ -143,8 +159,26 @@ def load_jar_classes(spider):
     return names, url, jar_md5
 
 
-def merge(xs, fan, xs_classes, fan_classes):
-    report = {"dropped_missing_class": [], "dropped_duplicate": [], "kept_fan": 0}
+class JarRegistry:
+    """按 jar 地址缓存「类名集合」，并逐个校验配置里声明的 md5。
+    站点若自带 jar，就用它自己的；否则用所属线路的兜底 spider。
+    """
+
+    def __init__(self):
+        self._cache = {}
+        self.info = []
+
+    def classes(self, spider):
+        if spider not in self._cache:
+            names, url, md5 = load_jar_classes(spider)
+            self._cache[spider] = names
+            self.info.append((spider, url, md5, len(names)))
+        return self._cache[spider]
+
+
+def merge(xs, fan, jars):
+    report = {"dropped_missing_class": [], "dropped_duplicate": [],
+              "dropped_blocked": [], "kept_fan": 0}
 
     xs_jar = xs["spider"]
     fan_jar = fan["spider"]
@@ -153,29 +187,39 @@ def merge(xs, fan, xs_classes, fan_classes):
 
     for s in xs["sites"]:
         site = dict(s)
+        kw = is_blocked(site)
+        if kw:
+            report["dropped_blocked"].append((site["key"], kw))
+            continue
+        jar = site.get("jar") or xs_jar
         if site.get("api", "").startswith("csp_"):
             cls = site["api"][4:]
-            if cls not in xs_classes:
+            if cls not in jars.classes(jar):
                 report["dropped_missing_class"].append((site["key"], site["api"], "潇洒"))
                 continue
         if site.get("api") in NO_SEARCH_APIS:
             site["searchable"] = 0
-        site["jar"] = xs_jar
+        site["jar"] = jar
         sites.append(site)
 
     for s in fan["sites"]:
         site = dict(s)
+        kw = is_blocked(site)
+        if kw:
+            report["dropped_blocked"].append((site["key"], kw))
+            continue
         if site["key"] in xs_keys:
             report["dropped_duplicate"].append(site["key"])
             continue
+        jar = site.get("jar") or fan_jar
         if site.get("api", "").startswith("csp_"):
             cls = site["api"][4:]
-            if cls not in fan_classes:
+            if cls not in jars.classes(jar):
                 report["dropped_missing_class"].append((site["key"], site["api"], "饭太硬"))
                 continue
         if site.get("api") in NO_SEARCH_APIS:
             site["searchable"] = 0
-        site["jar"] = fan_jar
+        site["jar"] = jar
         sites.append(site)
         report["kept_fan"] += 1
 
@@ -212,13 +256,18 @@ def main(out_path="tvbox.json"):
     fan = extract_fan(http_get(FAN_URL))
     print(f"   饭太硬站点 {len(fan['sites'])}")
 
-    print("→ 下载并校验两条 jar…")
-    xs_classes, xs_url, xs_md5 = load_jar_classes(xs["spider"])
-    fan_classes, fan_url, fan_md5 = load_jar_classes(fan["spider"])
-    print(f"   潇洒 jar {len(xs_classes)} 类 md5={xs_md5}")
-    print(f"   饭太硬 jar {len(fan_classes)} 类 md5={fan_md5}")
+    print("→ 下载并校验全部 jar（含上游站点自带的）…")
+    jars = JarRegistry()
+    for s in list(xs["sites"]) + list(fan["sites"]):
+        spider = s.get("jar")
+        if spider:
+            jars.classes(spider)
+    jars.classes(xs["spider"])
+    jars.classes(fan["spider"])
+    for spider, url, md5, n in jars.info:
+        print(f"   {url.split('/')[-1][:28]:30s} {n:5d} 类 md5={md5}")
 
-    merged, report = merge(xs, fan, xs_classes, fan_classes)
+    merged, report = merge(xs, fan, jars)
 
     # 安全闸：站点数异常（上游挂掉/解析走偏）时直接失败，不覆盖线上的好文件
     if len(merged["sites"]) < MIN_SITES:
@@ -245,6 +294,9 @@ def main(out_path="tvbox.json"):
     print(f"✅ 合并完成：{len(merged['sites'])} 站点 / {size} B / md5 {digest}")
     print(f"   潇洒 {len(merged['sites']) - report['kept_fan']} 站 · 饭太硬 {report['kept_fan']} 站 · "
           f"重名跳过 {len(report['dropped_duplicate'])} · 缺类剔除 {len(report['dropped_missing_class'])}")
+    if report["dropped_blocked"]:
+        print(f"   关键词屏蔽 {len(report['dropped_blocked'])} 站："
+              + "、".join(f"{k}({kw})" for k, kw in report["dropped_blocked"]))
     for item in report["dropped_missing_class"]:
         print(f"   ⚠ 剔除 {item[0]}（{item[1]} 不在{item[2]}jar 中）")
     if old_keys:
