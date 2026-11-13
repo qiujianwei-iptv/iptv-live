@@ -32,6 +32,16 @@ TIMEOUT = 60
 # 这些站点是入口/配置页，不该参与搜索
 NO_SEARCH_APIS = {"csp_Config", "csp_MyDriveGuard"}
 
+
+def is_drive_api(api):
+    """网盘 / 云盘 / 盘搜类站点：除配置中心与「我的云盘」外，一律参与搜索"""
+    if not api or not api.startswith("csp_"):
+        return False
+    if api in NO_SEARCH_APIS:
+        return False
+    cls = api[4:]
+    return "Pan" in cls or "Drive" in cls
+
 # 关键词屏蔽表：站点 key / name 命中即剔除（家长向 / 非影视类站点不要）
 BLOCKED_KEYWORDS = [
     "新片", "预告", "磁力", "荐片", "体育", "呦呦", "蜻蜓", "听书", "戏曲",
@@ -161,6 +171,7 @@ def build(xs, xs_classes, old_lives):
     sites = []
     dropped = []
     blocked = []
+    opened = []
     for s in xs["sites"]:
         site = dict(s)
         kw = is_blocked(site)
@@ -174,6 +185,10 @@ def build(xs, xs_classes, old_lives):
                 continue
         if site.get("api") in NO_SEARCH_APIS:
             site["searchable"] = 0
+        elif is_drive_api(site.get("api")):
+            if site.get("searchable") != 1:
+                site["searchable"] = 1
+                opened.append(site.get("key"))
         site["jar"] = xs_jar
         sites.append(site)
 
@@ -193,7 +208,7 @@ def build(xs, xs_classes, old_lives):
         "flags": xs.get("flags") or [],
         "ads": xs.get("ads") or [],
     }
-    return out, dropped, blocked
+    return out, dropped, blocked, opened
 
 
 def main(out_path="tvbox.json"):
@@ -215,7 +230,7 @@ def main(out_path="tvbox.json"):
         except Exception:
             pass
 
-    out, dropped, blocked = build(xs, xs_classes, old_lives)
+    out, dropped, blocked, opened = build(xs, xs_classes, old_lives)
 
     if len(out["sites"]) < MIN_SITES:
         raise SystemExit(f"❌ 上游只解析出 {len(out['sites'])} 站（低于 {MIN_SITES}），疑似上游异常，保留原文件")
@@ -230,6 +245,7 @@ def main(out_path="tvbox.json"):
     digest = hashlib.md5(open(out_path, "rb").read()).hexdigest()
     print(f"✅ 同步完成：{len(out['sites'])} 站点 / {size} B / md5 {digest}")
     print(f"   直播源 {len(out['lives'])} 条 · 缺类剔除 {len(dropped)} · 关键词屏蔽 {len(blocked)}")
+    print(f"   网盘类开启搜索 {len(opened)} 个：{opened or '无'}")
     for item in blocked:
         print(f"   ⊘ 屏蔽 {item[0]}（命中「{item[1]}」）")
     for item in dropped:
