@@ -988,22 +988,6 @@
    "jar": "https://xiuxiu-pro-new.meitudata.com/posters/8cc3c376daf1d4beeebb46012ca676a4.jpg;md5;6d10a60af6c0976836933c5f3cf9e8a7"
   },
   {
-   "key": "MDrive",
-   "name": "🗂我的云盘┃配置",
-   "type": 3,
-   "api": "csp_MyDriveGuard",
-   "changeable": 0,
-   "indexs": 0,
-   "searchable": 0,
-   "style": {
-    "type": "oval"
-   },
-   "ext": {
-    "Cloud-drive": "tvfan/Cloud-drive.txt"
-   },
-   "jar": "https://xiuxiu-pro-new.meitudata.com/posters/8cc3c376daf1d4beeebb46012ca676a4.jpg;md5;6d10a60af6c0976836933c5f3cf9e8a7"
-  },
-  {
    "key": "爱刷",
    "name": "♻️爱刷┃短视",
    "type": 3,

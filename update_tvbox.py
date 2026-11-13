@@ -13,7 +13,7 @@
   * 站点声明的 csp_ 类若在它自己的 jar 里不存在，剔除并记录
   * parses / doh / flags / ads / danmaku / wallpaper / logo 用潇洒
   * lives 用饭太硬（潇洒是空壳），rules 两边合并去重
-  * 配置中心、MDrive 等入口站不参与搜索（searchable=0）
+  * 配置中心不参与搜索（searchable=0）；「我的云盘」入口并入配置中心后不再单独保留
 """
 
 import base64
@@ -33,6 +33,8 @@ TIMEOUT = 60
 
 # 这些站点是入口/配置页，不该参与搜索
 NO_SEARCH_APIS = {"csp_Config", "csp_MyDriveGuard"}
+# 「我的云盘」入口并入「配置中心」，不再单独保留（用户 2026-11-13 确认只留配置中心）
+DROP_ENTRY_APIS = {"csp_MyDriveGuard"}
 
 # 站点数低于这个值就认为上游异常，不覆盖线上文件
 MIN_SITES = 60
@@ -178,7 +180,7 @@ class JarRegistry:
 
 def merge(xs, fan, jars):
     report = {"dropped_missing_class": [], "dropped_duplicate": [],
-              "dropped_blocked": [], "kept_fan": 0}
+              "dropped_blocked": [], "dropped_merged": [], "kept_fan": 0}
 
     xs_jar = xs["spider"]
     fan_jar = fan["spider"]
@@ -190,6 +192,9 @@ def merge(xs, fan, jars):
         kw = is_blocked(site)
         if kw:
             report["dropped_blocked"].append((site["key"], kw))
+            continue
+        if site.get("api") in DROP_ENTRY_APIS:
+            report["dropped_merged"].append((site["key"], "潇洒"))
             continue
         jar = site.get("jar") or xs_jar
         if site.get("api", "").startswith("csp_"):
@@ -207,6 +212,9 @@ def merge(xs, fan, jars):
         kw = is_blocked(site)
         if kw:
             report["dropped_blocked"].append((site["key"], kw))
+            continue
+        if site.get("api") in DROP_ENTRY_APIS:
+            report["dropped_merged"].append((site["key"], "饭太硬"))
             continue
         if site["key"] in xs_keys:
             report["dropped_duplicate"].append(site["key"])
