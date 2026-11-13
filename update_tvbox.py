@@ -1,19 +1,18 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""秋风影视 · 上游线路合并器
+"""秋风影视 · 上游线路同步器（只取潇洒）
 
-从两条上游取最新配置并合并成一份 tvbox.json：
-  1. 潇洒   https://9877.kstore.space/sun.json          （AES 加密，需解密）
-  2. 饭太硬 http://www.饭太硬.art/tv                     （配置藏在 JPEG 尾部）
+只从潇洒一条上游取最新配置，写出 tvbox.json：
+  潇洒  https://9877.kstore.space/sun.json   （AES 加密，需解密）
 
-合并规则：
-  * 全局 spider 用潇洒的 jar（兜底）
-  * 每个站点各自挂自己那条线路的 jar（含 md5 校验位）
-  * 与潇洒重名的站点只保留潇洒版
-  * 站点声明的 csp_ 类若在它自己的 jar 里不存在，剔除并记录
-  * parses / doh / flags / ads / danmaku / wallpaper / logo 用潇洒
-  * lives 用饭太硬（潇洒是空壳），rules 两边合并去重
-  * 配置中心、MDrive 等入口站不参与搜索（searchable=0）
+规则：
+  * 全局 spider / 每站点 jar 都用潇洒自己的 jar（含 md5 校验位）
+  * 站点声明的 csp_ 类若在潇洒 jar 里不存在，剔除并记录
+  * 配置中心、各云盘等入口站不参与搜索（searchable=0）
+  * 站点 key / name 命中关键词屏蔽表的直接剔除（BLOCKED_KEYWORDS）
+  * lives 上游是空壳，沿用线上已有的直播源（DEFAULT_LIVES 兜底）
+
+饭太硬的站点（带 .so 加壳 jar）不再合并，避免搜索时加载失败。
 """
 
 import base64
@@ -27,15 +26,46 @@ import urllib.request
 import zipfile
 
 XIAOSA_URL = "https://9877.kstore.space/sun.json"
-FAN_URL = "http://www.xn--sss604efuw.cc/tv"
 UA = "okhttp/3.14.9"
 TIMEOUT = 60
 
 # 这些站点是入口/配置页，不该参与搜索
 NO_SEARCH_APIS = {"csp_Config", "csp_MyDriveGuard"}
 
+# 关键词屏蔽表：站点 key / name 命中即剔除（家长向 / 非影视类站点不要）
+BLOCKED_KEYWORDS = [
+    "新片", "预告", "磁力", "荐片", "体育", "呦呦", "蜻蜓", "听书", "戏曲",
+    "儿童", "音乐", "哔哩", "课堂", "教育", "教学", "养生", "动漫", "看球",
+    "直播", "小说", "弹幕",
+]
+
+
+def is_blocked(site):
+    """站点 key / name 命中屏蔽词则返回命中的那个词"""
+    text = f"{site.get('key', '')} {site.get('name', '')}".lower()
+    for kw in BLOCKED_KEYWORDS:
+        if kw.lower() in text:
+            return kw
+    return None
+
 # 站点数低于这个值就认为上游异常，不覆盖线上文件
-MIN_SITES = 120
+MIN_SITES = 60
+
+# 潇洒上游的 lives 是空壳，线上保留这组公开直播源（纯播放列表，不依赖任何 jar）
+DEFAULT_LIVES = [
+    {"name": "综合", "type": 0, "url": "http://193.123.86.190:14888/TV/iptv.php",
+     "ua": "bingcha/1.1 (mianfeifenxiang)", "playerType": 2},
+    {"name": "牛播一", "url": "http://127.0.0.1:9978/proxy?do=cctva", "timeZone": "Asia/Shanghai"},
+    {"name": "Kimentanm", "type": 0,
+     "url": "https://ghproxy.net/https://raw.githubusercontent.com/Kimentanm/aptv/master/m3u/iptv.m3u",
+     "playerType": 2},
+    {"name": "虎牙一起看", "type": 0, "url": "https://sub.ottiptv.cc/huyayqk.m3u",
+     "playerType": 2, "timeout": 10, "ua": "okHttp/Mod-1.5.0.0"},
+    {"name": "斗鱼一起看", "type": 0, "url": "https://sub.ottiptv.cc/douyuyqk.m3u",
+     "playerType": 2, "timeout": 10, "ua": "okHttp/Mod-1.5.0.0"},
+    {"name": "YY轮播", "type": 0, "url": "https://sub.ottiptv.cc/yylunbo.m3u",
+     "playerType": 2, "timeout": 10, "ua": "okHttp/Mod-1.5.0.0"},
+]
 
 
 def aes_cbc_decrypt(key, data):
@@ -100,22 +130,6 @@ def decrypt_xiaosa(raw):
     return json.loads(pt.decode("utf-8", "ignore"))
 
 
-def extract_fan(raw):
-    """饭太硬配置：返回的是一张 JPEG，EOI(FFD9) 之后挂着 base64 文本。
-    解码后跳过 6 字节二进制前缀，去掉行首 // 注释即为明文 JSON。
-    """
-    if not raw.startswith(b"\xff\xd8"):
-        raise ValueError("饭太硬返回的不是 JPEG，可能被防爬页替代")
-    idx = raw.rfind(b"\xff\xd9")
-    if idx < 0:
-        raise ValueError("饭太硬图片里找不到 EOI，无法取配置")
-    tail = raw[idx + 2:].decode("utf-8", "ignore").strip()
-    payload = base64.b64decode(tail)[6:]
-    lines = [ln for ln in payload.decode("utf-8", "ignore").splitlines()
-             if not ln.strip().startswith("//")]
-    return json.loads("\n".join(lines).strip())
-
-
 def split_spider(spider):
     """spider 形如 https://....png;md5;xxxx → (url, md5)"""
     parts = spider.split(";md5;")
@@ -131,7 +145,6 @@ def load_jar_classes(spider):
     jar_md5 = hashlib.md5(data).hexdigest()
     if digest and digest != jar_md5:
         raise ValueError(f"jar md5 不符：声明 {digest}，实际 {jar_md5}")
-    # 这些"jar"其实是 dex（classes.dex 里是 com/github/catvod/spider/XXX 的类描述符）
     names = set()
     with zipfile.ZipFile(io.BytesIO(data)) as z:
         for n in z.namelist():
@@ -143,48 +156,28 @@ def load_jar_classes(spider):
     return names, url, jar_md5
 
 
-def merge(xs, fan, xs_classes, fan_classes):
-    report = {"dropped_missing_class": [], "dropped_duplicate": [], "kept_fan": 0}
-
+def build(xs, xs_classes, old_lives):
     xs_jar = xs["spider"]
-    fan_jar = fan["spider"]
-    xs_keys = {s["key"] for s in xs["sites"]}
     sites = []
-
+    dropped = []
+    blocked = []
     for s in xs["sites"]:
         site = dict(s)
+        kw = is_blocked(site)
+        if kw:
+            blocked.append((site.get("key"), kw))
+            continue
         if site.get("api", "").startswith("csp_"):
             cls = site["api"][4:]
             if cls not in xs_classes:
-                report["dropped_missing_class"].append((site["key"], site["api"], "潇洒"))
+                dropped.append((site.get("key"), site["api"]))
                 continue
         if site.get("api") in NO_SEARCH_APIS:
             site["searchable"] = 0
         site["jar"] = xs_jar
         sites.append(site)
 
-    for s in fan["sites"]:
-        site = dict(s)
-        if site["key"] in xs_keys:
-            report["dropped_duplicate"].append(site["key"])
-            continue
-        if site.get("api", "").startswith("csp_"):
-            cls = site["api"][4:]
-            if cls not in fan_classes:
-                report["dropped_missing_class"].append((site["key"], site["api"], "饭太硬"))
-                continue
-        if site.get("api") in NO_SEARCH_APIS:
-            site["searchable"] = 0
-        site["jar"] = fan_jar
-        sites.append(site)
-        report["kept_fan"] += 1
-
-    rules = list(xs.get("rules") or [])
-    seen = {r.get("name") for r in rules}
-    for r in (fan.get("rules") or []):
-        if r.get("name") not in seen:
-            rules.append(r)
-            seen.add(r.get("name"))
+    lives = [l for l in (xs.get("lives") or []) if l.get("url")] or old_lives or DEFAULT_LIVES
 
     out = {
         "spider": xs_jar,
@@ -192,15 +185,15 @@ def merge(xs, fan, xs_classes, fan_classes):
         "logo": xs.get("logo"),
         "danmaku": xs.get("danmaku"),
         "sites": sites,
-        "lives": fan.get("lives") or [],
+        "lives": lives,
         "parses": xs.get("parses") or [],
-        "rules": rules,
-        "hosts": fan.get("hosts") or [],
+        "rules": xs.get("rules") or [],
+        "hosts": xs.get("hosts") or [],
         "doh": xs.get("doh") or [],
         "flags": xs.get("flags") or [],
         "ads": xs.get("ads") or [],
     }
-    return out, report
+    return out, dropped, blocked
 
 
 def main(out_path="tvbox.json"):
@@ -208,50 +201,43 @@ def main(out_path="tvbox.json"):
     xs = decrypt_xiaosa(http_get(XIAOSA_URL))
     print(f"   潇洒站点 {len(xs['sites'])}")
 
-    print("→ 拉取饭太硬配置…")
-    fan = extract_fan(http_get(FAN_URL))
-    print(f"   饭太硬站点 {len(fan['sites'])}")
-
-    print("→ 下载并校验两条 jar…")
+    print("→ 下载并校验潇洒 jar…")
     xs_classes, xs_url, xs_md5 = load_jar_classes(xs["spider"])
-    fan_classes, fan_url, fan_md5 = load_jar_classes(fan["spider"])
     print(f"   潇洒 jar {len(xs_classes)} 类 md5={xs_md5}")
-    print(f"   饭太硬 jar {len(fan_classes)} 类 md5={fan_md5}")
 
-    merged, report = merge(xs, fan, xs_classes, fan_classes)
-
-    # 安全闸：站点数异常（上游挂掉/解析走偏）时直接失败，不覆盖线上的好文件
-    if len(merged["sites"]) < MIN_SITES:
-        raise SystemExit(f"❌ 合并结果只有 {len(merged['sites'])} 站（低于 {MIN_SITES}），疑似上游异常，保留原文件")
-
-    keys = [s["key"] for s in merged["sites"]]
-    assert len(keys) == len(set(keys)), "合并后存在重复 key"
-
-    # 与现有文件的差异（便于在提交信息里体现增减）
-    old_keys = set()
+    old_lives, old_keys = [], set()
     if os.path.exists(out_path):
         try:
             with open(out_path, encoding="utf-8") as f:
-                old_keys = {s["key"] for s in json.load(f).get("sites", [])}
+                old = json.load(f)
+            old_lives = [l for l in (old.get("lives") or []) if l.get("url")]
+            old_keys = {s["key"] for s in old.get("sites", [])}
         except Exception:
-            old_keys = set()
+            pass
+
+    out, dropped, blocked = build(xs, xs_classes, old_lives)
+
+    if len(out["sites"]) < MIN_SITES:
+        raise SystemExit(f"❌ 上游只解析出 {len(out['sites'])} 站（低于 {MIN_SITES}），疑似上游异常，保留原文件")
+
+    keys = [s["key"] for s in out["sites"]]
+    assert len(keys) == len(set(keys)), "存在重复 key"
 
     with open(out_path, "w", encoding="utf-8", newline="\n") as f:
-        f.write(json.dumps(merged, ensure_ascii=False, indent=1))
+        f.write(json.dumps(out, ensure_ascii=False, indent=1))
 
-    new_keys = set(keys)
     size = os.path.getsize(out_path)
     digest = hashlib.md5(open(out_path, "rb").read()).hexdigest()
-    print(f"✅ 合并完成：{len(merged['sites'])} 站点 / {size} B / md5 {digest}")
-    print(f"   潇洒 {len(merged['sites']) - report['kept_fan']} 站 · 饭太硬 {report['kept_fan']} 站 · "
-          f"重名跳过 {len(report['dropped_duplicate'])} · 缺类剔除 {len(report['dropped_missing_class'])}")
-    for item in report["dropped_missing_class"]:
-        print(f"   ⚠ 剔除 {item[0]}（{item[1]} 不在{item[2]}jar 中）")
+    print(f"✅ 同步完成：{len(out['sites'])} 站点 / {size} B / md5 {digest}")
+    print(f"   直播源 {len(out['lives'])} 条 · 缺类剔除 {len(dropped)} · 关键词屏蔽 {len(blocked)}")
+    for item in blocked:
+        print(f"   ⊘ 屏蔽 {item[0]}（命中「{item[1]}」）")
+    for item in dropped:
+        print(f"   ⚠ 剔除 {item[0]}（{item[1]} 不在潇洒 jar 中）")
     if old_keys:
-        added = sorted(new_keys - old_keys)
-        removed = sorted(old_keys - new_keys)
-        print(f"   相对上一版：新增 {added or '无'} / 下线 {removed or '无'}")
-    return merged
+        new_keys = set(keys)
+        print(f"   相对上一版：新增 {sorted(new_keys - old_keys) or '无'} / 下线 {sorted(old_keys - new_keys) or '无'}")
+    return out
 
 
 if __name__ == "__main__":
