@@ -38,13 +38,14 @@ jobs:
       - name: 合并两条上游
         run: python update_tvbox.py tvbox.json
 
+      # 关键词屏蔽后站点数会明显减少，阈值按筛后规模设定
       - name: 校验生成的配置
         run: |
           python - <<'PY'
           import json, sys
           d = json.load(open("tvbox.json", encoding="utf-8"))
           sites = d.get("sites", [])
-          assert len(sites) >= 120, f"站点数异常: {len(sites)}"
+          assert len(sites) >= 60, f"站点数异常: {len(sites)}"
           keys = [s["key"] for s in sites]
           assert len(keys) == len(set(keys)), "存在重复 key"
           assert all(s.get("jar") for s in sites), "有站点缺少 jar"
