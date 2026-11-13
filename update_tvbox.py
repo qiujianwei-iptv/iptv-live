@@ -26,8 +26,6 @@ import sys
 import urllib.request
 import zipfile
 
-from Cryptodome.Cipher import AES
-
 XIAOSA_URL = "https://9877.kstore.space/sun.json"
 FAN_URL = "http://www.xn--sss604efuw.cc/tv"
 UA = "okhttp/3.14.9"
@@ -38,6 +36,36 @@ NO_SEARCH_APIS = {"csp_Config", "csp_MyDriveGuard"}
 
 # 站点数低于这个值就认为上游异常，不覆盖线上文件
 MIN_SITES = 120
+
+
+def aes_cbc_decrypt(key, data):
+    """AES-CBC 解密（key 与 IV 相同）。优先用 pycryptodome，
+    没有该包时退回系统 openssl，避免因缺依赖直接失败。"""
+    try:
+        from Cryptodome.Cipher import AES
+        return AES.new(key, AES.MODE_CBC, key).decrypt(data)
+    except ImportError:
+        pass
+    try:
+        from Crypto.Cipher import AES  # 老 pycrypto 命名
+        return AES.new(key, AES.MODE_CBC, key).decrypt(data)
+    except ImportError:
+        pass
+    import subprocess
+    import tempfile
+    fd, path = tempfile.mkstemp()
+    try:
+        with os.fdopen(fd, "wb") as f:
+            f.write(data)
+        out = subprocess.run(
+            ["openssl", "enc", "-d", "-aes-128-cbc", "-nopad",
+             "-K", key.hex(), "-iv", key.hex(), "-in", path],
+            capture_output=True, check=True).stdout
+        return out
+    except (FileNotFoundError, subprocess.CalledProcessError) as e:
+        raise SystemExit(f"没有可用的 AES 实现（pycryptodome 未安装且 openssl 不可用）: {e}")
+    finally:
+        os.unlink(path)
 
 
 def http_get(url, timeout=TIMEOUT):
@@ -65,7 +93,7 @@ def decrypt_xiaosa(raw):
         raise ValueError("潇洒密钥与尾部不匹配")
     cipher = bytes.fromhex(h[34:len(h) - 26])
     key = (key13 + "0" * 16)[:16]
-    pt = AES.new(key.encode(), AES.MODE_CBC, key.encode()).decrypt(cipher)
+    pt = aes_cbc_decrypt(key.encode(), cipher)
     pad = pt[-1]
     if 1 <= pad <= 16:
         pt = pt[:-pad]
