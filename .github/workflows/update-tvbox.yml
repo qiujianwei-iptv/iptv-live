@@ -1,0 +1,62 @@
+name: 更新秋风影视线路
+
+# 每天北京时间 05:30（UTC 21:30）自动从潇洒 + 饭太硬两条上游取最新配置，合并后提交
+on:
+  schedule:
+    - cron: "30 21 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: update-tvbox
+  cancel-in-progress: false
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: 拉取仓库
+        uses: actions/checkout@v4
+
+      - name: 准备 Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: 安装依赖
+        run: pip install --quiet pycryptodome
+
+      - name: 合并两条上游
+        run: python update_tvbox.py tvbox.json
+
+      - name: 校验生成的配置
+        run: |
+          python - <<'PY'
+          import json, sys
+          d = json.load(open("tvbox.json", encoding="utf-8"))
+          sites = d.get("sites", [])
+          assert len(sites) >= 120, f"站点数异常: {len(sites)}"
+          keys = [s["key"] for s in sites]
+          assert len(keys) == len(set(keys)), "存在重复 key"
+          assert all(s.get("jar") for s in sites), "有站点缺少 jar"
+          cfg = [s for s in sites if s.get("api") == "csp_Config"]
+          assert len(cfg) == 1, f"配置中心数量异常: {len(cfg)}"
+          print(f"校验通过: {len(sites)} 站点")
+          PY
+
+      - name: 提交变更
+        run: |
+          git config user.name "tvbox-bot"
+          git config user.email "actions@users.noreply.github.com"
+          if [ -z "$(git status --porcelain tvbox.json)" ]; then
+            echo "上游无变化，跳过提交"
+            exit 0
+          fi
+          COUNT=$(python -c "import json;print(len(json.load(open('tvbox.json'))['sites']))")
+          git add tvbox.json
+          git commit -m "自动同步上游线路（${COUNT} 站点）$(date -u '+%Y-%m-%d %H:%M UTC')"
+          git push
