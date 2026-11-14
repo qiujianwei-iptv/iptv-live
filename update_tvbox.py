@@ -6,11 +6,13 @@
   潇洒  https://9877.kstore.space/sun.json   （AES 加密，需解密）
 
 规则：
-  * 全局 spider / 每站点 jar 都用潇洒自己的 jar（含 md5 校验位）
-  * 站点声明的 csp_ 类若在潇洒 jar 里不存在，剔除并记录
+  * 全局 spider / 每站点 jar 一律指向【自有固定 jar】，不再信任上游 jar 地址
+  * 自有 jar 优先用仓库 jar/qf_spider.jar（gh-proxy 包装），失败再退备用地址
+  * 站点声明的 csp_ 类若在 jar 里不存在，剔除并记录
   * 配置中心、各云盘等入口站不参与搜索（searchable=0）
   * 站点 key / name 命中关键词屏蔽表的直接剔除（BLOCKED_KEYWORDS）
   * lives 上游是空壳，沿用线上已有的直播源（DEFAULT_LIVES 兜底）
+  * 上游 403/404、jar 全挂、站点数不足时【不写文件】，保留上一次可用配置
 
 饭太硬的站点（带 .so 加壳 jar）不再合并，避免搜索时加载失败。
 """
@@ -28,6 +30,14 @@ import zipfile
 XIAOSA_URL = "https://9877.kstore.space/sun.json"
 UA = "okhttp/3.14.9"
 TIMEOUT = 60
+
+# ---- 自有固定 jar（上游 jar 失效不再影响我们）----
+QF_JAR_MD5 = "cbe016eb3cb002ae62058604843f5106"
+QF_JAR_URLS = [
+    "https://aka.doubaocdn.com/s/mQEn4oI1UG",
+    "https://gh-proxy.com/https://raw.githubusercontent.com/qiujianwei-iptv/iptv-live/main/jar/qf_spider.jar",
+    "https://raw.githubusercontent.com/qiujianwei-iptv/iptv-live/main/jar/qf_spider.jar",
+]
 
 # 这些站点是入口/配置页，不该参与搜索
 NO_SEARCH_APIS = {"csp_Config", "csp_MyDriveGuard"}
@@ -166,8 +176,21 @@ def load_jar_classes(spider):
     return names, url, jar_md5
 
 
-def build(xs, xs_classes, old_lives):
-    xs_jar = xs["spider"]
+def load_first_working_jar(candidates):
+    """按顺序尝试候选 jar，返回第一个可用的 (类名集合, url, md5)"""
+    errors = []
+    for spider in candidates:
+        try:
+            names, url, md5 = load_jar_classes(spider)
+            if names:
+                return names, url, md5
+            errors.append(f"{spider.split(';md5;')[0]} → jar 内没有 csp_ 类")
+        except Exception as e:
+            errors.append(f"{spider.split(';md5;')[0]} → {e}")
+    raise SystemExit("❌ 所有 jar 候选都不可用，保留原文件：\n   " + "\n   ".join(errors))
+
+
+def build(xs, xs_classes, old_lives, jar_line):
     sites = []
     dropped = []
     blocked = []
@@ -189,13 +212,13 @@ def build(xs, xs_classes, old_lives):
             if site.get("searchable") != 1:
                 site["searchable"] = 1
                 opened.append(site.get("key"))
-        site["jar"] = xs_jar
+        site["jar"] = jar_line
         sites.append(site)
 
     lives = [l for l in (xs.get("lives") or []) if l.get("url")] or old_lives or DEFAULT_LIVES
 
     out = {
-        "spider": xs_jar,
+        "spider": jar_line,
         "wallpaper": xs.get("wallpaper"),
         "logo": xs.get("logo"),
         "danmaku": xs.get("danmaku"),
@@ -212,13 +235,18 @@ def build(xs, xs_classes, old_lives):
 
 
 def main(out_path="tvbox.json"):
-    print("→ 拉取潇洒配置…")
-    xs = decrypt_xiaosa(http_get(XIAOSA_URL))
-    print(f"   潇洒站点 {len(xs['sites'])}")
+    print("→ 解析自有 jar…")
+    candidates = [f"{u};md5;{QF_JAR_MD5}" for u in QF_JAR_URLS]
+    xs_classes, jar_url, jar_md5 = load_first_working_jar(candidates)
+    jar_line = f"{jar_url};md5;{jar_md5}"
+    print(f"   自有 jar 来自 {jar_url} · {len(xs_classes)} 类 · md5={jar_md5}")
 
-    print("→ 下载并校验潇洒 jar…")
-    xs_classes, xs_url, xs_md5 = load_jar_classes(xs["spider"])
-    print(f"   潇洒 jar {len(xs_classes)} 类 md5={xs_md5}")
+    print("→ 拉取潇洒配置…")
+    try:
+        xs = decrypt_xiaosa(http_get(XIAOSA_URL))
+    except Exception as e:
+        raise SystemExit(f"❌ 上游潇洒配置取不到（{e}），保留原文件不覆盖")
+    print(f"   潇洒站点 {len(xs['sites'])}")
 
     old_lives, old_keys = [], set()
     if os.path.exists(out_path):
@@ -230,7 +258,7 @@ def main(out_path="tvbox.json"):
         except Exception:
             pass
 
-    out, dropped, blocked, opened = build(xs, xs_classes, old_lives)
+    out, dropped, blocked, opened = build(xs, xs_classes, old_lives, jar_line)
 
     if len(out["sites"]) < MIN_SITES:
         raise SystemExit(f"❌ 上游只解析出 {len(out['sites'])} 站（低于 {MIN_SITES}），疑似上游异常，保留原文件")
@@ -249,7 +277,7 @@ def main(out_path="tvbox.json"):
     for item in blocked:
         print(f"   ⊘ 屏蔽 {item[0]}（命中「{item[1]}」）")
     for item in dropped:
-        print(f"   ⚠ 剔除 {item[0]}（{item[1]} 不在潇洒 jar 中）")
+        print(f"   ⚠ 剔除 {item[0]}（{item[1]} 不在 jar 中）")
     if old_keys:
         new_keys = set(keys)
         print(f"   相对上一版：新增 {sorted(new_keys - old_keys) or '无'} / 下线 {sorted(old_keys - new_keys) or '无'}")
