@@ -381,7 +381,7 @@ def main(out_path="tvbox.json"):
     keys = [s["key"] for s in sites]
     assert len(keys) == len(set(keys)), "存在重复 key"
     for s in sites:
-        s.pop("jar", None)
+        s["jar"] = jar_line
 
     with open(out_path, "w", encoding="utf-8", newline="\n") as f:
         f.write(json.dumps(out, ensure_ascii=False, indent=1))
