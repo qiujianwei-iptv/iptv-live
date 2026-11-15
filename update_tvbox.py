@@ -56,6 +56,9 @@ WEX_JAR_URLS = [
 # 这些站点是入口/配置页，不该参与搜索
 NO_SEARCH_APIS = {"csp_Config", "csp_MyDriveGuard"}
 
+# 王二小自己的两个入口（配置中心 / 我的网盘）：不参与去重，必须常驻，且不参与搜索
+WEX_KEEP_KEYS = {"Wexconfig", "MyPan"}
+
 # 王二小那边需要「他自己的配置中心」授权的站，不并入（网盘配置用潇洒的）
 WEX_NO_MERGE_APIS = {
     "csp_PanConfigGuard",      # 他的配置中心
@@ -252,6 +255,10 @@ def merge_wex(xs_sites, wex_sites, wex_classes):
     kept, stat = [], {"blocked": [], "dup": [], "auth": [], "missing": []}
     for s in wex_sites:
         site = {k: v for k, v in s.items() if k != "jar"}
+        if site.get("key") in WEX_KEEP_KEYS:
+            site["searchable"] = 0
+            kept.append(site)
+            continue
         kw = is_blocked(site)
         if kw:
             stat["blocked"].append((site.get("key"), kw))
