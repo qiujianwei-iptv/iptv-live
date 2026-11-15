@@ -1001,6 +1001,32 @@
    "jar": "https://aka.doubaocdn.com/s/VnN0OE9SEi;md5;4731e5322d7a4c2aa000808358abe58d"
   },
   {
+   "key": "Wexconfig",
+   "name": "🐮配置┃中心🐮",
+   "type": 3,
+   "api": "csp_PanConfigGuard",
+   "searchable": 0,
+   "changeable": 0,
+   "indexs": 0,
+   "style": {
+    "type": "list"
+   },
+   "jar": "https://aka.doubaocdn.com/s/VnN0OE9SEi;md5;4731e5322d7a4c2aa000808358abe58d"
+  },
+  {
+   "key": "MyPan",
+   "name": "🐮我的┃网盘🐮",
+   "type": 3,
+   "api": "csp_MyPanGuard",
+   "searchable": 0,
+   "changeable": 0,
+   "indexs": 0,
+   "style": {
+    "type": "list"
+   },
+   "jar": "https://aka.doubaocdn.com/s/VnN0OE9SEi;md5;4731e5322d7a4c2aa000808358abe58d"
+  },
+  {
    "key": "AiNewGuanYing",
    "name": "💓‍观影┃4K💓‍",
    "type": 3,
