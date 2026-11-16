@@ -39,9 +39,9 @@ UA = "okhttp/3.14.9"
 TIMEOUT = 60
 
 # ---- 自有【合并 jar】（潇洒 + 王二小，上游 jar 失效都不再影响我们）----
-QF_JAR_MD5 = "4731e5322d7a4c2aa000808358abe58d"
+QF_JAR_MD5 = "ee4797ac65c1eed166ea59b2cea3033a"
 QF_JAR_URLS = [
-    "https://aka.doubaocdn.com/s/VnN0OE9SEi",
+    "https://aka.doubaocdn.com/s/KGhws3ZgV2",
     "https://gh-proxy.com/https://raw.githubusercontent.com/qiujianwei-iptv/iptv-live/main/jar/qf_spider_merged.jar",
     "https://raw.githubusercontent.com/qiujianwei-iptv/iptv-live/main/jar/qf_spider_merged.jar",
 ]
@@ -361,6 +361,16 @@ def main(out_path="tvbox.json"):
     print("→ 合并王二小站点…")
     kept, wstat = merge_wex(sites, wex_sites, wex_classes) if wex_sites else ([], {"blocked": [], "dup": [], "auth": [], "missing": []})
     sites += kept
+
+    # ---- 秋风影视自有「线路包更新」入口（类 csp_QfUpdate 在合并 jar 内，打开即检查）----
+    if "QfUpdate" in jar_classes:
+        sites.append({
+            "key": "QfUpdate",
+            "name": "🔄 线路包更新",
+            "type": 3,
+            "api": "csp_QfUpdate",
+            "searchable": 0,
+        })
     print(f"   并入 {len(kept)} 条 · 重复剔除 {len(wstat['dup'])} · 需他自己网盘授权剔除 "
           f"{len(wstat['auth'])} · 关键词剔除 {len(wstat['blocked'])} · 缺类剔除 {len(wstat['missing'])}")
 
