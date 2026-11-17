@@ -1,25 +1,26 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""秋风影视 · 上游 jar 每周自动合并
+"""秋风影视 · 上游 jar 每周自动合并（增量合并版）
 
-做的事情：
-  1. 取潇洒 jar（从潇洒配置里的 spider 字段）+ 取王二小加壳 jar
-  2. 两个 jar 都拆成 smali
-  3. 以潇洒为底座；王二小里「潇洒没见过的类」原样并入，
-     与潇洒同名冲突的类（Init/Proxy 这类）整体迁到 wex. 子包隔离，再把内部引用改写过去
-  4. 注入我们自己的 QfUpdate / QfToast
-  5. 汇编成一个 classes.dex，套用潇洒 jar 的其他资源，产出合并 jar
-  6. 回读校验：类数、我们的两个类、dex 可反编译
+核心思路：**以上一次可用 jar 为底座，只增不删**。
+  底座 = 仓库里现有的 jar/qf_spider_merged.jar（已经真机验证能跑）
+  往里加：潇洒新 jar 里底座没有的类、王二小 jar 里底座没有的类
+  和底座同名的类不覆盖——潇洒的跳过，王二小的迁到 wex. 子包隔离并改写内部引用
+  这样上游换 jar、删类，都不会把我们已验证能跑的东西弄丢。
 
-安全阀：
-  · 任何一个上游取不到 → 不写文件，保留现有 jar
-  · 合并后类数少于潇洒原先的类数 → 不写文件
-  · 回读校验失败 → 不写文件
+步骤：
+  1. 取潇洒 jar（从潇洒配置的 spider 字段，带 md5 校验）
+  2. 取王二小加壳 jar（md5 必须等于 541366f…）
+  3. 取仓库现有 jar 作底座
+  4. 三份都拆 smali，按上面的规则并入
+  5. 注入 QfUpdate / QfToast，汇编成 classes.dex，套用底座 jar 的其他资源打包
+  6. 回读校验：类数不得少于底座、必须含 QfUpdate、dex 可反编译
+
+安全阀：上游取不到 / md5 不符 / 类数变少 → 不写文件；两个上游 md5 与上次相同 → 直接跳过。
 
 用法：
   python3 rebuild_jar.py --out jar/qf_spider_merged.jar
-  可用环境变量覆盖上游地址做本地联调：
-    XS_JAR_URL / WEX_JAR_URL
+  env：XS_JAR_URL / WEX_JAR_URL / BASE_JAR_URL 可覆盖（本地联调用）
 """
 
 import hashlib
@@ -38,7 +39,7 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 TOOLS = os.path.join(HERE, "jar", "tools")
 SMALI_JAR = os.path.join(TOOLS, "smali.jar")
 BAKSMALI_JAR = os.path.join(TOOLS, "baksmali.jar")
-OWN_SMALI = os.path.join(HERE, "jar", "smali")   # QfUpdate.smali / QfToast.smali
+OWN_SMALI = os.path.join(HERE, "jar", "smali")
 UA = "okhttp/3.14.9"
 TIMEOUT = 90
 
@@ -47,8 +48,12 @@ WEX_JAR_URLS = [
     "https://aka.doubaocdn.com/s/G4Tc2uJeLv",
     "http://oss4liview.moji.com/thd_file/2026/11/12/7b563c7039830e7c712e93f27fd2e102.jpg",
 ]
+BASE_JAR_URLS = [
+    "https://gh-proxy.com/https://raw.githubusercontent.com/qiujianwei-iptv/iptv-live/main/jar/qf_spider_merged.jar",
+    "https://raw.githubusercontent.com/qiujianwei-iptv/iptv-live/main/jar/qf_spider_merged.jar",
+]
 
-RELOC_PREFIX = "Lcom/github/catvod/spider/wex/"
+RELOC = "wex"
 
 
 def log(msg):
@@ -78,7 +83,7 @@ def read_dex_bytes(jar_bytes):
 def run(cmd):
     p = subprocess.run(cmd, capture_output=True, text=True)
     if p.returncode != 0:
-        raise SystemExit("命令失败: %s\n%s\n%s" % (" ".join(cmd), p.stdout[-2000:], p.stderr[-2000:]))
+        raise SystemExit("命令失败: %s\n%s\n%s" % (" ".join(cmd), p.stdout[-1500:], p.stderr[-1500:]))
     return p.stdout
 
 
@@ -92,36 +97,33 @@ def assemble(src_dir, out_dex):
 
 
 def class_desc(root):
-    """返回 {descriptor: smali 文件相对路径}"""
     res = {}
     for dirpath, _, files in os.walk(root):
         for f in files:
             if not f.endswith(".smali"):
                 continue
-            full = os.path.join(dirpath, f)
-            rel = os.path.relpath(full, root)
-            desc = "L" + rel[:-6] + ";"
-            res[desc] = rel
+            rel = os.path.relpath(os.path.join(dirpath, f), root)
+            res["L" + rel[:-6] + ";"] = rel
     return res
 
 
-def sha_jar_ok(url):
+def fetch(url, label):
     try:
         data = http_get(url)
-        return data, md5(data)
+        log("  %s ← %s  %d B md5=%s" % (label, url, len(data), md5(data)))
+        return data
     except Exception as e:
-        log("  ✗ %s → %s" % (url, e))
-        return None, None
+        log("  ✗ %s %s → %s" % (label, url, e))
+        return None
 
 
 def fetch_xs_jar():
     override = os.environ.get("XS_JAR_URL")
     if override:
-        data, m = sha_jar_ok(override)
+        data = fetch(override, "潇洒 jar")
         if not data:
             raise SystemExit("潇洒 jar（覆盖地址）取不到")
-        return data, m, override
-    # 走 update_tvbox 的潇洒配置解密拿 spider
+        return data
     sys.path.insert(0, HERE)
     import update_tvbox as u
     raw = u.http_get(u.XIAOSA_URL)
@@ -133,26 +135,36 @@ def fetch_xs_jar():
         raise SystemExit("潇洒配置里没有 spider 字段")
     jar_url = spider.split(";md5;")[0]
     want = spider.split(";md5;")[1] if ";md5;" in spider else None
-    data, m = sha_jar_ok(jar_url)
+    data = fetch(jar_url, "潇洒 jar")
     if not data:
-        raise SystemExit("潇洒 jar 取不到：%s" % jar_url)
-    if want and m != want:
-        raise SystemExit("潇洒 jar md5 与配置声明不符：%s ≠ %s" % (m, want))
-    return data, m, jar_url
+        raise SystemExit("潇洒 jar 取不到")
+    if want and md5(data) != want:
+        raise SystemExit("潇洒 jar md5 与配置声明不符：%s ≠ %s" % (md5(data), want))
+    return data
 
 
 def fetch_wex_jar():
     override = os.environ.get("WEX_JAR_URL")
     if override:
-        data, m = sha_jar_ok(override)
+        data = fetch(override, "王二小 jar")
         if not data:
             raise SystemExit("王二小 jar（覆盖地址）取不到")
-        return data, m, override
+        return data
     for url in WEX_JAR_URLS:
-        data, m = sha_jar_ok(url)
-        if data and m == WEX_JAR_MD5:
-            return data, m, url
+        data = fetch(url, "王二小 jar")
+        if data and md5(data) == WEX_JAR_MD5:
+            return data
     raise SystemExit("王二小 jar 全部候选不可用或 md5 不符")
+
+
+def fetch_base_jar():
+    override = os.environ.get("BASE_JAR_URL")
+    urls = [override] if override else BASE_JAR_URLS
+    for url in urls:
+        data = fetch(url, "底座 jar")
+        if data:
+            return data
+    raise SystemExit("底座 jar 取不到（为免覆盖成空壳，本次不重建）")
 
 
 def main():
@@ -165,72 +177,87 @@ def main():
         if not os.path.exists(t):
             raise SystemExit("缺少工具 %s" % t)
 
-    work = tempfile.mkdtemp(prefix="qfj_")
-    log("工作目录 %s" % work)
+    log("→ 取上游")
+    xs_bytes = fetch_xs_jar()
+    wex_bytes = fetch_wex_jar()
+    base_bytes = fetch_base_jar()
 
+    xs_md5, wex_md5 = md5(xs_bytes), md5(wex_bytes)
     state_path = os.path.join(HERE, "jar", "upstream_state.json")
-    xs_bytes, xs_md5, xs_url = fetch_xs_jar()
-    log("潇洒 jar  %s  md5=%s  %d B" % (xs_url, xs_md5, len(xs_bytes)))
-    wex_bytes, wex_md5, wex_url = fetch_wex_jar()
-    log("王二小 jar %s  md5=%s  %d B" % (wex_url, wex_md5, len(wex_bytes)))
-
     state = {}
     if os.path.exists(state_path):
         try:
             state = json.load(open(state_path, encoding="utf-8"))
         except Exception:
             state = {}
-    if (state.get("xs_md5") == xs_md5 and state.get("wex_md5") == wex_md5 and os.path.exists(out)):
+    if state.get("xs_md5") == xs_md5 and state.get("wex_md5") == wex_md5 and os.path.exists(out):
         log("上游两个 jar 都没变化，跳过重建")
         print("MD5=%s" % md5(open(out, "rb").read()))
         return
 
-    xs_dex = os.path.join(work, "xs.dex")
-    wex_dex = os.path.join(work, "wex.dex")
-    open(xs_dex, "wb").write(read_dex_bytes(xs_bytes))
-    open(wex_dex, "wb").write(read_dex_bytes(wex_bytes))
-
-    xs_dir = os.path.join(work, "xs")
-    wex_dir = os.path.join(work, "wex")
-    baksmali(xs_dex, xs_dir)
-    baksmali(wex_dex, wex_dir)
-
-    xs_cls = class_desc(xs_dir)
-    wex_cls = class_desc(wex_dir)
-    log("潇洒类数 %d · 王二小类数 %d" % (len(xs_cls), len(wex_cls)))
+    work = tempfile.mkdtemp(prefix="qfj_")
+    log("→ 拆 smali（工作目录 %s）" % work)
+    dirs = {}
+    for name, data in (("base", base_bytes), ("xs", xs_bytes), ("wex", wex_bytes)):
+        d = os.path.join(work, name + ".dex")
+        open(d, "wb").write(read_dex_bytes(data))
+        dirs[name] = os.path.join(work, name)
+        baksmali(d, dirs[name])
+    base_cls = class_desc(dirs["base"])
+    xs_cls = class_desc(dirs["xs"])
+    wex_cls = class_desc(dirs["wex"])
+    log("   底座 %d 类 · 潇洒 %d 类 · 王二小 %d 类" % (len(base_cls), len(xs_cls), len(wex_cls)))
 
     merged = os.path.join(work, "merged")
-    shutil.copytree(xs_dir, merged)
+    shutil.copytree(dirs["base"], merged)
+    have = set(base_cls)
 
-    clashes = [d for d in wex_cls if d in xs_cls]
-    log("同名冲突类 %d 个：%s" % (len(clashes), ", ".join(c.split("/")[-1][:-1] for c in clashes[:12])))
+    # ---- 潇洒：底座没有的才加，同名保留底座 ----
+    xs_new = xs_ref = 0
+    for d, rel in xs_cls.items():
+        if d in have:
+            xs_ref += 1
+            continue
+        dst = os.path.join(merged, rel)
+        os.makedirs(os.path.dirname(dst), exist_ok=True)
+        shutil.copy(os.path.join(dirs["xs"], rel), dst)
+        have.add(d)
+        xs_new += 1
+    log("   潇洒：新增 %d 类，同名沿用底座 %d 类" % (xs_new, xs_ref))
 
-    # 名字迁移映射：冲突类整体挪到 wex. 子包
+    # ---- 王二小：底座没有才加；同名冲突迁 wex. 子包并改写内部引用 ----
     rename = {}
     for d in wex_cls:
-        if d in xs_cls:
-            inner = d[1:-1]
-            parts = inner.split("/")
-            rename[d] = "L" + "/".join(parts[:-1] + ["wex", parts[-1]]) + ";"
+        if d not in have:
+            continue
+        parts = d[1:-1].split("/")
+        cand = "L" + "/".join(parts[:-1] + [RELOC, parts[-1]]) + ";"
+        n = 1
+        while cand in have or cand in rename.values():
+            n += 1
+            cand = "L" + "/".join(parts[:-1] + [RELOC + str(n), parts[-1]]) + ";"
+        rename[d] = cand
 
-    added = 0
+    wex_new = 0
     for d, rel in wex_cls.items():
-        src = os.path.join(wex_dir, rel)
-        txt = open(src, encoding="utf-8").read()
+        txt = open(os.path.join(dirs["wex"], rel), encoding="utf-8").read()
         newd = rename.get(d, d)
-        if rename:
-            for old, new in rename.items():
-                if old in txt:
-                    txt = txt.replace(old, new)
-        rel_new = newd[1:-1] + ".smali"
+        for old, new in rename.items():
+            if old in txt:
+                txt = txt.replace(old, new)
+        if newd in have:
+            continue
+        if newd != d:
+            rel_new = newd[1:-1] + ".smali"
+        else:
+            rel_new = rel
         dst = os.path.join(merged, rel_new)
         os.makedirs(os.path.dirname(dst), exist_ok=True)
         open(dst, "w", encoding="utf-8").write(txt)
-        added += 1
+        have.add(newd)
+        wex_new += 1
+    log("   王二小：新增 %d 类（其中迁包 %d 类）" % (wex_new, len(rename)))
 
-    log("并入王二小类 %d 个（其中迁包 %d 个）" % (added, len(rename)))
-
-    # 注入自有类
     own = 0
     if os.path.isdir(OWN_SMALI):
         for f in os.listdir(OWN_SMALI):
@@ -238,25 +265,24 @@ def main():
                 shutil.copy(os.path.join(OWN_SMALI, f),
                             os.path.join(merged, "com", "github", "catvod", "spider", f))
                 own += 1
-    log("注入自有类 %d 个" % own)
+    log("   自有类 %d 个已注入" % own)
 
+    log("→ 汇编 + 回读校验")
     merged_dex = os.path.join(work, "classes.dex")
     assemble(merged, merged_dex)
-
-    # 回读校验
     ck = os.path.join(work, "ck")
     baksmali(merged_dex, ck)
     ck_cls = class_desc(ck)
-    got_own = [c for c in ck_cls if c in ("Lcom/github/catvod/spider/QfUpdate;", "Lcom/github/catvod/spider/QfToast;")]
-    if len(ck_cls) < len(xs_cls):
-        raise SystemExit("❌ 合并后类数 %d 少于潇洒 %d，放弃写入" % (len(ck_cls), len(xs_cls)))
-    if "QfUpdate" not in "".join(got_own):
+    if len(ck_cls) < len(base_cls):
+        raise SystemExit("❌ 合并后 %d 类少于底座 %d 类，放弃写入" % (len(ck_cls), len(base_cls)))
+    if "Lcom/github/catvod/spider/QfUpdate;" not in ck_cls:
         raise SystemExit("❌ 回读校验找不到 QfUpdate")
-    log("回读校验通过：%d 类（潇洒 %d + 王二小 %d + 自有 %d）" % (len(ck_cls), len(xs_cls), added, own))
+    log("   通过：%d 类（底座 %d + 潇洒 %d + 王二小 %d + 自有 %d）"
+        % (len(ck_cls), len(base_cls), xs_new, wex_new, own))
 
-    # 打包：沿用潇洒 jar 的非 dex 资源
+    # ---- 打包：沿用底座 jar 的非 dex 资源 ----
     zbuf = io.BytesIO()
-    with zipfile.ZipFile(io.BytesIO(xs_bytes)) as zin, zipfile.ZipFile(zbuf, "w", zipfile.ZIP_DEFLATED) as zout:
+    with zipfile.ZipFile(io.BytesIO(base_bytes)) as zin, zipfile.ZipFile(zbuf, "w", zipfile.ZIP_DEFLATED) as zout:
         for item in zin.infolist():
             if re.match(r"classes\d*\.dex$", item.filename):
                 continue
@@ -266,17 +292,14 @@ def main():
         zout.writestr(zi, open(merged_dex, "rb").read())
 
     data = zbuf.getvalue()
-    old_md5 = None
-    if os.path.exists(out):
-        old_md5 = md5(open(out, "rb").read())
+    old_md5 = md5(open(out, "rb").read()) if os.path.exists(out) else None
     new_md5 = md5(data)
     if old_md5 == new_md5:
-        log("合并 jar 无变化（md5 相同），不写文件")
+        log("合并 jar 无变化，不写文件")
     else:
         os.makedirs(os.path.dirname(out), exist_ok=True)
         open(out, "wb").write(data)
-        log("写入 %s  %d B  md5=%s（原 %s）" % (out, len(data), new_md5, old_md5))
-    if old_md5 != new_md5:
+        log("→ 写入 %s  %d B  md5=%s（原 %s）" % (out, len(data), new_md5, old_md5))
         json.dump({"xs_md5": xs_md5, "wex_md5": wex_md5},
                   open(state_path, "w", encoding="utf-8"), ensure_ascii=False, indent=1)
     print("MD5=%s" % new_md5)
