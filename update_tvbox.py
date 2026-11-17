@@ -39,9 +39,9 @@ UA = "okhttp/3.14.9"
 TIMEOUT = 60
 
 # ---- 自有【合并 jar】（潇洒 + 王二小，上游 jar 失效都不再影响我们）----
-QF_JAR_MD5 = "ee4797ac65c1eed166ea59b2cea3033a"
+QF_JAR_MD5 = "9b4135727c9fc829cdc2c4744271f777"
 QF_JAR_URLS = [
-    "https://aka.doubaocdn.com/s/KGhws3ZgV2",
+    "https://aka.doubaocdn.com/s/7QUbsw9iuj",
     "https://gh-proxy.com/https://raw.githubusercontent.com/qiujianwei-iptv/iptv-live/main/jar/qf_spider_merged.jar",
     "https://raw.githubusercontent.com/qiujianwei-iptv/iptv-live/main/jar/qf_spider_merged.jar",
 ]
@@ -59,24 +59,13 @@ NO_SEARCH_APIS = {"csp_Config", "csp_MyDriveGuard"}
 # 王二小自己的两个入口（配置中心 / 我的网盘）：不参与去重，必须常驻，且不参与搜索
 WEX_KEEP_KEYS = {"Wexconfig", "MyPan"}
 
-# 王二小那边需要「他自己的配置中心」授权的站，不并入（网盘配置用潇洒的）
-WEX_NO_MERGE_APIS = {
-    "csp_PanConfigGuard",      # 他的配置中心
-    "csp_MyPanGuard",          # 他的我的网盘
-    "csp_FakeAi115ShareGuard",
-    "csp_EmbyGuard",
-    "csp_EmbyDiyGuard",
-    "csp_AListGuard",
-    "csp_WebDAVGuard",
-    "csp_DiyVodGuard",
-}
+# 王二小那边需要「他自己的配置中心」授权的站：全部并入，两套网盘入口都保留
+# （潇洒「配置 • 中心」、王二小「🐮配置┃中心🐮」+「🐮我的┃网盘🐮」互不相通，
+#   王二小的网盘站点必须在那两个入口各扫一次授权才可播放）
+WEX_NO_MERGE_APIS = set()
 
-# 已确认同源（换个名字的同一家），保留潇洒那份
-WEX_SAME_SOURCE = {
-    "csp_AiNewZhiNan4KGuard": "指南",   # 他的「原盘」= 潇洒「指南」csp_4KZhinan
-    "csp_AiNewYiDong4KGuard": "移动",   # 他的「逸动」= 潇洒「移动」csp_Yidong4K
-    "csp_AiNewKuaiYingGuard": "快映",   # 他的「快影」= 潇洒「快映」csp_PanWebShare
-}
+# 已确认同源：仅记录说明，不再据此剔除（改由品牌词判重决定去留）
+WEX_SAME_SOURCE = {}
 
 # 关键词屏蔽表：站点 key / name 命中即剔除（家长向 / 非影视类站点不要）
 BLOCKED_KEYWORDS = [
@@ -230,18 +219,15 @@ _TAILWORDS = ("机器人", "影视", "短剧", "网盘", "云盘", "搜索", "�
 
 
 def name_tokens(name):
-    """把「💓虎斑┃4K💓」这类站名拆成品牌词：['虎斑']"""
-    s = re.sub(r"[^\u4e00-\u9fa5A-Za-z0-9]+", " ", name or "")
-    out = []
-    for p in [x for x in s.split() if x]:
-        if p.lower() in _TAGS or p.isdigit():
-            continue
-        for t in _TAILWORDS:
-            p = p.replace(t, "")
-        p = p.strip()
-        if p and not p.isdigit():
-            out.append(p)
-    return out
+    """把「💓虎斑┃4K💓」这类站名拆成品牌词：['虎斑']
+
+    规则：取「┃」「•」「·」等分隔符之前的第一段，去掉 emoji/符号后小写。
+    这样「💥热播┃秒播💥」与「热播 • APP」会撞在同一个品牌词「热播」上。
+    """
+    raw = (name or "").replace("\u200d", "").replace("\ufe0f", "").strip()
+    head = re.split(r"[┃|•·\u2022]", raw)[0]
+    head = re.sub(r"[^\u4e00-\u9fa5A-Za-z0-9]", "", head).lower()
+    return [head] if head else []
 
 
 def brand_index(sites):
@@ -402,6 +388,17 @@ def main(out_path="tvbox.json"):
 
     with open(out_path, "w", encoding="utf-8", newline="\n") as f:
         f.write(json.dumps(out, ensure_ascii=False, indent=1))
+
+    # ---- 同步产出「本地包模板」：jar 全部写成 LOCALJAR 占位 ----
+    tpl = json.loads(json.dumps(out, ensure_ascii=False))
+    tpl["spider"] = "LOCALJAR"
+    for s in tpl["sites"]:
+        s["jar"] = "LOCALJAR"
+    tpl_path = os.path.join(os.path.dirname(os.path.abspath(out_path)) or ".", "tvbox_local.json")
+    with open(tpl_path, "w", encoding="utf-8", newline="\n") as f:
+        f.write(json.dumps(tpl, ensure_ascii=False, indent=1))
+    print(f"   模板 {os.path.basename(tpl_path)}：{len(tpl['sites'])} 站 / "
+          f"{os.path.getsize(tpl_path)} B / LOCALJAR {sum(1 for s in tpl['sites'] if s['jar']=='LOCALJAR')+1} 处")
 
     size = os.path.getsize(out_path)
     digest = hashlib.md5(open(out_path, "rb").read()).hexdigest()
