@@ -169,18 +169,23 @@ def fetch_base_jar():
 
 def main():
     out = os.path.join(HERE, "jar", "qf_spider_merged.jar")
+    mode = os.environ.get("MODE", "union")
     for i, a in enumerate(sys.argv[1:]):
         if a == "--out":
             out = os.path.abspath(sys.argv[i + 2])
+        if a == "--mode":
+            mode = sys.argv[i + 2]
 
     for t in (SMALI_JAR, BAKSMALI_JAR):
         if not os.path.exists(t):
             raise SystemExit("缺少工具 %s" % t)
+    if mode not in ("union", "slim"):
+        raise SystemExit("mode 只能是 union 或 slim")
 
-    log("→ 取上游")
+    log("→ 取上游（mode=%s）" % mode)
     xs_bytes = fetch_xs_jar()
     wex_bytes = fetch_wex_jar()
-    base_bytes = fetch_base_jar()
+    base_bytes = None if mode == "slim" else fetch_base_jar()
 
     xs_md5, wex_md5 = md5(xs_bytes), md5(wex_bytes)
     state_path = os.path.join(HERE, "jar", "upstream_state.json")
@@ -190,7 +195,8 @@ def main():
             state = json.load(open(state_path, encoding="utf-8"))
         except Exception:
             state = {}
-    if state.get("xs_md5") == xs_md5 and state.get("wex_md5") == wex_md5 and os.path.exists(out):
+    if (state.get("xs_md5") == xs_md5 and state.get("wex_md5") == wex_md5
+            and state.get("mode") == mode and os.path.exists(out)):
         log("上游两个 jar 都没变化，跳过重建")
         print("MD5=%s" % md5(open(out, "rb").read()))
         return
@@ -198,46 +204,77 @@ def main():
     work = tempfile.mkdtemp(prefix="qfj_")
     log("→ 拆 smali（工作目录 %s）" % work)
     dirs = {}
-    for name, data in (("base", base_bytes), ("xs", xs_bytes), ("wex", wex_bytes)):
+    blobs = [("xs", xs_bytes), ("wex", wex_bytes)]
+    if base_bytes:
+        blobs.insert(0, ("base", base_bytes))
+    for name, data in blobs:
         d = os.path.join(work, name + ".dex")
         open(d, "wb").write(read_dex_bytes(data))
         dirs[name] = os.path.join(work, name)
         baksmali(d, dirs[name])
-    base_cls = class_desc(dirs["base"])
     xs_cls = class_desc(dirs["xs"])
     wex_cls = class_desc(dirs["wex"])
-    log("   底座 %d 类 · 潇洒 %d 类 · 王二小 %d 类" % (len(base_cls), len(xs_cls), len(wex_cls)))
+    base_cls = class_desc(dirs["base"]) if base_bytes else {}
+    log("   潇洒 %d 类 · 王二小 %d 类 · 底座 %d 类" % (len(xs_cls), len(wex_cls), len(base_cls)))
 
     merged = os.path.join(work, "merged")
-    shutil.copytree(dirs["base"], merged)
-    have = set(base_cls)
 
-    # ---- 潇洒：底座没有的才加，同名保留底座 ----
-    xs_new = xs_ref = 0
-    for d, rel in xs_cls.items():
-        if d in have:
-            xs_ref += 1
-            continue
-        dst = os.path.join(merged, rel)
-        os.makedirs(os.path.dirname(dst), exist_ok=True)
-        shutil.copy(os.path.join(dirs["xs"], rel), dst)
-        have.add(d)
-        xs_new += 1
-    log("   潇洒：新增 %d 类，同名沿用底座 %d 类" % (xs_new, xs_ref))
-
-    # ---- 王二小：底座里已有的（含之前迁过包的）一律沿用，只补真正新增的类 ----
-    # 底座里那套已经在真机跑通过，绝不动它；assets 里的 guard / .so 打包时一起带上
-    wex_new = wex_keep = 0
-    for d, rel in wex_cls.items():
-        if d in have:
-            wex_keep += 1
-            continue
-        dst = os.path.join(merged, rel)
-        os.makedirs(os.path.dirname(dst), exist_ok=True)
-        shutil.copy(os.path.join(dirs["wex"], rel), dst)
-        have.add(d)
-        wex_new += 1
-    log("   王二小：沿用底座 %d 类，新增 %d 类" % (wex_keep, wex_new))
+    if mode == "slim":
+        # 只按当前上游重建：潇洒全量 + 王二小（同名迁包）+ 自有类，上游删掉的类不再保留
+        shutil.copytree(dirs["xs"], merged)
+        have = set(xs_cls)
+        rename = {}
+        for d in wex_cls:
+            if d not in have:
+                continue
+            parts = d[1:-1].split("/")
+            cand = "L" + "/".join(parts[:-1] + [RELOC, parts[-1]]) + ";"
+            n = 1
+            while cand in have or cand in rename.values():
+                n += 1
+                cand = "L" + "/".join(parts[:-1] + [RELOC + str(n), parts[-1]]) + ";"
+            rename[d] = cand
+        wex_new = 0
+        for d, rel in wex_cls.items():
+            txt = open(os.path.join(dirs["wex"], rel), encoding="utf-8").read()
+            newd = rename.get(d, d)
+            for old, new in rename.items():
+                if old in txt:
+                    txt = txt.replace(old, new)
+            if newd in have:
+                continue
+            dst = os.path.join(merged, newd[1:-1] + ".smali")
+            os.makedirs(os.path.dirname(dst), exist_ok=True)
+            open(dst, "w", encoding="utf-8").write(txt)
+            have.add(newd)
+            wex_new += 1
+        log("   潇洒全量 %d 类 + 王二小 %d 类（迁包 %d）" % (len(xs_cls), wex_new, len(rename)))
+        xs_new = 0
+    else:
+        shutil.copytree(dirs["base"], merged)
+        have = set(base_cls)
+        xs_new = xs_ref = 0
+        for d, rel in xs_cls.items():
+            if d in have:
+                xs_ref += 1
+                continue
+            dst = os.path.join(merged, rel)
+            os.makedirs(os.path.dirname(dst), exist_ok=True)
+            shutil.copy(os.path.join(dirs["xs"], rel), dst)
+            have.add(d)
+            xs_new += 1
+        log("   潇洒：新增 %d 类，同名沿用底座 %d 类" % (xs_new, xs_ref))
+        wex_new = wex_keep = 0
+        for d, rel in wex_cls.items():
+            if d in have:
+                wex_keep += 1
+                continue
+            dst = os.path.join(merged, rel)
+            os.makedirs(os.path.dirname(dst), exist_ok=True)
+            shutil.copy(os.path.join(dirs["wex"], rel), dst)
+            have.add(d)
+            wex_new += 1
+        log("   王二小：沿用底座 %d 类，新增 %d 类" % (wex_keep, wex_new))
 
     own = 0
     if os.path.isdir(OWN_SMALI):
@@ -254,25 +291,26 @@ def main():
     ck = os.path.join(work, "ck")
     baksmali(merged_dex, ck)
     ck_cls = class_desc(ck)
-    if len(ck_cls) < len(base_cls):
-        raise SystemExit("❌ 合并后 %d 类少于底座 %d 类，放弃写入" % (len(ck_cls), len(base_cls)))
+    floor = len(base_cls) if mode == "union" else len(xs_cls)
+    if len(ck_cls) < floor:
+        raise SystemExit("❌ 合并后 %d 类少于下限 %d 类，放弃写入" % (len(ck_cls), floor))
     if "Lcom/github/catvod/spider/QfUpdate;" not in ck_cls:
         raise SystemExit("❌ 回读校验找不到 QfUpdate")
-    log("   通过：%d 类（底座 %d + 潇洒 %d + 王二小 %d + 自有 %d）"
-        % (len(ck_cls), len(base_cls), xs_new, wex_new, own))
+    log("   通过：%d 类（下限 %d）" % (len(ck_cls), floor))
 
-    # ---- 打包：资源取三方的并集（底座优先，再补潇洒、王二小的 assets）----
-    # 王二小真正的站点代码在 assets/wexshinidie.guard + wexguard_v*.so 里，必须带上
+    # ---- 打包：资源取三方并集（底座优先），王二小的 guard/.so 必须带上 ----
     zbuf = io.BytesIO()
     with zipfile.ZipFile(zbuf, "w", zipfile.ZIP_DEFLATED) as zout:
         seen = set()
-        for label, blob in (("base", base_bytes), ("xs", xs_bytes), ("wex", wex_bytes)):
+        for label in ("base", "xs", "wex"):
+            if label not in dirs:
+                continue
+            blob = {"base": base_bytes, "xs": xs_bytes, "wex": wex_bytes}[label]
             with zipfile.ZipFile(io.BytesIO(blob)) as zin:
                 for item in zin.infolist():
                     name = item.filename
                     if re.match(r"classes\d*\.dex$", name) or name in seen:
                         continue
-                    # 签名残留会带来校验问题，一律不进包
                     if re.match(r"META-INF/[^/]+\.(RSA|SF|DSA|EC)$", name, re.I):
                         continue
                     seen.add(name)
@@ -291,7 +329,7 @@ def main():
         os.makedirs(os.path.dirname(out), exist_ok=True)
         open(out, "wb").write(data)
         log("→ 写入 %s  %d B  md5=%s（原 %s）" % (out, len(data), new_md5, old_md5))
-        json.dump({"xs_md5": xs_md5, "wex_md5": wex_md5},
+        json.dump({"xs_md5": xs_md5, "wex_md5": wex_md5, "mode": mode},
                   open(state_path, "w", encoding="utf-8"), ensure_ascii=False, indent=1)
     print("MD5=%s" % new_md5)
     shutil.rmtree(work, ignore_errors=True)
