@@ -225,38 +225,19 @@ def main():
         xs_new += 1
     log("   潇洒：新增 %d 类，同名沿用底座 %d 类" % (xs_new, xs_ref))
 
-    # ---- 王二小：底座没有才加；同名冲突迁 wex. 子包并改写内部引用 ----
-    rename = {}
-    for d in wex_cls:
-        if d not in have:
-            continue
-        parts = d[1:-1].split("/")
-        cand = "L" + "/".join(parts[:-1] + [RELOC, parts[-1]]) + ";"
-        n = 1
-        while cand in have or cand in rename.values():
-            n += 1
-            cand = "L" + "/".join(parts[:-1] + [RELOC + str(n), parts[-1]]) + ";"
-        rename[d] = cand
-
-    wex_new = 0
+    # ---- 王二小：底座里已有的（含之前迁过包的）一律沿用，只补真正新增的类 ----
+    # 底座里那套已经在真机跑通过，绝不动它；assets 里的 guard / .so 打包时一起带上
+    wex_new = wex_keep = 0
     for d, rel in wex_cls.items():
-        txt = open(os.path.join(dirs["wex"], rel), encoding="utf-8").read()
-        newd = rename.get(d, d)
-        for old, new in rename.items():
-            if old in txt:
-                txt = txt.replace(old, new)
-        if newd in have:
+        if d in have:
+            wex_keep += 1
             continue
-        if newd != d:
-            rel_new = newd[1:-1] + ".smali"
-        else:
-            rel_new = rel
-        dst = os.path.join(merged, rel_new)
+        dst = os.path.join(merged, rel)
         os.makedirs(os.path.dirname(dst), exist_ok=True)
-        open(dst, "w", encoding="utf-8").write(txt)
-        have.add(newd)
+        shutil.copy(os.path.join(dirs["wex"], rel), dst)
+        have.add(d)
         wex_new += 1
-    log("   王二小：新增 %d 类（其中迁包 %d 类）" % (wex_new, len(rename)))
+    log("   王二小：沿用底座 %d 类，新增 %d 类" % (wex_keep, wex_new))
 
     own = 0
     if os.path.isdir(OWN_SMALI):
@@ -280,13 +261,23 @@ def main():
     log("   通过：%d 类（底座 %d + 潇洒 %d + 王二小 %d + 自有 %d）"
         % (len(ck_cls), len(base_cls), xs_new, wex_new, own))
 
-    # ---- 打包：沿用底座 jar 的非 dex 资源 ----
+    # ---- 打包：资源取三方的并集（底座优先，再补潇洒、王二小的 assets）----
+    # 王二小真正的站点代码在 assets/wexshinidie.guard + wexguard_v*.so 里，必须带上
     zbuf = io.BytesIO()
-    with zipfile.ZipFile(io.BytesIO(base_bytes)) as zin, zipfile.ZipFile(zbuf, "w", zipfile.ZIP_DEFLATED) as zout:
-        for item in zin.infolist():
-            if re.match(r"classes\d*\.dex$", item.filename):
-                continue
-            zout.writestr(item, zin.read(item.filename))
+    with zipfile.ZipFile(zbuf, "w", zipfile.ZIP_DEFLATED) as zout:
+        seen = set()
+        for label, blob in (("base", base_bytes), ("xs", xs_bytes), ("wex", wex_bytes)):
+            with zipfile.ZipFile(io.BytesIO(blob)) as zin:
+                for item in zin.infolist():
+                    name = item.filename
+                    if re.match(r"classes\d*\.dex$", name) or name in seen:
+                        continue
+                    # 签名残留会带来校验问题，一律不进包
+                    if re.match(r"META-INF/[^/]+\.(RSA|SF|DSA|EC)$", name, re.I):
+                        continue
+                    seen.add(name)
+                    zout.writestr(item, zin.read(name))
+                    log("   资源 %-28s ← %s" % (name, label))
         zi = zipfile.ZipInfo("classes.dex", date_time=(1980, 1, 1, 0, 0, 0))
         zi.compress_type = zipfile.ZIP_DEFLATED
         zout.writestr(zi, open(merged_dex, "rb").read())
