@@ -85,10 +85,12 @@ jobs:
         run: |
           git config user.name "tvbox-bot"
           git config user.email "actions@users.noreply.github.com"
-          if [ -z "$(git status --porcelain)" ]; then
+          git add -A
+          git status --short
+          if git diff --cached --quiet; then
             echo "没有变化，跳过提交"
             exit 0
           fi
-          git add jar/qf_spider_merged.jar jar/upstream_state.json update_tvbox.py tvbox.json tvbox_local.json
           git commit -m "每周合并上游 jar（md5 ${NEW_MD5}）$(date -u '+%Y-%m-%d')"
-          git push
+          git pull --rebase origin main || true
+          git push || { echo "push 失败，重试一次"; git pull --rebase origin main; git push; }
