@@ -39,7 +39,7 @@ UA = "okhttp/3.14.9"
 TIMEOUT = 60
 
 # ---- 自有【合并 jar】（潇洒 + 王二小，上游 jar 失效都不再影响我们）----
-QF_JAR_MD5 = "1ade76d8a994db1965c3d8d10e570961"
+QF_JAR_MD5 = "b6811899f7890737061f94be5fad21cc"
 QF_JAR_URLS = [
     "https://gh-proxy.com/https://raw.githubusercontent.com/qiujianwei-iptv/iptv-live/main/jar/qf_spider_merged.jar",
     "https://raw.githubusercontent.com/qiujianwei-iptv/iptv-live/main/jar/qf_spider_merged.jar",
