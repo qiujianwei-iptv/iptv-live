@@ -6,7 +6,7 @@
  "sites": [
   {
    "key": "豆瓣",
-   "name": "秋风线路①",
+   "name": "秋风线路",
    "type": 3,
    "api": "csp_Douban",
    "searchable": 0,
