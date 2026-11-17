@@ -41,8 +41,10 @@ jobs:
 
       - name: 合并 jar
         run: |
-          python rebuild_jar.py --out jar/qf_spider_merged.jar | tee /tmp/rebuild.log
+          set -o pipefail
+          python rebuild_jar.py --out jar/qf_spider_merged.jar 2>&1 | tee /tmp/rebuild.log
           NEW_MD5=$(grep -o 'MD5=[0-9a-f]\{32\}' /tmp/rebuild.log | tail -1 | cut -d= -f2)
+          if [ -z "$NEW_MD5" ]; then echo "❌ 没拿到合并后 jar 的 md5"; exit 1; fi
           echo "NEW_MD5=$NEW_MD5" >> $GITHUB_ENV
 
       - name: 校验 jar
