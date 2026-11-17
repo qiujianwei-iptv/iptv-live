@@ -88,7 +88,7 @@ jobs:
           OLD=$(git show HEAD:tvbox.json | python3 -c "import json,sys;print(len(json.load(sys.stdin)['sites']))")
           NEW=$(python3 -c "import json;print(len(json.load(open('tvbox.json'))['sites']))")
           echo "站点数：上次 $OLD → 本次 $NEW"
-          if [ "$NEW" -lt $((OLD - 5)) ]; then
+          if [ "$NEW" -lt $((OLD - 10)) ]; then
             echo "❌ 站点数掉得太多，判定上游异常，本次保留旧 jar 与旧配置"
             git checkout -- jar/qf_spider_merged.jar update_tvbox.py tvbox.json tvbox_local.json 2>/dev/null || true
             rm -f jar/upstream_state.json
