@@ -47,6 +47,26 @@
    "jar": "LOCALJAR"
   },
   {
+   "key": "云播",
+   "name": "云播 • APP",
+   "type": 3,
+   "api": "csp_AppYB",
+   "searchable": 1,
+   "quickSearch": 1,
+   "filterable": 1,
+   "jar": "LOCALJAR"
+  },
+  {
+   "key": "未来",
+   "name": "未来 • APP",
+   "type": 3,
+   "api": "csp_AppWL",
+   "searchable": 1,
+   "quickSearch": 1,
+   "filterable": 0,
+   "jar": "LOCALJAR"
+  },
+  {
    "key": "下饭",
    "name": "下饭 • APP",
    "type": 3,
