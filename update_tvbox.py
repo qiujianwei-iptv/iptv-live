@@ -362,6 +362,11 @@ def main(out_path="tvbox.json"):
 
     lives = [l for l in (xs.get("lives") or []) if l.get("url")] or old_lives or DEFAULT_LIVES
 
+    # ---- 站点改名（首页第一站统一叫「秋风线路」）----
+    for s in sites:
+        if s.get("api") == "csp_Douban":
+            s["name"] = "秋风线路"
+
     out = {
         "spider": jar_line,
         "wallpaper": xs.get("wallpaper"),
