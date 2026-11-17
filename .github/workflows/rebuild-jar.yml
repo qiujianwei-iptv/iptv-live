@@ -1,0 +1,94 @@
+name: 每周合并上游 jar
+
+# 每周二北京时间 05:10（UTC 周一 21:10）检查潇洒 / 王二小 的 jar 有没有换，换了就自动合并
+on:
+  schedule:
+    - cron: "10 21 * * 1"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: rebuild-jar
+  cancel-in-progress: false
+
+jobs:
+  rebuild:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+
+    steps:
+      - name: 拉取仓库
+        uses: actions/checkout@v4
+
+      - name: 准备 Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: 准备 JDK（smali/baksmali 要 java）
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "17"
+
+      - name: 安装依赖（可失败）
+        continue-on-error: true
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install pycryptodome
+
+      - name: 合并 jar
+        run: |
+          python rebuild_jar.py --out jar/qf_spider_merged.jar | tee /tmp/rebuild.log
+          NEW_MD5=$(grep -o 'MD5=[0-9a-f]\{32\}' /tmp/rebuild.log | tail -1 | cut -d= -f2)
+          echo "NEW_MD5=$NEW_MD5" >> $GITHUB_ENV
+
+      - name: 校验 jar
+        run: |
+          python - <<'PY'
+          import zipfile, sys
+          z = zipfile.ZipFile("jar/qf_spider_merged.jar")
+          dex = z.read("classes.dex")
+          for c in (b"Lcom/github/catvod/spider/QfUpdate;", b"Lcom/github/catvod/spider/QfToast;"):
+              assert c in dex, f"缺少 {c}"
+          print("jar 校验通过:", len(dex), "B dex")
+          PY
+
+      - name: 用新 jar 重建配置
+        run: |
+          python - <<'PY'
+          import re, os
+          p = "update_tvbox.py"
+          s = open(p, encoding="utf-8").read()
+          s = re.sub(r'QF_JAR_MD5 = "[0-9a-f]{32}"', 'QF_JAR_MD5 = "%s"' % os.environ["NEW_MD5"], s)
+          open(p, "w", encoding="utf-8").write(s)
+          print("QF_JAR_MD5 →", os.environ["NEW_MD5"])
+          PY
+          QF_JAR_LOCAL=jar/qf_spider_merged.jar python update_tvbox.py tvbox.json
+
+      - name: 校验配置
+        run: |
+          python - <<'PY'
+          import json
+          d = json.load(open("tvbox.json", encoding="utf-8"))
+          sites = d["sites"]
+          assert len(sites) >= 60, f"站点数异常: {len(sites)}"
+          t = json.load(open("tvbox_local.json", encoding="utf-8"))
+          assert t["spider"] == "LOCALJAR"
+          assert all(s["jar"] == "LOCALJAR" for s in t["sites"])
+          print(f"校验通过: {len(sites)} 站点")
+          PY
+
+      - name: 提交变更
+        run: |
+          git config user.name "tvbox-bot"
+          git config user.email "actions@users.noreply.github.com"
+          if [ -z "$(git status --porcelain)" ]; then
+            echo "没有变化，跳过提交"
+            exit 0
+          fi
+          git add jar/qf_spider_merged.jar jar/upstream_state.json update_tvbox.py tvbox.json tvbox_local.json
+          git commit -m "每周合并上游 jar（md5 ${NEW_MD5}）$(date -u '+%Y-%m-%d')"
+          git push
