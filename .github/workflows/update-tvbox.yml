@@ -58,11 +58,19 @@ jobs:
         run: |
           git config user.name "tvbox-bot"
           git config user.email "actions@users.noreply.github.com"
-          if [ -z "$(git status --porcelain tvbox.json)" ]; then
+          if [ -z "$(git status --porcelain tvbox.json tvbox_local.json)" ]; then
             echo "上游无变化，跳过提交"
             exit 0
           fi
           COUNT=$(python -c "import json;print(len(json.load(open('tvbox.json'))['sites']))")
-          git add tvbox.json
+          python - <<'PY2'
+          import json
+          t = json.load(open("tvbox_local.json", encoding="utf-8"))
+          assert t["spider"] == "LOCALJAR", "模板 spider 必须是 LOCALJAR"
+          assert all(s["jar"] == "LOCALJAR" for s in t["sites"]), "模板站点 jar 必须全是 LOCALJAR"
+          assert len(t["sites"]) == json.load(open("tvbox.json", encoding="utf-8"))["sites"].__len__()
+          print(f"模板校验通过: {len(t['sites'])} 站")
+          PY2
+          git add tvbox.json tvbox_local.json
           git commit -m "自动同步上游线路（${COUNT} 站点）$(date -u '+%Y-%m-%d %H:%M UTC')"
           git push
