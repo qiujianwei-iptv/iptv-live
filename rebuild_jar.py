@@ -125,7 +125,9 @@ def fetch_xs_jar():
     sys.path.insert(0, HERE)
     import update_tvbox as u
     raw = u.http_get(u.XIAOSA_URL)
-    cfg = json.loads(u.decrypt_xiaosa(raw))
+    cfg = u.decrypt_xiaosa(raw)
+    if isinstance(cfg, str):
+        cfg = json.loads(cfg)
     spider = (cfg.get("spider") or "").strip()
     if not spider:
         raise SystemExit("潇洒配置里没有 spider 字段")
