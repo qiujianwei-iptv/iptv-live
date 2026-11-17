@@ -277,8 +277,16 @@ def merge_wex(xs_sites, wex_sites, wex_classes):
 
 def main(out_path="tvbox.json"):
     print("→ 解析自有合并 jar…")
-    candidates = [f"{u};md5;{QF_JAR_MD5}" for u in QF_JAR_URLS]
-    jar_classes, jar_url, jar_md5 = load_first_working_jar(candidates, want_md5=QF_JAR_MD5)
+    local_jar = os.environ.get("QF_JAR_LOCAL")
+    if local_jar and os.path.exists(local_jar):
+        with open(local_jar, "rb") as f:
+            data = f.read()
+        jar_classes, jar_md5 = jar_classes_and_md5(data)
+        jar_url = QF_JAR_URLS[0]
+        print(f"   使用本地刚合成的 jar · {len(jar_classes)} 类 · md5={jar_md5}")
+    else:
+        candidates = [f"{u};md5;{QF_JAR_MD5}" for u in QF_JAR_URLS]
+        jar_classes, jar_url, jar_md5 = load_first_working_jar(candidates, want_md5=QF_JAR_MD5)
     jar_line = f"{jar_url};md5;{jar_md5}"
     print(f"   合并 jar 来自 {jar_url} · {len(jar_classes)} 类 · md5={jar_md5}")
 
