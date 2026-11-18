@@ -69,7 +69,7 @@ WEX_SAME_SOURCE = {}
 
 # 关键词屏蔽表：站点 key / name 命中即剔除（家长向 / 非影视类站点不要）
 BLOCKED_KEYWORDS = [
-    "玩偶", "新片", "预告", "磁力", "荐片", "体育", "呦呦", "蜻蜓", "听书", "戏曲",
+    "玩偶", "观影", "4K", "新片", "预告", "磁力", "荐片", "体育", "呦呦", "蜻蜓", "听书", "戏曲",
     "儿童", "音乐", "哔哩", "课堂", "教育", "教学", "养生", "动漫", "看球",
     "直播", "小说", "弹幕",
 ]
@@ -195,7 +195,11 @@ def load_first_working_jar(candidates, want_md5=None):
 # ---------- 站点规则 ----------
 
 def is_blocked(site):
-    text = f"{site.get('key', '')} {site.get('name', '')}".lower()
+    # 按站点名称匹配关键词（与 APP 端“屏蔽”行为一致）；api 以 .py 结尾的同样剔除
+    text = str(site.get("name", "")).lower()
+    api = str(site.get("api", "")).lower()
+    if api.endswith(".py"):
+        return ".py"
     for kw in BLOCKED_KEYWORDS:
         if kw.lower() in text:
             return kw
