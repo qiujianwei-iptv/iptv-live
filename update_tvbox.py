@@ -74,6 +74,10 @@ BLOCKED_KEYWORDS = [
     "直播", "小说", "弹幕",
 ]
 
+# 按 api 家族屏蔽：网盘盘搜/加壳家族（搜索能出链接、点开解析不出播放地址，
+# 且详情异常会把 APP 的搜索列表清空，必须重搜）
+BLOCKED_API_PREFIX = ["csp_AiNew", "csp_AiPan", "csp_AiQw", "csp_Emby"]
+
 # 站点数低于这个值就认为上游异常，不覆盖线上文件
 MIN_SITES = 60
 
@@ -200,6 +204,9 @@ def is_blocked(site):
     api = str(site.get("api", "")).lower()
     if api.endswith(".py"):
         return ".py"
+    for pf in BLOCKED_API_PREFIX:
+        if api.startswith(pf.lower()):
+            return "类:" + pf
     for kw in BLOCKED_KEYWORDS:
         if kw.lower() in text:
             return kw
