@@ -74,9 +74,16 @@ BLOCKED_KEYWORDS = [
     "直播", "小说", "弹幕",
 ]
 
-# 按 api 家族屏蔽：网盘盘搜/加壳家族（搜索能出链接、点开解析不出播放地址，
-# 且详情异常会把 APP 的搜索列表清空，必须重搜）
-BLOCKED_API_PREFIX = ["csp_AiNew", "csp_AiPan", "csp_AiQw", "csp_Emby"]
+# 只精确屏蔽「搜得到、点开没数据」的那几个站点类：
+# 观影 / 盘库 / 蜗牛 的详情解析接口已失效；Emby/Emby001 需要自建服务器，没有就是空数据。
+# 注意：同族的 快影/剧透/立播/原盘/盘迷/逸动/七味 实测可正常播放，不能整族屏蔽。
+BLOCKED_APIS = [
+    "csp_AiNewGuanYingGuard",
+    "csp_AiNewPianKuGuard",
+    "csp_AiNewWoNiu4KGuard",
+    "csp_EmbyGuard",
+    "csp_EmbyDiyGuard",
+]
 
 # 站点数低于这个值就认为上游异常，不覆盖线上文件
 MIN_SITES = 60
@@ -204,9 +211,9 @@ def is_blocked(site):
     api = str(site.get("api", "")).lower()
     if api.endswith(".py"):
         return ".py"
-    for pf in BLOCKED_API_PREFIX:
-        if api.startswith(pf.lower()):
-            return "类:" + pf
+    for a in BLOCKED_APIS:
+        if api == a.lower():
+            return "api:" + a
     for kw in BLOCKED_KEYWORDS:
         if kw.lower() in text:
             return kw
