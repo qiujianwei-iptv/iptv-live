@@ -67,16 +67,6 @@
    "jar": "LOCALJAR"
   },
   {
-   "key": "下饭",
-   "name": "下饭 • APP",
-   "type": 3,
-   "api": "csp_JuXiaFan",
-   "searchable": 1,
-   "quickSearch": 1,
-   "filterable": 1,
-   "jar": "LOCALJAR"
-  },
-  {
    "key": "快映fox",
    "name": "快映 • APP",
    "type": 3,
@@ -491,10 +481,9 @@
    "quickSearch": 0,
    "ext": {
     "site": [
-     "https://sidhub.cc",
+     "https://seedog.cc",
      "https://seeduck.cc",
-     "https://hubdog.cc",
-     "http://104.243.25.80"
+     "https://hubdog.cc"
     ]
    },
    "timeout": 60,
@@ -553,8 +542,8 @@
    "filterable": 1,
    "ext": {
     "site": [
-     "https://www.hdmoli.com",
-     "https://www.hdmoli.pro"
+     "https://www.hdmoli.me",
+     "https://www.hdmoli.org"
     ]
    },
    "timeout": 60,
@@ -700,13 +689,6 @@
    "jar": "LOCALJAR"
   },
   {
-   "key": "飞娱影视",
-   "name": "飞娱 • 影视",
-   "type": 3,
-   "api": "csp_Feiyu",
-   "jar": "LOCALJAR"
-  },
-  {
    "key": "旺旺影视",
    "name": "旺旺 • 影视",
    "type": 3,
@@ -736,7 +718,7 @@
    "searchable": 1,
    "quickSearch": 1,
    "filterable": 1,
-   "ext": "https://cz01.vip/",
+   "ext": "https://www.4kcz.com",
    "jar": "LOCALJAR"
   },
   {
@@ -753,14 +735,6 @@
    "type": 3,
    "api": "csp_SaoHuo",
    "ext": "https://shdy5.us",
-   "jar": "LOCALJAR"
-  },
-  {
-   "key": "枫叶影视",
-   "name": "枫叶 • 影视",
-   "type": 3,
-   "api": "csp_FengYe",
-   "ext": "https://www.vip1949.com/",
    "jar": "LOCALJAR"
   },
   {
@@ -975,7 +949,7 @@
   },
   {
    "key": "Doubanaaaa",
-   "name": "🐮【更新日期:20261117】🐮",
+   "name": "🐮【更新日期:20261121】🐮",
    "type": 3,
    "api": "csp_NewDouBanGuard",
    "indexs": 1,
@@ -1116,6 +1090,16 @@
    "name": "💥贱片┃秒播💥",
    "type": 3,
    "api": "csp_WexAiJianPianGuard",
+   "searchable": 1,
+   "quickSearch": 1,
+   "changeable": 0,
+   "jar": "LOCALJAR"
+  },
+  {
+   "key": "下饭",
+   "name": "💥下饭┃秒播💥",
+   "type": 3,
+   "api": "csp_WexAiJuXiaFanGuard",
    "searchable": 1,
    "quickSearch": 1,
    "changeable": 0,
