@@ -143,6 +143,26 @@
    "jar": "LOCALJAR"
   },
   {
+   "key": "师兄",
+   "name": "师兄 • APP",
+   "type": 3,
+   "api": "csp_AppV7",
+   "ext": {
+    "host": "http://app2.dsx.ac/ndsx.php",
+    "version": "4.0.6",
+    "version_number": "4006",
+    "pk_id": "com.qdsj.zxt.hzjc",
+    "build_time": "1790053427039",
+    "sign_md5": "56a4bb80bd67422e9c5b48f003d445c8",
+    "apk_length": "59954699",
+    "platform": "",
+    "platform_version": "TP1A.220624.014",
+    "user_agent": "Dart/3.11 (dart:io)",
+    "private_key": "MIICdgIBADANBgkqhkiG9w0BAQEFAASCAmAwggJcAgEAAoGBAO9omsi+ys7fmBH3w1d0DfvRAQlj0wLB1BI3Xsb9WSiu4lEc1Me+XubnzTxaQPCBbnuZURerRrO981n9GhsQkDcWmtW+X1mpCllOWt8bbnWwKPsHqemRFxncDWE/d0nA9yrZn6nLVy/J7DJ3cVJlIs9bNLArqEiR8KVrAf1PNSLXAgMBAAECgYBGPn3z2q8s5cP7uaOSHFYiBZ/1PlniXDa6JY7ked9YJX/35qqz9LJps6evRpf5OTDOiRyXAkUbZedqBu5K9KArSGVyxp/Vym4b0siEVeM8qq9Gbf74lHPH+L+X/NmXemydwZHR1lU9PiLJVMsh8o6aAazkB8ijZcsNMyYZUSH36QJBAPvHq511Uz45lx5BtVSZClcUnqPRFSmNnRdjATikDzFTObemnGJU3eL/7VIPWtjEj9LvGP/WyX6gyo1zKc8BRtUCQQDza9oFnSmMHPkvrll/zMxcy3FeOTW0hctBhdIMbBmjJJyhlfTmBOvxwm8I91F05ydkSZ1yLuLhAjLxbjqs2fD7AkB/KOHQvW+UTqu22ULGfiCNyFkyrSc9/EqphBQa0ijmJX1R9nCm7Ou/eLgYKK8eKW/l/WGn3IeZT4XdGJu185QdAkBthqmivQRktuSoP5qlllCdsCxiaPtxLoI2CTBpxnoCngab7g0zMiO3s/Sh5CYSo69lwHnHVrFe7M5fM2nTPHzhAkEAiJETUvYFwCVKNGTYMzUg7v3QblqYXB+IhzcU37sHZOn6a46V5eJDadavIvuEmoxJHWTybi+1ZkN7LeUUg4ylCw=="
+   },
+   "jar": "LOCALJAR"
+  },
+  {
    "key": "剧圈99",
    "name": "剧圈 • APP",
    "type": 3,
@@ -362,23 +382,6 @@
    "jar": "LOCALJAR"
   },
   {
-   "key": "闪电",
-   "name": "闪电 • 4K",
-   "type": 3,
-   "api": "csp_PanWebShare",
-   "searchable": 1,
-   "quickSearch": 1,
-   "filterable": 1,
-   "changeable": 1,
-   "ext": {
-    "site": [
-     "http://shandian.blog"
-    ]
-   },
-   "timeout": 60,
-   "jar": "LOCALJAR"
-  },
-  {
    "key": "蜡笔",
    "name": "蜡笔 • 4K",
    "type": 3,
@@ -393,6 +396,24 @@
      "https://www.mmpanpan.site",
      "http://tvpanpan.site",
      "http://www.tvpanpan.site"
+    ]
+   },
+   "timeout": 60,
+   "jar": "LOCALJAR"
+  },
+  {
+   "key": "闪电",
+   "name": "闪电 • 4K",
+   "type": 3,
+   "api": "csp_PanWebShare",
+   "searchable": 1,
+   "quickSearch": 1,
+   "filterable": 1,
+   "changeable": 1,
+   "ext": {
+    "site": [
+     "http://oo.sduc.site",
+     "http://sd.sduc.site"
     ]
    },
    "timeout": 60,
@@ -949,7 +970,7 @@
   },
   {
    "key": "Doubanaaaa",
-   "name": "🐮【更新日期:20261123】🐮",
+   "name": "🐮【更新日期:20261124】🐮",
    "type": 3,
    "api": "csp_NewDouBanGuard",
    "indexs": 1,
@@ -1106,20 +1127,6 @@
    "jar": "LOCALJAR"
   },
   {
-   "key": "AppV7 | 大师兄",
-   "name": "💥师兄┃秒播💥",
-   "type": 3,
-   "api": "csp_WexAppV7Guard",
-   "searchable": 1,
-   "changeable": 0,
-   "ext": {
-    "config": "AppV7Dsx",
-    "proxyImg": false
-   },
-   "timeout": 120,
-   "jar": "LOCALJAR"
-  },
-  {
    "key": "AppV7 | 粉猪追剧",
    "name": "💥粉猪┃秒播💥",
    "type": 3,
@@ -1128,20 +1135,6 @@
    "changeable": 0,
    "ext": {
     "config": "AppV7Fz",
-    "proxyImg": false
-   },
-   "timeout": 120,
-   "jar": "LOCALJAR"
-  },
-  {
-   "key": "AppV7 | 咸鱼",
-   "name": "💥咸鱼┃秒播💥",
-   "type": 3,
-   "api": "csp_WexAppV7Guard",
-   "searchable": 1,
-   "changeable": 0,
-   "ext": {
-    "config": "AppV7Xy",
     "proxyImg": false
    },
    "timeout": 120,
@@ -1176,20 +1169,6 @@
    "jar": "LOCALJAR"
   },
   {
-   "key": "AppV7 | 小柠檬",
-   "name": "💥柠檬┃秒播💥",
-   "type": 3,
-   "api": "csp_WexAppV7Guard",
-   "searchable": 1,
-   "changeable": 0,
-   "ext": {
-    "config": "AppV7Xnm",
-    "proxyImg": false
-   },
-   "timeout": 120,
-   "jar": "LOCALJAR"
-  },
-  {
    "key": "AppV7 | 蒙太奇",
    "name": "💥太奇┃秒播💥",
    "type": 3,
@@ -1198,34 +1177,6 @@
    "changeable": 0,
    "ext": {
     "config": "AppV7Mtq",
-    "proxyImg": false
-   },
-   "timeout": 120,
-   "jar": "LOCALJAR"
-  },
-  {
-   "key": "AppV7 | 零零七影视",
-   "name": "💥零七┃秒播💥",
-   "type": 3,
-   "api": "csp_WexAppV7Guard",
-   "searchable": 1,
-   "changeable": 0,
-   "ext": {
-    "config": "AppV7Llq",
-    "proxyImg": false
-   },
-   "timeout": 120,
-   "jar": "LOCALJAR"
-  },
-  {
-   "key": "AppV7 | 小柿子",
-   "name": "💥柿子┃秒播💥",
-   "type": 3,
-   "api": "csp_WexAppV7Guard",
-   "searchable": 1,
-   "changeable": 0,
-   "ext": {
-    "config": "AppV7Xsz",
     "proxyImg": false
    },
    "timeout": 120,
