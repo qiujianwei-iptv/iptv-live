@@ -1,6 +1,7 @@
 name: 更新秋风影视线路
 
-# 每天北京时间 05:30（UTC 21:30）自动从潇洒 + 饭太硬两条上游取最新配置，合并后提交
+# 每天北京时间 05:30（UTC 21:30）自动从潇洒 + 王二小两条上游取最新配置，合并后提交
+# 同时刷新 own_sites.json（固化快照）：上游挂掉时脚本用它兜底出片，所以必须跟着一起提交
 on:
   schedule:
     - cron: "30 21 * * *"
@@ -51,6 +52,15 @@ jobs:
           assert all(s.get("jar") for s in sites), "有站点缺少 jar"
           cfg = [s for s in sites if s.get("api") == "csp_Config"]
           assert len(cfg) == 1, f"配置中心数量异常: {len(cfg)}"
+          # 固化快照：存在就必须可用，否则上游挂了没有兜底
+          import os
+          if os.path.exists("own_sites.json"):
+              snap = json.load(open("own_sites.json", encoding="utf-8"))
+              xs = snap.get("xs") or {}
+              ss = xs.get("sites") or []
+              assert len(ss) >= 60, f"快照站点数异常: {len(ss)}"
+              assert (snap.get("_meta") or {}).get("updated_at"), "快照缺少 updated_at"
+              print(f"快照校验通过: {len(ss)} 站 / 更新于 {(snap.get('_meta') or {}).get('updated_at')}")
           print(f"校验通过: {len(sites)} 站点")
           PY
 
@@ -58,7 +68,7 @@ jobs:
         run: |
           git config user.name "tvbox-bot"
           git config user.email "actions@users.noreply.github.com"
-          if [ -z "$(git status --porcelain tvbox.json tvbox_local.json)" ]; then
+          if [ -z "$(git status --porcelain tvbox.json tvbox_local.json own_sites.json)" ]; then
             echo "上游无变化，跳过提交"
             exit 0
           fi
@@ -71,6 +81,7 @@ jobs:
           assert len(t["sites"]) == json.load(open("tvbox.json", encoding="utf-8"))["sites"].__len__()
           print(f"模板校验通过: {len(t['sites'])} 站")
           PY2
-          git add tvbox.json tvbox_local.json
-          git commit -m "自动同步上游线路（${COUNT} 站点）$(date -u '+%Y-%m-%d %H:%M UTC')"
+          git add tvbox.json tvbox_local.json own_sites.json
+          SNAP=$(python -c "import json;print((json.load(open('own_sites.json'))['_meta'] or {}).get('updated_at','?'))" 2>/dev/null || echo "?")
+          git commit -m "自动同步上游线路（${COUNT} 站点，快照 ${SNAP}）$(date -u '+%Y-%m-%d %H:%M UTC')"
           git push
