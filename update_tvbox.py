@@ -45,6 +45,11 @@ QF_JAR_URLS = [
 UA = "okhttp/3.14.9"
 TIMEOUT = 60
 
+# ---- 补源渠道（只在站点失效时用，不参与任何删除判断）----
+# 库里的站失效了，就去这两家找同名/同品牌的站，测通了就换上来。
+XIAOSA_URL = "https://9877.kstore.space/sun.json"
+WEX_CFG_URL = "https://9280.kstore.vip/newwex.json"
+
 # ---- 自有线路库 ----
 LIB_FILE = "own_sites.json"
 
@@ -149,6 +154,137 @@ def load_first_working_jar(candidates, want_md5=None):
 def is_drive_api(api):
     cls = str(api or "")
     return "Pan" in cls or "Drive" in cls
+
+
+# ---------- 补源渠道（失效站才用） ----------
+
+def aes_cbc_decrypt(key, data):
+    """AES-CBC 解密（key 与 IV 相同）。优先 pycryptodome，退回系统 openssl。"""
+    try:
+        from Cryptodome.Cipher import AES
+        return AES.new(key, AES.MODE_CBC, key).decrypt(data)
+    except ImportError:
+        pass
+    try:
+        from Crypto.Cipher import AES
+        return AES.new(key, AES.MODE_CBC, key).decrypt(data)
+    except ImportError:
+        pass
+    import subprocess
+    import tempfile
+    fd, path = tempfile.mkstemp()
+    try:
+        with os.fdopen(fd, "wb") as f:
+            f.write(data)
+        out = subprocess.run(
+            ["openssl", "enc", "-d", "-aes-128-cbc", "-nopad",
+             "-K", key.hex(), "-iv", key.hex(), "-in", path],
+            capture_output=True, check=True).stdout
+        return out
+    except (FileNotFoundError, subprocess.CalledProcessError) as e:
+        # 用 RuntimeError 而不是 SystemExit：补源是可选步骤，失败不能把主流程带崩
+        raise RuntimeError(f"没有可用的 AES 实现（pycryptodome 未安装且 openssl 不可用）: {e}")
+    finally:
+        os.unlink(path)
+
+
+def decrypt_xiaosa(raw):
+    """潇洒配置：整份十六进制文本
+    结构 = "$#<13位密钥>#$" + 密文hex + 尾部重复的 13 位密钥(26 hex)
+    """
+    h = raw.decode("utf-8", "ignore").strip()
+    if len(h) % 2:
+        h = h[:-1]
+    header = bytes.fromhex(h[:34])
+    if header[:2] != b"$#" or header[-2:] != b"#$":
+        raise ValueError("潇洒配置格式变了：头部不是 $#...#$")
+    key13 = header[2:-2].decode()
+    tail = bytes.fromhex(h[-26:]).decode()
+    if tail != key13:
+        raise ValueError("潇洒密钥与尾部不匹配")
+    cipher = bytes.fromhex(h[34:len(h) - 26])
+    key = (key13 + "0" * 16)[:16]
+    pt = aes_cbc_decrypt(key.encode(), cipher)
+    pad = pt[-1]
+    if 1 <= pad <= 16:
+        pt = pt[:-pad]
+    return json.loads(pt.decode("utf-8", "ignore"))
+
+
+def load_rescue_pool():
+    """拉补源池：潇洒 + 王二小的全量站点（按 key 和品牌词都能索引）"""
+    pool = []
+    try:
+        xs = decrypt_xiaosa(http_get(XIAOSA_URL))
+        for s in xs.get("sites") or []:
+            site = {k: v for k, v in s.items() if k != "jar"}
+            site["_from"] = "潇洒"
+            pool.append(site)
+        print(f"   补源池：潇洒 {len(xs.get('sites') or [])} 站", end="")
+    except Exception as e:
+        print(f"   ⚠ 潇洒补源池取不到（{str(e)[:40]}）", end="")
+    try:
+        wex = json.loads(http_get(WEX_CFG_URL).decode("utf-8", "ignore"))
+        for s in wex.get("sites") or []:
+            site = {k: v for k, v in s.items() if k != "jar"}
+            site["_from"] = "王二小"
+            pool.append(site)
+        print(f" · 王二小 {len(wex.get('sites') or [])} 站")
+    except Exception as e:
+        print(f" · ⚠ 王二小补源池取不到（{str(e)[:40]}）")
+    return pool
+
+
+def find_replacement(failed_site, pool):
+    """在补源池里找同名/同品牌、且地址能连上的替换站"""
+    key = failed_site.get("key")
+    brands = set(name_tokens(failed_site.get("name", "")))
+    cands = []
+    for c in pool:
+        if c.get("key") == key:
+            cands.append(c)
+            continue
+        if brands & set(name_tokens(c.get("name", ""))):
+            cands.append(c)
+    for c in cands:
+        urls = extract_probe_urls(c)
+        if not urls:
+            continue  # 候选也测不了，宁可不换
+        if any(probe_url_alive(u) for u in urls):
+            return c
+    return None
+
+
+def rescue_failed(sites):
+    """失效站补源：连续失效或已停用的站，去补源池找能用的同名站换上来"""
+    failed = [s for s in sites
+              if not s.get("_self") and (s.get("_disabled") or s.get("_fails"))]
+    if not failed:
+        return []
+    print(f"→ 补源：{len(failed)} 个失效站在补源池里找替代…")
+    pool = load_rescue_pool()
+    if not pool:
+        return []
+    rescued = []
+    for s in failed:
+        rep = find_replacement(s, pool)
+        if not rep:
+            continue
+        keep = {k: v for k, v in s.items() if str(k).startswith("_") and k != "_fails"}
+        keep["_fails"] = 0
+        keep["_disabled"] = False
+        keep["_dead_by"] = None
+        keep["_rescued"] = _now()[:10]
+        s.clear()
+        s.update({k: v for k, v in rep.items() if not str(k).startswith("_")})
+        s.update(keep)
+        rescued.append((s.get("key"), rep.get("name", ""), rep.get("_from", "")))
+    if rescued:
+        print(f"   ♻ 补源成功 {len(rescued)} 站："
+              + "、".join(f"{k}←{f}" for k, _, f in rescued[:8]))
+    else:
+        print("   ✗ 补源池里没有可用的同名站")
+    return rescued
 
 
 def name_tokens(name):
@@ -408,8 +544,21 @@ def main(out_path="tvbox.json"):
             print(f"   ⏸ 主流线路停用留档 {len(suspended)} 站（连续 {PROBE_FAIL_LIMIT} 天失效）："
                   + "、".join(k for k, _ in suspended[:8]))
         if removed:
-            print(f"   ➖ 删除 {len(removed)} 站（连续 {PROBE_FAIL_LIMIT} 天失效）："
+            print(f"   ➖ 删除 {len(removed)} 站（连续 {PROBE_DELETE_LIMIT} 天失效）："
                   + "、".join(k for k, _ in removed[:8]))
+
+    # ---- 补源：失效的站去潇洒/王二小找能用的同名站换上来 ----
+    if not os.environ.get("QF_SKIP_RESCUE"):
+        try:
+            rescued = rescue_failed(sites)
+        except Exception as e:
+            print(f"   ⚠ 补源异常（不影响主流程）：{e}")
+    # 补源后再做一次探测落地：换上新地址的站可能已经连续失败过，需清零
+    for s in sites:
+        if s.get("_rescued") == _now()[:10]:
+            s["_fails"] = 0
+            s["_disabled"] = False
+            s["_dead_by"] = None
 
     sites = inject_own_sites(sites)
     sites = unify_config(sites)
