@@ -53,31 +53,36 @@ WEX_JAR_URLS = [
     "http://oss4liview.moji.com/thd_file/2026/11/12/7b563c7039830e7c712e93f27fd2e102.jpg",
 ]
 
-# ---- 固化快照：站点做「自己的」----
-# 每次同步成功，把上游站点（潇洒+王二小合并后的最终版）落盘 own_sites.json；
-# 上游全挂时用它兜底照常生成——配置永远是自己的，上游死活不再影响出片。
+# ---- 自有线路库（own_sites.json）----
+# 2026-11-27 起不再做「每天被上游覆盖」的镜像，改为自有库模式：
+#   * 库里的站点就是自己的最终线路，生成 tvbox.json 只读库；
+#   * 上游（潇洒/王二小）只当「信号源」：新站加入库、上游下线的站从库删除；
+#   * 上游全挂时，库照常出完整配置，不依赖上游。
+# 库内站点用 _origin/_self/_since/_disabled 记内部状态，输出时自动剥掉。
 SNAPSHOT_FILE = "own_sites.json"
-# 兜底时若快照超过这个天数没刷新，说明上游长期异常，打印醒目告警（不阻断出片）
+LIB_FILE = SNAPSHOT_FILE
+# 兜底/离线时若库超过这个天数没刷新，打印醒目告警（不阻断出片）
 SNAPSHOT_MAX_AGE_DAYS = 7
-# 快照必须一并提交到仓库（CI 里由 workflow git add），否则兜底用的永远是仓库里的旧快照
 
 # 这些站点是入口/配置页，不该参与搜索
 NO_SEARCH_APIS = {"csp_Config", "csp_MyDriveGuard"}
 
-# 王二小自己的两个入口（配置中心 / 我的网盘）：不参与去重，必须常驻，且不参与搜索
-WEX_KEEP_KEYS = {"Wexconfig", "MyPan"}
+# 统一配置中心：只保留潇洒的 csp_Config（已在自己合并 jar 里），
+# 王二小的两个独立入口（要单独授权、跟潇洒互不相通）直接去掉，
+# 所有网盘站共用同一个配置中心扫描/授权。
+CONFIG_CENTER_API = "csp_Config"
+UNIFIED_DROP_APIS = {"csp_PanConfigGuard", "csp_MyPanGuard"}
 
-# 王二小那边需要「他自己的配置中心」授权的站：全部并入，两套网盘入口都保留
-# （潇洒「配置 • 中心」、王二小「🐮配置┃中心🐮」+「🐮我的┃网盘🐮」互不相通，
-#   王二小的网盘站点必须在那两个入口各扫一次授权才可播放）
+# 王二小那边需要「他自己的配置中心」授权的站：统一到潇洒配置中心后全部并入
 WEX_NO_MERGE_APIS = set()
 
 # 已确认同源：仅记录说明，不再据此剔除（改由品牌词判重决定去留）
 WEX_SAME_SOURCE = {}
 
 # 关键词屏蔽表：站点 key / name 命中即剔除（家长向 / 非影视类站点不要）
+# 注意：「玩偶」不在此列（用户 2026-11-27 要求恢复该 4K 线路）
 BLOCKED_KEYWORDS = [
-    "玩偶", "观影", "盘库", "蜗牛", "新片", "预告", "磁力", "荐片", "体育", "呦呦", "蜻蜓", "听书", "戏曲",
+    "观影", "盘库", "蜗牛", "新片", "预告", "磁力", "荐片", "体育", "呦呦", "蜻蜓", "听书", "戏曲",
     "儿童", "音乐", "哔哩", "课堂", "教育", "教学", "养生", "动漫", "看球",
     "直播", "小说", "弹幕",
 ]
@@ -110,6 +115,48 @@ DEFAULT_LIVES = [
      "playerType": 2, "timeout": 10, "ua": "okHttp/Mod-1.5.0.0"},
     {"name": "YY轮播", "type": 0, "url": "https://sub.ottiptv.cc/yylunbo.m3u",
      "playerType": 2, "timeout": 10, "ua": "okHttp/Mod-1.5.0.0"},
+]
+
+# ---- 自有采集站（不依赖上游、不依赖 jar）----
+# 2026-11-27 起非凡/360 改成 drpy2 爬虫（js），在爬虫里把「伦理片」分类和内容整体过滤掉，
+# 配置文件只管挂 js；改过滤词只需改仓库 js，不用动电视端。
+# 360 的裸域名 360zy.com 已不可用，改用 www.360zy.com。
+GH_RAW = "https://gh-proxy.com/https://raw.githubusercontent.com/qiujianwei-iptv/iptv-live/main"
+OWN_CJ_SITES = [
+    {
+        "key": "ffzy_cj",
+        "name": "非凡 • 高清",
+        "type": 3,
+        "api": "assets://js/lib/drpy2.min.js",
+        "searchable": 1,
+        "quickSearch": 1,
+        "filterable": 0,
+        "ext": GH_RAW + "/js/ffzy.js",
+        "_self": True,
+    },
+    {
+        "key": "zy360_cj",
+        "name": "360 • 高清",
+        "type": 3,
+        "api": "assets://js/lib/drpy2.min.js",
+        "searchable": 1,
+        "quickSearch": 1,
+        "filterable": 0,
+        "ext": GH_RAW + "/js/360zy.js",
+        "_self": True,
+    },
+    {
+        # 厂长资源（4kcz.com）：4K 网盘资源站，在线解析播放 + 夸克/百度/迅雷网盘
+        "key": "cz4k_js",
+        "name": "厂长 • 4K",
+        "type": 3,
+        "api": "assets://js/lib/drpy2.min.js",
+        "searchable": 0,
+        "quickSearch": 0,
+        "filterable": 0,
+        "ext": GH_RAW + "/js/4kcz.js",
+        "_self": True,
+    },
 ]
 
 
@@ -276,16 +323,19 @@ def brand_index(sites):
 
 
 def merge_wex(xs_sites, wex_sites, wex_classes):
-    """把王二小站点去重并入潇洒站点集合。返回 (并入列表, 统计明细)"""
+    """把王二小站点去重并入潇洒站点集合。返回 (并入列表, 统计明细)
+
+    注意：xs_sites 要传「潇洒原始站点」而不是过滤后的列表 ——
+    jar 缺类时潇洒站会被过滤掉，若拿过滤结果判重，王二小同名站就会顶替进来，
+    把库里的站悄悄换成另一家的实现。
+    （王二小的两个独立配置中心入口在统一配置中心阶段会被移除，这里不特殊保留）"""
     xs_keys = {s["key"] for s in xs_sites}
     xs_brands = brand_index(xs_sites)
     kept, stat = [], {"blocked": [], "dup": [], "auth": [], "missing": []}
     for s in wex_sites:
         site = {k: v for k, v in s.items() if k != "jar"}
-        if site.get("key") in WEX_KEEP_KEYS:
-            site["searchable"] = 0
-            kept.append(site)
-            continue
+        if site.get("api") in UNIFIED_DROP_APIS:
+            continue  # 王二小的独立配置中心入口，不并入（统一用潇洒的配置中心）
         kw = is_blocked(site)
         if kw:
             stat["blocked"].append((site.get("key"), kw))
@@ -310,8 +360,177 @@ def merge_wex(xs_sites, wex_sites, wex_classes):
             continue
         if is_drive_api(site.get("api")):
             site["searchable"] = 1
+        site["_origin"] = "wex"
         kept.append(site)
     return kept, stat
+
+
+# ---------- 自有线路库 ----------
+
+def _now():
+    import datetime as _dt
+    return _dt.datetime.now().strftime("%Y-%m-%d %H:%M")
+
+
+def load_lib(path=None):
+    """读自有线路库；不存在或损坏返回 None"""
+    path = path or LIB_FILE
+    if not os.path.exists(path):
+        return None
+    try:
+        with open(path, encoding="utf-8") as f:
+            d = json.load(f)
+        xs = d.get("xs") or {}
+        if not isinstance(xs.get("sites"), list) or not xs["sites"]:
+            return None
+        return d
+    except Exception as e:
+        print(f"   ⚠ 自有库读取失败（{e}），按首次导入处理")
+        return None
+
+
+def filter_upstream(cfg, tag, jar_classes):
+    """上游配置 → 站点列表（屏蔽词 / 缺类 / 网盘搜索 / 来源标记）"""
+    out, dropped, blocked = [], [], []
+    for s in cfg.get("sites") or []:
+        site = {k: v for k, v in s.items() if k != "jar"}
+        if site.get("api") in UNIFIED_DROP_APIS:
+            continue  # 王二小的独立配置中心入口，统一配置中心里不要
+        kw = is_blocked(site)
+        if kw:
+            blocked.append((tag, site.get("key"), kw))
+            continue
+        api = str(site.get("api") or "")
+        if api.startswith("csp_") and api[4:] not in jar_classes:
+            dropped.append((tag, site.get("key"), api))
+            continue
+        if is_drive_api(api):
+            site["searchable"] = 1
+        site["_origin"] = tag
+        out.append(site)
+    return out, dropped, blocked
+
+
+def sync_lib(lib_sites, up_sites, xs_keys, wex_keys, xs_ok, wex_ok, jar_classes, today):
+    """自有库 + 上游信号 → 新库站点（不修改入参）
+
+    规则：
+      * _self 站点（自有采集站/配置中心）不参与上游增删
+      * 上游原始配置里已找不到该 key → 从库删除（视为下线）
+        （用未过滤的原始 key 判断：jar 缺类不应被当成下线，否则 jar 一更新就丢站）
+      * 上游新增 → 加入库（4K 线路插到最前）
+      * 两边都有 → 以上游字段为准更新，保留内部标记
+      * jar 里缺类 → _disabled=True（不输出、保留档案）；类恢复 → 自动复活
+    """
+    rep = {"added": [], "removed": [], "updated": [], "disabled": [], "revived": [], "new4k": []}
+    up_map = {s["key"]: s for s in up_sites}
+
+    kept = []
+    for s in lib_sites:
+        key = s.get("key")
+        if not key:
+            continue
+        if s.get("_self"):
+            kept.append(dict(s))
+            continue
+        origin = s.get("_origin") or "xiaosa"
+        gone = ((origin == "xiaosa" and xs_ok and key not in xs_keys)
+                or (origin == "wex" and wex_ok and key not in wex_keys))
+        if gone:
+            rep["removed"].append((key, s.get("name", ""), origin))
+            continue
+        kept.append(dict(s))
+
+    index = {s["key"]: i for i, s in enumerate(kept)}
+
+    for u in up_sites:
+        key = u["key"]
+        if key in index:
+            old = kept[index[key]]
+            if old.get("_self"):
+                continue
+            changed = False
+            for k, v in u.items():
+                if str(k).startswith("_"):
+                    continue
+                if old.get(k) != v:
+                    changed = True
+                old[k] = v
+            if changed:
+                rep["updated"].append(key)
+        else:
+            new = dict(u)
+            new["_since"] = today
+            is4k = "4k" in (str(new.get("name", "")) + key).lower()
+            if is4k:
+                kept.insert(0, new)
+                index = {s["key"]: i for i, s in enumerate(kept)}
+                rep["new4k"].append((key, new.get("name", "")))
+            else:
+                kept.append(new)
+                index[key] = len(kept) - 1
+            rep["added"].append((key, new.get("name", ""), new.get("_origin")))
+
+    for s in kept:
+        api = str(s.get("api") or "")
+        missing = api.startswith("csp_") and api[4:] not in jar_classes
+        if missing and not s.get("_disabled"):
+            s["_disabled"] = True
+            rep["disabled"].append((s.get("key"), api))
+        elif not missing and s.get("_disabled"):
+            s["_disabled"] = False
+            rep["revived"].append(s.get("key"))
+
+    return kept, rep
+
+
+def inject_own_sites(sites):
+    """自有站并入库：已在库则刷新定义，不在则追加"""
+    index = {s.get("key"): i for i, s in enumerate(sites)}
+    for own in OWN_CJ_SITES:
+        if own["key"] in index:
+            sites[index[own["key"]]].update(dict(own))
+        else:
+            sites.append(dict(own))
+    return sites
+
+
+def unify_config(sites):
+    """统一配置中心：只留一个 csp_Config，所有网盘/云盘站共用
+
+    - 删掉王二小那两个需要单独授权的入口（PanConfigGuard / MyPanGuard）
+    - 保证 csp_Config 存在
+    - 配置中心不参与搜索，其余网盘类一律开启搜索（统一扫盘）
+    """
+    out = [s for s in sites if s.get("api") not in UNIFIED_DROP_APIS]
+
+    if not any(s.get("api") == CONFIG_CENTER_API for s in out):
+        out.insert(0, {
+            "key": "配置中心", "name": "配置 • 中心", "type": 3,
+            "api": CONFIG_CENTER_API, "searchable": 0, "changeable": 0, "indexs": 0,
+            "style": {"type": "rect", "ratio": 1.618}, "_self": True,
+        })
+
+    for s in out:
+        api = str(s.get("api") or "")
+        if api in NO_SEARCH_APIS:
+            s["searchable"] = 0
+        elif is_drive_api(api):
+            s["searchable"] = 1
+    return out
+
+
+def strip_internal(site):
+    return {k: v for k, v in site.items() if not str(k).startswith("_")}
+
+
+def pick_top(up, lib_xs, key, default=None):
+    """顶层配置优先级：上游 → 自有库 → 默认值"""
+    if up is not None and up.get(key):
+        return up.get(key)
+    if lib_xs and lib_xs.get(key):
+        return lib_xs.get(key)
+    return default
 
 
 # ---------- 主流程 ----------
@@ -331,174 +550,106 @@ def main(out_path="tvbox.json"):
     jar_line = f"{jar_url};md5;{jar_md5}"
     print(f"   合并 jar 来自 {jar_url} · {len(jar_classes)} 类 · md5={jar_md5}")
 
-    print("→ 拉取潇洒配置…")
-    snapshot_mode = False
+    today = _now()[:10]
+    lib = load_lib()
+    lib_sites = list((lib or {}).get("xs", {}).get("sites") or [])
+    print(f"→ 自有线路库：{len(lib_sites)} 站" + ("" if lib else "（首次运行，将从上游全量导入）"))
+
+    # ---- 上游只当信号源：拉不到不影响出片 ----
+    xs, xs_ok = None, False
+    print("→ 拉取潇洒配置（仅作新增/下线信号）…")
     try:
         xs = decrypt_xiaosa(http_get(XIAOSA_URL))
+        xs_ok = True
         print(f"   潇洒站点 {len(xs['sites'])}")
     except Exception as e:
-        snap_xs = load_snapshot()
-        if not snap_xs:
-            raise SystemExit(f"❌ 上游潇洒配置取不到（{e}），且固化快照不可用，保留原文件不覆盖")
-        snapshot_mode = True
-        xs = snap_xs
-        print(f"   ⚠ 上游潇洒取不到（{e}）")
-        print(f"   → 固化快照兜底：{len(xs['sites'])} 站照常出配置（上游死活不再影响）")
+        print(f"   ⚠ 潇洒取不到（{e}），跳过其增删判断")
 
-    # ---- 王二小：任何一环不对就整段跳过，绝不写半坏配置 ----
-    # 快照模式：王二小站点已固化在快照里，不再拉取（避免 Wexconfig/MyPan 等必驻站重复）
-    wex_sites, wex_classes, wex_note = [], set(), "未启用"
-    if snapshot_mode:
-        wex_note = "快照模式：王二小站点已含在固化快照里"
-        print(f"   ⚠ {wex_note}")
-    else:
-        print("→ 拉取王二小配置…")
-        try:
-            wex = json.loads(http_get(WEX_CFG_URL).decode("utf-8", "ignore"))
-            wex_sites = wex.get("sites", [])
-            print(f"   王二小站点 {len(wex_sites)}")
-        except Exception as e:
-            wex_sites = []
-            wex_note = f"配置取不到（{e}），跳过王二小"
-            print(f"   ⚠ {wex_note}")
+    wex, wex_ok = None, False
+    print("→ 拉取王二小配置（仅作新增/下线信号）…")
+    try:
+        wex = json.loads(http_get(WEX_CFG_URL).decode("utf-8", "ignore"))
+        wex_ok = True
+        print(f"   王二小站点 {len(wex.get('sites') or [])}")
+    except Exception as e:
+        print(f"   ⚠ 王二小取不到（{e}），跳过其增删判断")
 
-    if wex_sites:
-        print("→ 核对王二小 jar（合成前提）…")
+    # ---- 上游站点整理 ----
+    up_sites, dropped, blocked = [], [], []
+    xs_sites = []
+    if xs:
+        xs_sites, d1, b1 = filter_upstream(xs, "xiaosa", jar_classes)
+        up_sites += xs_sites
+        dropped += d1
+        blocked += b1
+
+    wex_stat = {"dup": [], "blocked": [], "auth": [], "missing": []}
+    if wex and wex.get("sites"):
+        print("→ 核对王二小 jar（合并前提）…")
+        wex_classes = set()
         try:
-            wex_classes, wurl, wmd5 = load_first_working_jar(
+            wex_classes, wurl, _ = load_first_working_jar(
                 [f"{u};md5;{WEX_JAR_MD5}" for u in WEX_JAR_URLS], want_md5=WEX_JAR_MD5)
             print(f"   jar {wurl} · {len(wex_classes)} 类 · md5 一致")
-            wex_note = "已合并"
         except SystemExit as e:
-            wex_sites = []
-            wex_classes = set()
-            wex_note = "王二小 jar 不可用或已更新（合并 jar 不匹配），跳过王二小"
-            print(f"   ⚠ {wex_note}\n      {e}")
+            print(f"   ⚠ 王二小 jar 不可用（{e}），本轮到站直接并入库（已在自己 jar 里）")
+        wex_kept, wex_stat = merge_wex(xs.get("sites") or [], wex["sites"], wex_classes)
+        up_sites += wex_kept
 
+    # ---- 增量同步 ----
+    # 下线判断用「上游原始 key」，不吃过滤结果：jar 缺类只停用，不删档
+    xs_keys = {s.get("key") for s in (xs or {}).get("sites", [])} if xs_ok else set()
+    wex_keys = {s.get("key") for s in (wex or {}).get("sites", [])} if wex_ok else set()
+    sites, rep = sync_lib(lib_sites, up_sites, xs_keys, wex_keys, xs_ok, wex_ok, jar_classes, today)
+    sites = inject_own_sites(sites)
+    sites = unify_config(sites)
+
+    live = [s for s in sites if not s.get("_disabled")]
+    if len(live) < MIN_SITES:
+        raise SystemExit(f"❌ 只解析出 {len(live)} 个可用站点（低于 {MIN_SITES}），"
+                         "疑似上游异常，保留线上文件与自有库不动")
+
+    # ---- 顶层配置：上游 → 库 → 默认 ----
+    lib_xs = (lib or {}).get("xs") or {}
     old_lives = []
     if os.path.exists(out_path):
         try:
             with open(out_path, encoding="utf-8") as f:
-                old = json.load(f)
-            old_lives = [l for l in (old.get("lives") or []) if l.get("url")]
+                old_lives = [l for l in (json.load(f).get("lives") or []) if l.get("url")]
         except Exception:
             pass
 
-    # ---- 潇洒侧：沿用原有过滤 ----
-    sites, dropped, blocked, opened = [], [], [], []
-    for s in xs["sites"]:
-        site = dict(s)
-        kw = is_blocked(site)
-        if kw:
-            blocked.append((site.get("key"), kw))
-            continue
-        if site.get("api", "").startswith("csp_"):
-            cls = site["api"][4:]
-            if cls not in jar_classes:
-                dropped.append((site.get("key"), site["api"]))
-                continue
-        if site.get("api") in NO_SEARCH_APIS:
-            site["searchable"] = 0
-        elif is_drive_api(site.get("api")):
-            if site.get("searchable") != 1:
-                site["searchable"] = 1
-                opened.append(site.get("key"))
-        sites.append(site)
+    lives = ([l for l in (pick_top(xs, lib_xs, "lives") or []) if l.get("url")]
+             or old_lives or DEFAULT_LIVES)
 
-    print("→ 合并王二小站点…")
-    kept, wstat = merge_wex(sites, wex_sites, wex_classes) if wex_sites else ([], {"blocked": [], "dup": [], "auth": [], "missing": []})
-    sites += kept
-
-    # ---- 秋风影视自有「线路包更新」入口（类 csp_QfUpdate 在合并 jar 内，打开即检查）----
-    if "QfUpdate" in jar_classes:
-        sites.append({
-            "key": "QfUpdate",
-            "name": "🔄 线路包更新",
-            "type": 3,
-            "api": "csp_QfUpdate",
-            "searchable": 0,
-        })
-
-    # ---- 秋风影视自有「在线即点即播」采集站（type=1 直连苹果CMS采集接口，TVBox 原生支持，不依赖 jar）----
-    # 已实测可用的公开采集源：数据每日更新，m3u8 直链在线播放
-    OWN_CJ_SITES = [
-        {
-            "key": "ffzy_cj",
-            "name": "非凡 • 高清",
-            "type": 1,
-            "api": "http://ffzy5.tv/api.php/provide/vod/",
-            "searchable": 1,
-            "quickSearch": 1,
-            "filterable": 1,
-        },
-        {
-            "key": "zy360_cj",
-            "name": "360 • 高清",
-            "type": 1,
-            "api": "https://360zy.com/api.php/provide/vod/from/360azy/",
-            "searchable": 1,
-            "quickSearch": 1,
-            "filterable": 1,
-        },
-        {
-            # 厂长资源（4kcz.com）：4K 网盘资源站，在线解析播放 + 夸克/百度/迅雷网盘
-            # 爬虫文件在仓库 js/4kcz.js，改逻辑不用动电视端
-            "key": "cz4k_js",
-            "name": "厂长 • 4K",
-            "type": 3,
-            "api": "assets://js/lib/drpy2.min.js",
-            "searchable": 0,
-            "quickSearch": 0,
-            "filterable": 0,
-            "ext": "https://gh-proxy.com/https://raw.githubusercontent.com/qiujianwei-iptv/iptv-live/main/js/4kcz.js",
-        },
-    ]
-    # 插入位置：紧跟「本地 • 视频」之后，首页靠前；找不到就放末尾
-    insert_at = len(sites)
-    for i, s in enumerate(sites):
-        if s.get("key") == "本地":
-            insert_at = i + 1
-            break
-    sites[insert_at:insert_at] = OWN_CJ_SITES
-
-    print(f"   并入 {len(kept)} 条 · 重复剔除 {len(wstat['dup'])} · 需他自己网盘授权剔除 "
-          f"{len(wstat['auth'])} · 关键词剔除 {len(wstat['blocked'])} · 缺类剔除 {len(wstat['missing'])}")
-
-    lives = [l for l in (xs.get("lives") or []) if l.get("url")] or old_lives or DEFAULT_LIVES
-
-    # ---- 站点改名（首页第一站统一叫「秋风线路」）----
-    for s in sites:
-        if s.get("api") == "csp_Douban":
-            s["name"] = "秋风线路"
+    out_sites = []
+    for s in live:
+        c = strip_internal(s)
+        c["jar"] = jar_line
+        out_sites.append(c)
 
     out = {
         "spider": jar_line,
-        "wallpaper": xs.get("wallpaper"),
-        "logo": xs.get("logo"),
-        "danmaku": xs.get("danmaku"),
-        "sites": sites,
+        "wallpaper": pick_top(xs, lib_xs, "wallpaper"),
+        "logo": pick_top(xs, lib_xs, "logo"),
+        "danmaku": pick_top(xs, lib_xs, "danmaku"),
+        "sites": out_sites,
         "lives": lives,
-        "parses": xs.get("parses") or [],
-        "rules": xs.get("rules") or [],
-        "hosts": xs.get("hosts") or [],
-        "doh": xs.get("doh") or [],
-        "flags": xs.get("flags") or [],
-        "ads": xs.get("ads") or [],
+        "parses": pick_top(xs, lib_xs, "parses") or [],
+        "rules": pick_top(xs, lib_xs, "rules") or [],
+        "hosts": pick_top(xs, lib_xs, "hosts") or [],
+        "doh": pick_top(xs, lib_xs, "doh") or [],
+        "flags": pick_top(xs, lib_xs, "flags") or [],
+        "ads": pick_top(xs, lib_xs, "ads") or [],
     }
 
-    if len([s for s in sites if s.get("key") not in {k["key"] for k in kept}]) < MIN_SITES:
-        raise SystemExit(f"❌ 潇洒侧只解析出 {len(sites) - len(kept)} 站（低于 {MIN_SITES}），"
-                         "疑似上游异常，保留原文件")
-
-    keys = [s["key"] for s in sites]
+    keys = [s["key"] for s in out_sites]
     assert len(keys) == len(set(keys)), "存在重复 key"
-    for s in sites:
-        s["jar"] = jar_line
 
     with open(out_path, "w", encoding="utf-8", newline="\n") as f:
         f.write(json.dumps(out, ensure_ascii=False, indent=1))
 
-    # ---- 同步产出「本地包模板」：jar 全部写成 LOCALJAR 占位 ----
+    # ---- 本地包模板 ----
     tpl = json.loads(json.dumps(out, ensure_ascii=False))
     tpl["spider"] = "LOCALJAR"
     for s in tpl["sites"]:
@@ -506,86 +657,67 @@ def main(out_path="tvbox.json"):
     tpl_path = os.path.join(os.path.dirname(os.path.abspath(out_path)) or ".", "tvbox_local.json")
     with open(tpl_path, "w", encoding="utf-8", newline="\n") as f:
         f.write(json.dumps(tpl, ensure_ascii=False, indent=1))
-    print(f"   模板 {os.path.basename(tpl_path)}：{len(tpl['sites'])} 站 / "
-          f"{os.path.getsize(tpl_path)} B / LOCALJAR {sum(1 for s in tpl['sites'] if s['jar']=='LOCALJAR')+1} 处")
+    print(f"   模板 {os.path.basename(tpl_path)}：{len(tpl['sites'])} 站")
 
-    # ---- 固化快照落盘（上游最终站点 + 顶层配置；自有站不入快照，恢复时再注入）----
-    own_keys = {"ffzy_cj", "zy360_cj", "cz4k_js", "QfUpdate"}
-    upstream_sites = [s for s in sites if s.get("key") not in own_keys]
-    snap_path = os.path.join(os.path.dirname(os.path.abspath(out_path)) or ".", SNAPSHOT_FILE)
-    try:
-        import datetime as _dt
-        if snapshot_mode:
-            # 兜底模式：快照就是本次数据来源，绝不重写它
-            # （重写会把 updated_at 刷成今天，快照看起来是新的，实际已陈旧，等于自己骗自己）
-            age_days = None
-            try:
-                with open(snap_path, encoding="utf-8") as f:
-                    meta = json.load(f).get("_meta") or {}
-                up = _dt.datetime.strptime(meta.get("updated_at", ""), "%Y-%m-%d %H:%M")
-                age_days = (_dt.datetime.now() - up).days
-            except Exception:
-                pass
-            age_txt = "未知" if age_days is None else f"{age_days} 天"
-            print(f"   固化快照 {SNAPSHOT_FILE} 保持不动（{len(upstream_sites)} 站，快照龄 {age_txt}）")
-            if age_days is not None and age_days > SNAPSHOT_MAX_AGE_DAYS:
-                print(f"   ⚠⚠ 快照已 {age_days} 天没跟随上游刷新（阈值 {SNAPSHOT_MAX_AGE_DAYS} 天），"
-                      "上游疑似长期异常，需要人工看一眼")
-        else:
-            xs_snap = {
-                "wallpaper": out.get("wallpaper"),
-                "logo": out.get("logo"),
-                "danmaku": out.get("danmaku"),
-                "lives": lives,
-                "parses": out.get("parses") or [],
-                "rules": out.get("rules") or [],
-                "hosts": out.get("hosts") or [],
-                "doh": out.get("doh") or [],
-                "flags": out.get("flags") or [],
-                "ads": out.get("ads") or [],
-                "sites": upstream_sites,
-            }
-            # 内容与旧快照完全一致时不动文件：避免仅时间戳变化导致每天一次无意义提交
-            prev = None
-            try:
-                with open(snap_path, encoding="utf-8") as f:
-                    prev = json.load(f)
-            except Exception:
-                prev = None
-            if prev and (prev.get("xs") or {}) == xs_snap:
-                old_meta = prev.get("_meta") or {}
-                print(f"   固化快照 {SNAPSHOT_FILE}：内容与上一版一致（{len(upstream_sites)} 站），"
-                      f"沿用更新时间 {old_meta.get('updated_at', '?')}")
-            else:
-                snap = {
-                    "_meta": {
-                        "updated_at": _dt.datetime.now().strftime("%Y-%m-%d %H:%M"),
-                        "sites": len(upstream_sites),
-                        "source": "xiaosa+wex merged snapshot",
-                        "note": "上游兜底快照：每次成功同步自动刷新，CI 随 tvbox.json 一起提交",
-                    },
-                    "xs": xs_snap,
-                }
-                with open(snap_path, "w", encoding="utf-8", newline="\n") as f:
-                    json.dump(snap, f, ensure_ascii=False, indent=1)
-                print(f"   固化快照 {SNAPSHOT_FILE}：{len(upstream_sites)} 站已刷新（随上游更新）")
-    except Exception as e:
-        print(f"   ⚠ 快照落盘失败（{e}）")
+    # ---- 自有库落盘（含内部标记；上游挂了也照常写回，保证库是最新状态） ----
+    lib_path = os.path.join(os.path.dirname(os.path.abspath(out_path)) or ".", LIB_FILE)
+    lib_out = {
+        "_meta": {
+            "updated_at": _now(),
+            "sites": len(sites),
+            "live": len(live),
+            "note": "自有线路库：上游只做新增/下线信号，上游挂掉照常出配置",
+            "sources": {"xiaosa": xs_ok, "wex": wex_ok},
+        },
+        "xs": {
+            "wallpaper": out.get("wallpaper"),
+            "logo": out.get("logo"),
+            "danmaku": out.get("danmaku"),
+            "lives": lives,
+            "parses": out.get("parses") or [],
+            "rules": out.get("rules") or [],
+            "hosts": out.get("hosts") or [],
+            "doh": out.get("doh") or [],
+            "flags": out.get("flags") or [],
+            "ads": out.get("ads") or [],
+            "sites": sites,
+        },
+    }
+    with open(lib_path, "w", encoding="utf-8", newline="\n") as f:
+        json.dump(lib_out, f, ensure_ascii=False, indent=1)
 
     size = os.path.getsize(out_path)
     digest = hashlib.md5(open(out_path, "rb").read()).hexdigest()
-    print(f"✅ 同步完成：{len(sites)} 站点 / {size} B / md5 {digest}")
-    print(f"   王二小：{wex_note}")
-    print(f"   直播源 {len(lives)} 条 · 潇洒缺类剔除 {len(dropped)} · 潇洒关键词屏蔽 {len(blocked)}")
-    print(f"   网盘类开启搜索 {len(opened)} 个：{opened or '无'}")
-    for item in blocked:
-        print(f"   ⊘ 屏蔽 {item[0]}（命中「{item[1]}」）")
-    for item in dropped:
-        print(f"   ⚠ 剔除 {item[0]}（{item[1]} 不在 jar 中）")
-    for name, rows in (("重复", wstat["dup"]), ("需自有网盘授权", wstat["auth"]),
-                       ("关键词", wstat["blocked"]), ("缺类", wstat["missing"])):
-        for row in rows:
-            print(f"   ⊘ 王二小 {name}剔除 {row[0]}（{row[1]}）")
+    print(f"✅ 生成完成：{len(live)} 站（库内 {len(sites)}，停用 {len(sites) - len(live)}）"
+          f" / {size} B / md5 {digest}")
+
+    if rep["added"]:
+        print(f"   ➕ 新增 {len(rep['added'])} 站："
+              + "、".join(f"{k}({n})" for k, n, _ in rep["added"][:12]))
+    if rep["new4k"]:
+        print("   🆕 新 4K 线路：" + "、".join(f"{k}({n})" for k, n in rep["new4k"]))
+    if rep["removed"]:
+        print(f"   ➖ 下线删除 {len(rep['removed'])} 站："
+              + "、".join(f"{k}({o})" for k, _, o in rep["removed"][:12]))
+    if rep["disabled"]:
+        print(f"   ⏸ 缺类停用 {len(rep['disabled'])} 站："
+              + "、".join(f"{k}({a})" for k, a in rep["disabled"][:12]))
+    if rep["revived"]:
+        print("   ▶ 恢复启用：" + "、".join(rep["revived"][:12]))
+    if rep["updated"]:
+        print(f"   ↻ 上游字段更新 {len(rep['updated'])} 站")
+    if blocked:
+        print(f"   ⊘ 关键词屏蔽 {len(blocked)} 站："
+              + "、".join(f"{k}({kw})" for _, k, kw in blocked[:10]))
+    if dropped:
+        print(f"   ⚠ 缺类剔除 {len(dropped)} 站（未入库）")
+    if wex_stat["dup"]:
+        print(f"   ⊘ 王二小重复 {len(wex_stat['dup'])} 站")
+
+    cfg_n = sum(1 for s in out_sites if s.get("api") == CONFIG_CENTER_API)
+    drive_n = sum(1 for s in out_sites if is_drive_api(str(s.get("api") or "")))
+    print(f"   配置中心 {cfg_n} 个（统一共用）· 网盘类 {drive_n} 个（均开启搜索）")
+    print(f"   来源：潇洒 {'在线' if xs_ok else '离线'} · 王二小 {'在线' if wex_ok else '离线'} · 自有站 {len(OWN_CJ_SITES)} 个")
     return out
 
 
