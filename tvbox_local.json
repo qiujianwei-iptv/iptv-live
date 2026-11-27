@@ -6,7 +6,7 @@
  "sites": [
   {
    "key": "豆瓣",
-   "name": "秋风线路",
+   "name": "豆瓣 • 首页",
    "type": 3,
    "api": "csp_Douban",
    "searchable": 0,
@@ -34,34 +34,23 @@
    "jar": "LOCALJAR"
   },
   {
-   "key": "ffzy_cj",
-   "name": "非凡 • 高清",
-   "type": 1,
-   "api": "http://ffzy5.tv/api.php/provide/vod/",
-   "searchable": 1,
-   "quickSearch": 1,
-   "filterable": 1,
-   "jar": "LOCALJAR"
-  },
-  {
-   "key": "zy360_cj",
-   "name": "360 • 高清",
-   "type": 1,
-   "api": "https://360zy.com/api.php/provide/vod/from/360azy/",
-   "searchable": 1,
-   "quickSearch": 1,
-   "filterable": 1,
-   "jar": "LOCALJAR"
-  },
-  {
-   "key": "cz4k_js",
-   "name": "厂长 • 4K",
+   "key": "玩偶",
+   "name": "玩偶 • 4K",
    "type": 3,
-   "api": "assets://js/lib/drpy2.min.js",
-   "searchable": 0,
-   "quickSearch": 0,
-   "filterable": 0,
-   "ext": "https://gh-proxy.com/https://raw.githubusercontent.com/qiujianwei-iptv/iptv-live/main/js/4kcz.js",
+   "api": "csp_Wogg",
+   "searchable": 1,
+   "quickSearch": 1,
+   "filterable": 1,
+   "changeable": 1,
+   "ext": {
+    "site": [
+     "https://www.wogg.live",
+     "https://woggpan.888484.xyz",
+     "https://wogg.xxooo.cf",
+     "https://woggpan.xxooo.cf"
+    ]
+   },
+   "timeout": 60,
    "jar": "LOCALJAR"
   },
   {
@@ -993,32 +982,6 @@
    "jar": "LOCALJAR"
   },
   {
-   "key": "Wexconfig",
-   "name": "🐮配置┃中心🐮",
-   "type": 3,
-   "api": "csp_PanConfigGuard",
-   "searchable": 0,
-   "changeable": 0,
-   "indexs": 0,
-   "style": {
-    "type": "list"
-   },
-   "jar": "LOCALJAR"
-  },
-  {
-   "key": "MyPan",
-   "name": "🐮我的┃网盘🐮",
-   "type": 3,
-   "api": "csp_MyPanGuard",
-   "searchable": 0,
-   "changeable": 0,
-   "indexs": 0,
-   "style": {
-    "type": "list"
-   },
-   "jar": "LOCALJAR"
-  },
-  {
    "key": "AiQwMkv",
    "name": "💓‍七味┃4K💓‍",
    "type": 3,
@@ -1437,11 +1400,36 @@
    "jar": "LOCALJAR"
   },
   {
-   "key": "QfUpdate",
-   "name": "🔄 线路包更新",
+   "key": "ffzy_cj",
+   "name": "非凡 • 高清",
    "type": 3,
-   "api": "csp_QfUpdate",
+   "api": "assets://js/lib/drpy2.min.js",
+   "searchable": 1,
+   "quickSearch": 1,
+   "filterable": 0,
+   "ext": "https://gh-proxy.com/https://raw.githubusercontent.com/qiujianwei-iptv/iptv-live/main/js/ffzy.js",
+   "jar": "LOCALJAR"
+  },
+  {
+   "key": "zy360_cj",
+   "name": "360 • 高清",
+   "type": 3,
+   "api": "assets://js/lib/drpy2.min.js",
+   "searchable": 1,
+   "quickSearch": 1,
+   "filterable": 0,
+   "ext": "https://gh-proxy.com/https://raw.githubusercontent.com/qiujianwei-iptv/iptv-live/main/js/360zy.js",
+   "jar": "LOCALJAR"
+  },
+  {
+   "key": "cz4k_js",
+   "name": "厂长 • 4K",
+   "type": 3,
+   "api": "assets://js/lib/drpy2.min.js",
    "searchable": 0,
+   "quickSearch": 0,
+   "filterable": 0,
+   "ext": "https://gh-proxy.com/https://raw.githubusercontent.com/qiujianwei-iptv/iptv-live/main/js/4kcz.js",
    "jar": "LOCALJAR"
   }
  ],
