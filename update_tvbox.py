@@ -458,14 +458,25 @@ def check_classes(sites, jar_classes):
     return disabled, revived
 
 
-def inject_own_sites(sites):
-    """自有采集站并入库：已在库则刷新定义，不在则追加"""
+def inject_own_sites(sites, jar_classes):
+    """自有站并入库：已在库则刷新定义，不在则追加"""
     index = {s.get("key"): i for i, s in enumerate(sites)}
     for own in OWN_CJ_SITES:
         if own["key"] in index:
             sites[index[own["key"]]].update(dict(own))
         else:
             sites.append(dict(own))
+    # 线路包更新入口（自己 jar 里的 QfUpdate 类）：
+    # 电视端点它就会去检查仓库里合并 jar 有没有新版，有就直接换包
+    if "QfUpdate" in jar_classes:
+        item = {
+            "key": "QfUpdate", "name": "🔄 线路包更新", "type": 3,
+            "api": "csp_QfUpdate", "searchable": 0, "_self": True,
+        }
+        if "QfUpdate" in index:
+            sites[index["QfUpdate"]].update(item)
+        else:
+            sites.insert(3, item)  # 首页第 4 位，跟前几位入口放一起
     return sites
 
 
@@ -560,7 +571,7 @@ def main(out_path="tvbox.json"):
             s["_disabled"] = False
             s["_dead_by"] = None
 
-    sites = inject_own_sites(sites)
+    sites = inject_own_sites(sites, jar_classes)
     sites = unify_config(sites)
 
     live = [s for s in sites if not s.get("_disabled")]
