@@ -39,6 +39,11 @@
    "type": 3,
    "api": "csp_QfUpdate",
    "searchable": 0,
+   "changeable": 0,
+   "indexs": 0,
+   "style": {
+    "type": "list"
+   },
    "jar": "LOCALJAR"
   },
   {
