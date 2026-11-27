@@ -1,9 +1,11 @@
 name: 每周合并上游 jar
 
-# 每周二北京时间 05:10（UTC 周一 21:10）检查潇洒 / 王二小 的 jar 有没有换，换了就自动合并
+# 【2026-11-27 已暂停自动合并】原每周二 05:10（UTC 周一 21:10）的 schedule 已移除。
+# 原因：该流程会调用 update_tvbox.py 重新生成 tvbox.json / tvbox_local.json，覆盖已定版的 v67 123 站配置。
+# 恢复方式：需要恢复时在 on: 下重新加入
+#   schedule:
+#     - cron: "10 21 * * 1"
 on:
-  schedule:
-    - cron: "10 21 * * 1"
   workflow_dispatch:
 
 permissions:
