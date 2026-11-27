@@ -1,8 +1,13 @@
 {
  "_meta": {
-  "updated_at": "2026-11-27 19:13",
-  "source": "xiaosa+wex merged snapshot",
-  "note": "Upper-stream offline fallback; regenerated on every successful sync"
+  "updated_at": "2026-11-27 21:21",
+  "sites": 117,
+  "live": 117,
+  "note": "自有线路库：上游只做新增/下线信号，上游挂掉照常出配置",
+  "sources": {
+   "xiaosa": true,
+   "wex": true
+  }
  },
  "xs": {
   "wallpaper": "http://127.0.0.1:9978/proxy?do=wallpaper",
@@ -302,11 +307,13 @@
   "sites": [
    {
     "key": "豆瓣",
-    "name": "秋风线路",
+    "name": "豆瓣 • 首页",
     "type": 3,
     "api": "csp_Douban",
     "searchable": 0,
-    "jar": "https://gh-proxy.com/https://raw.githubusercontent.com/qiujianwei-iptv/iptv-live/main/jar/qf_spider_merged.jar;md5;c58eed36c90d07e45348a2bfc6617a8b"
+    "jar": "https://gh-proxy.com/https://raw.githubusercontent.com/qiujianwei-iptv/iptv-live/main/jar/qf_spider_merged.jar;md5;c58eed36c90d07e45348a2bfc6617a8b",
+    "_origin": "xiaosa",
+    "_since": "2026-11-27"
    },
    {
     "key": "配置中心",
@@ -320,14 +327,39 @@
      "type": "rect",
      "ratio": 1.618
     },
-    "jar": "https://gh-proxy.com/https://raw.githubusercontent.com/qiujianwei-iptv/iptv-live/main/jar/qf_spider_merged.jar;md5;c58eed36c90d07e45348a2bfc6617a8b"
+    "jar": "https://gh-proxy.com/https://raw.githubusercontent.com/qiujianwei-iptv/iptv-live/main/jar/qf_spider_merged.jar;md5;c58eed36c90d07e45348a2bfc6617a8b",
+    "_origin": "xiaosa",
+    "_since": "2026-11-27"
    },
    {
     "key": "本地",
     "name": "本地 • 视频",
     "type": 3,
     "api": "csp_LocalFile",
-    "jar": "https://gh-proxy.com/https://raw.githubusercontent.com/qiujianwei-iptv/iptv-live/main/jar/qf_spider_merged.jar;md5;c58eed36c90d07e45348a2bfc6617a8b"
+    "jar": "https://gh-proxy.com/https://raw.githubusercontent.com/qiujianwei-iptv/iptv-live/main/jar/qf_spider_merged.jar;md5;c58eed36c90d07e45348a2bfc6617a8b",
+    "_origin": "xiaosa",
+    "_since": "2026-11-27"
+   },
+   {
+    "key": "玩偶",
+    "name": "玩偶 • 4K",
+    "type": 3,
+    "api": "csp_Wogg",
+    "searchable": 1,
+    "quickSearch": 1,
+    "filterable": 1,
+    "changeable": 1,
+    "ext": {
+     "site": [
+      "https://www.wogg.live",
+      "https://woggpan.888484.xyz",
+      "https://wogg.xxooo.cf",
+      "https://woggpan.xxooo.cf"
+     ]
+    },
+    "timeout": 60,
+    "_origin": "xiaosa",
+    "_since": "2026-11-27"
    },
    {
     "key": "热播影视",
@@ -340,7 +372,9 @@
     "ext": {
      "url": "http://v.rbotv.cn"
     },
-    "jar": "https://gh-proxy.com/https://raw.githubusercontent.com/qiujianwei-iptv/iptv-live/main/jar/qf_spider_merged.jar;md5;c58eed36c90d07e45348a2bfc6617a8b"
+    "jar": "https://gh-proxy.com/https://raw.githubusercontent.com/qiujianwei-iptv/iptv-live/main/jar/qf_spider_merged.jar;md5;c58eed36c90d07e45348a2bfc6617a8b",
+    "_origin": "xiaosa",
+    "_since": "2026-11-27"
    },
    {
     "key": "云播",
@@ -350,7 +384,9 @@
     "searchable": 1,
     "quickSearch": 1,
     "filterable": 1,
-    "jar": "https://gh-proxy.com/https://raw.githubusercontent.com/qiujianwei-iptv/iptv-live/main/jar/qf_spider_merged.jar;md5;c58eed36c90d07e45348a2bfc6617a8b"
+    "jar": "https://gh-proxy.com/https://raw.githubusercontent.com/qiujianwei-iptv/iptv-live/main/jar/qf_spider_merged.jar;md5;c58eed36c90d07e45348a2bfc6617a8b",
+    "_origin": "xiaosa",
+    "_since": "2026-11-27"
    },
    {
     "key": "未来",
@@ -360,7 +396,9 @@
     "searchable": 1,
     "quickSearch": 1,
     "filterable": 0,
-    "jar": "https://gh-proxy.com/https://raw.githubusercontent.com/qiujianwei-iptv/iptv-live/main/jar/qf_spider_merged.jar;md5;c58eed36c90d07e45348a2bfc6617a8b"
+    "jar": "https://gh-proxy.com/https://raw.githubusercontent.com/qiujianwei-iptv/iptv-live/main/jar/qf_spider_merged.jar;md5;c58eed36c90d07e45348a2bfc6617a8b",
+    "_origin": "xiaosa",
+    "_since": "2026-11-27"
    },
    {
     "key": "快映fox",
@@ -371,7 +409,9 @@
     "quickSearch": 1,
     "filterable": 0,
     "ext": "https://www.pjb777.top/ky4kbgq7b273.json",
-    "jar": "https://gh-proxy.com/https://raw.githubusercontent.com/qiujianwei-iptv/iptv-live/main/jar/qf_spider_merged.jar;md5;c58eed36c90d07e45348a2bfc6617a8b"
+    "jar": "https://gh-proxy.com/https://raw.githubusercontent.com/qiujianwei-iptv/iptv-live/main/jar/qf_spider_merged.jar;md5;c58eed36c90d07e45348a2bfc6617a8b",
+    "_origin": "xiaosa",
+    "_since": "2026-11-27"
    },
    {
     "key": "一起影视",
@@ -381,7 +421,9 @@
     "searchable": 1,
     "quickSearch": 1,
     "filterable": 0,
-    "jar": "https://gh-proxy.com/https://raw.githubusercontent.com/qiujianwei-iptv/iptv-live/main/jar/qf_spider_merged.jar;md5;c58eed36c90d07e45348a2bfc6617a8b"
+    "jar": "https://gh-proxy.com/https://raw.githubusercontent.com/qiujianwei-iptv/iptv-live/main/jar/qf_spider_merged.jar;md5;c58eed36c90d07e45348a2bfc6617a8b",
+    "_origin": "xiaosa",
+    "_since": "2026-11-27"
    },
    {
     "key": "咕噜",
@@ -391,7 +433,9 @@
     "searchable": 1,
     "quickSearch": 1,
     "filterable": 1,
-    "jar": "https://gh-proxy.com/https://raw.githubusercontent.com/qiujianwei-iptv/iptv-live/main/jar/qf_spider_merged.jar;md5;c58eed36c90d07e45348a2bfc6617a8b"
+    "jar": "https://gh-proxy.com/https://raw.githubusercontent.com/qiujianwei-iptv/iptv-live/main/jar/qf_spider_merged.jar;md5;c58eed36c90d07e45348a2bfc6617a8b",
+    "_origin": "xiaosa",
+    "_since": "2026-11-27"
    },
    {
     "key": "布布",
@@ -409,7 +453,9 @@
      "client": "8f3d2a1c7b6e5d4c9a0b1f2e3d4c5b6a",
      "sign": "ddtvf65f3a83d6d9ad6f"
     },
-    "jar": "https://gh-proxy.com/https://raw.githubusercontent.com/qiujianwei-iptv/iptv-live/main/jar/qf_spider_merged.jar;md5;c58eed36c90d07e45348a2bfc6617a8b"
+    "jar": "https://gh-proxy.com/https://raw.githubusercontent.com/qiujianwei-iptv/iptv-live/main/jar/qf_spider_merged.jar;md5;c58eed36c90d07e45348a2bfc6617a8b",
+    "_origin": "xiaosa",
+    "_since": "2026-11-27"
    },
    {
     "key": "马猴影视",
@@ -426,7 +472,9 @@
      "sk": "SK-woniu-thanks",
      "ver": "1"
     },
-    "jar": "https://gh-proxy.com/https://raw.githubusercontent.com/qiujianwei-iptv/iptv-live/main/jar/qf_spider_merged.jar;md5;c58eed36c90d07e45348a2bfc6617a8b"
+    "jar": "https://gh-proxy.com/https://raw.githubusercontent.com/qiujianwei-iptv/iptv-live/main/jar/qf_spider_merged.jar;md5;c58eed36c90d07e45348a2bfc6617a8b",
+    "_origin": "xiaosa",
+    "_since": "2026-11-27"
    },
    {
     "key": "韩圈",
@@ -436,7 +484,9 @@
     "searchable": 1,
     "quickSearch": 1,
     "filterable": 1,
-    "jar": "https://gh-proxy.com/https://raw.githubusercontent.com/qiujianwei-iptv/iptv-live/main/jar/qf_spider_merged.jar;md5;c58eed36c90d07e45348a2bfc6617a8b"
+    "jar": "https://gh-proxy.com/https://raw.githubusercontent.com/qiujianwei-iptv/iptv-live/main/jar/qf_spider_merged.jar;md5;c58eed36c90d07e45348a2bfc6617a8b",
+    "_origin": "xiaosa",
+    "_since": "2026-11-27"
    },
    {
     "key": "师兄",
@@ -456,7 +506,9 @@
      "user_agent": "Dart/3.11 (dart:io)",
      "private_key": "MIICdgIBADANBgkqhkiG9w0BAQEFAASCAmAwggJcAgEAAoGBAO9omsi+ys7fmBH3w1d0DfvRAQlj0wLB1BI3Xsb9WSiu4lEc1Me+XubnzTxaQPCBbnuZURerRrO981n9GhsQkDcWmtW+X1mpCllOWt8bbnWwKPsHqemRFxncDWE/d0nA9yrZn6nLVy/J7DJ3cVJlIs9bNLArqEiR8KVrAf1PNSLXAgMBAAECgYBGPn3z2q8s5cP7uaOSHFYiBZ/1PlniXDa6JY7ked9YJX/35qqz9LJps6evRpf5OTDOiRyXAkUbZedqBu5K9KArSGVyxp/Vym4b0siEVeM8qq9Gbf74lHPH+L+X/NmXemydwZHR1lU9PiLJVMsh8o6aAazkB8ijZcsNMyYZUSH36QJBAPvHq511Uz45lx5BtVSZClcUnqPRFSmNnRdjATikDzFTObemnGJU3eL/7VIPWtjEj9LvGP/WyX6gyo1zKc8BRtUCQQDza9oFnSmMHPkvrll/zMxcy3FeOTW0hctBhdIMbBmjJJyhlfTmBOvxwm8I91F05ydkSZ1yLuLhAjLxbjqs2fD7AkB/KOHQvW+UTqu22ULGfiCNyFkyrSc9/EqphBQa0ijmJX1R9nCm7Ou/eLgYKK8eKW/l/WGn3IeZT4XdGJu185QdAkBthqmivQRktuSoP5qlllCdsCxiaPtxLoI2CTBpxnoCngab7g0zMiO3s/Sh5CYSo69lwHnHVrFe7M5fM2nTPHzhAkEAiJETUvYFwCVKNGTYMzUg7v3QblqYXB+IhzcU37sHZOn6a46V5eJDadavIvuEmoxJHWTybi+1ZkN7LeUUg4ylCw=="
     },
-    "jar": "https://gh-proxy.com/https://raw.githubusercontent.com/qiujianwei-iptv/iptv-live/main/jar/qf_spider_merged.jar;md5;c58eed36c90d07e45348a2bfc6617a8b"
+    "jar": "https://gh-proxy.com/https://raw.githubusercontent.com/qiujianwei-iptv/iptv-live/main/jar/qf_spider_merged.jar;md5;c58eed36c90d07e45348a2bfc6617a8b",
+    "_origin": "xiaosa",
+    "_since": "2026-11-27"
    },
    {
     "key": "剧圈99",
@@ -471,7 +523,9 @@
      "buildNumber": "2002",
      "buildSignature": "054FA8DDA4319C6B6A9B954CA5777541C993F00B1B0BD4394F7EDE48184C4594"
     },
-    "jar": "https://gh-proxy.com/https://raw.githubusercontent.com/qiujianwei-iptv/iptv-live/main/jar/qf_spider_merged.jar;md5;c58eed36c90d07e45348a2bfc6617a8b"
+    "jar": "https://gh-proxy.com/https://raw.githubusercontent.com/qiujianwei-iptv/iptv-live/main/jar/qf_spider_merged.jar;md5;c58eed36c90d07e45348a2bfc6617a8b",
+    "_origin": "xiaosa",
+    "_since": "2026-11-27"
    },
    {
     "key": "半日99",
@@ -486,7 +540,9 @@
      "buildNumber": "2001",
      "buildSignature": "A40DA80A59D170CAA950CF15C18C454D47A39B26989D8B640ECD745BA71BF5DC"
     },
-    "jar": "https://gh-proxy.com/https://raw.githubusercontent.com/qiujianwei-iptv/iptv-live/main/jar/qf_spider_merged.jar;md5;c58eed36c90d07e45348a2bfc6617a8b"
+    "jar": "https://gh-proxy.com/https://raw.githubusercontent.com/qiujianwei-iptv/iptv-live/main/jar/qf_spider_merged.jar;md5;c58eed36c90d07e45348a2bfc6617a8b",
+    "_origin": "xiaosa",
+    "_since": "2026-11-27"
    },
    {
     "key": "天堂",
@@ -507,7 +563,9 @@
      "version": "3.0.0.7",
      "decrypt": "0"
     },
-    "jar": "https://gh-proxy.com/https://raw.githubusercontent.com/qiujianwei-iptv/iptv-live/main/jar/qf_spider_merged.jar;md5;c58eed36c90d07e45348a2bfc6617a8b"
+    "jar": "https://gh-proxy.com/https://raw.githubusercontent.com/qiujianwei-iptv/iptv-live/main/jar/qf_spider_merged.jar;md5;c58eed36c90d07e45348a2bfc6617a8b",
+    "_origin": "xiaosa",
+    "_since": "2026-11-27"
    },
    {
     "key": "橘汁",
@@ -528,7 +586,9 @@
      "version": "3.0.7.0",
      "decrypt": "1"
     },
-    "jar": "https://gh-proxy.com/https://raw.githubusercontent.com/qiujianwei-iptv/iptv-live/main/jar/qf_spider_merged.jar;md5;c58eed36c90d07e45348a2bfc6617a8b"
+    "jar": "https://gh-proxy.com/https://raw.githubusercontent.com/qiujianwei-iptv/iptv-live/main/jar/qf_spider_merged.jar;md5;c58eed36c90d07e45348a2bfc6617a8b",
+    "_origin": "xiaosa",
+    "_since": "2026-11-27"
    },
    {
     "key": "华谊",
@@ -549,7 +609,9 @@
      "version": "6.0.0.1",
      "decrypt": "0"
     },
-    "jar": "https://gh-proxy.com/https://raw.githubusercontent.com/qiujianwei-iptv/iptv-live/main/jar/qf_spider_merged.jar;md5;c58eed36c90d07e45348a2bfc6617a8b"
+    "jar": "https://gh-proxy.com/https://raw.githubusercontent.com/qiujianwei-iptv/iptv-live/main/jar/qf_spider_merged.jar;md5;c58eed36c90d07e45348a2bfc6617a8b",
+    "_origin": "xiaosa",
+    "_since": "2026-11-27"
    },
    {
     "key": "苹果",
@@ -570,7 +632,9 @@
      "version": "1.0.0.3",
      "decrypt": "0"
     },
-    "jar": "https://gh-proxy.com/https://raw.githubusercontent.com/qiujianwei-iptv/iptv-live/main/jar/qf_spider_merged.jar;md5;c58eed36c90d07e45348a2bfc6617a8b"
+    "jar": "https://gh-proxy.com/https://raw.githubusercontent.com/qiujianwei-iptv/iptv-live/main/jar/qf_spider_merged.jar;md5;c58eed36c90d07e45348a2bfc6617a8b",
+    "_origin": "xiaosa",
+    "_since": "2026-11-27"
    },
    {
     "key": "蓝鹰",
@@ -586,7 +650,9 @@
      "init": "initV122",
      "ua": "okhttp/3.10.0"
     },
-    "jar": "https://gh-proxy.com/https://raw.githubusercontent.com/qiujianwei-iptv/iptv-live/main/jar/qf_spider_merged.jar;md5;c58eed36c90d07e45348a2bfc6617a8b"
+    "jar": "https://gh-proxy.com/https://raw.githubusercontent.com/qiujianwei-iptv/iptv-live/main/jar/qf_spider_merged.jar;md5;c58eed36c90d07e45348a2bfc6617a8b",
+    "_origin": "xiaosa",
+    "_since": "2026-11-27"
    },
    {
     "key": "蓝鸟",
@@ -602,7 +668,9 @@
      "init": "initV122",
      "ua": "okhttp/3.10.0"
     },
-    "jar": "https://gh-proxy.com/https://raw.githubusercontent.com/qiujianwei-iptv/iptv-live/main/jar/qf_spider_merged.jar;md5;c58eed36c90d07e45348a2bfc6617a8b"
+    "jar": "https://gh-proxy.com/https://raw.githubusercontent.com/qiujianwei-iptv/iptv-live/main/jar/qf_spider_merged.jar;md5;c58eed36c90d07e45348a2bfc6617a8b",
+    "_origin": "xiaosa",
+    "_since": "2026-11-27"
    },
    {
     "key": "王子",
@@ -616,7 +684,9 @@
      "dataKey": "5a9w6x58dsq6z3a6",
      "dataIv": "5a9w6x58dsq6z3a6"
     },
-    "jar": "https://gh-proxy.com/https://raw.githubusercontent.com/qiujianwei-iptv/iptv-live/main/jar/qf_spider_merged.jar;md5;c58eed36c90d07e45348a2bfc6617a8b"
+    "jar": "https://gh-proxy.com/https://raw.githubusercontent.com/qiujianwei-iptv/iptv-live/main/jar/qf_spider_merged.jar;md5;c58eed36c90d07e45348a2bfc6617a8b",
+    "_origin": "xiaosa",
+    "_since": "2026-11-27"
    },
    {
     "key": "茉莉Get",
@@ -630,14 +700,18 @@
      "dataKey": "88689667dce61725",
      "dataIv": "88689667dce61725"
     },
-    "jar": "https://gh-proxy.com/https://raw.githubusercontent.com/qiujianwei-iptv/iptv-live/main/jar/qf_spider_merged.jar;md5;c58eed36c90d07e45348a2bfc6617a8b"
+    "jar": "https://gh-proxy.com/https://raw.githubusercontent.com/qiujianwei-iptv/iptv-live/main/jar/qf_spider_merged.jar;md5;c58eed36c90d07e45348a2bfc6617a8b",
+    "_origin": "xiaosa",
+    "_since": "2026-11-27"
    },
    {
     "key": "三六零",
     "name": "三六零 • 视频",
     "type": 3,
     "api": "csp_SP360",
-    "jar": "https://gh-proxy.com/https://raw.githubusercontent.com/qiujianwei-iptv/iptv-live/main/jar/qf_spider_merged.jar;md5;c58eed36c90d07e45348a2bfc6617a8b"
+    "jar": "https://gh-proxy.com/https://raw.githubusercontent.com/qiujianwei-iptv/iptv-live/main/jar/qf_spider_merged.jar;md5;c58eed36c90d07e45348a2bfc6617a8b",
+    "_origin": "xiaosa",
+    "_since": "2026-11-27"
    },
    {
     "key": "快映",
@@ -655,7 +729,9 @@
      ]
     },
     "timeout": 60,
-    "jar": "https://gh-proxy.com/https://raw.githubusercontent.com/qiujianwei-iptv/iptv-live/main/jar/qf_spider_merged.jar;md5;c58eed36c90d07e45348a2bfc6617a8b"
+    "jar": "https://gh-proxy.com/https://raw.githubusercontent.com/qiujianwei-iptv/iptv-live/main/jar/qf_spider_merged.jar;md5;c58eed36c90d07e45348a2bfc6617a8b",
+    "_origin": "xiaosa",
+    "_since": "2026-11-27"
    },
    {
     "key": "木偶",
@@ -675,7 +751,9 @@
      ]
     },
     "timeout": 60,
-    "jar": "https://gh-proxy.com/https://raw.githubusercontent.com/qiujianwei-iptv/iptv-live/main/jar/qf_spider_merged.jar;md5;c58eed36c90d07e45348a2bfc6617a8b"
+    "jar": "https://gh-proxy.com/https://raw.githubusercontent.com/qiujianwei-iptv/iptv-live/main/jar/qf_spider_merged.jar;md5;c58eed36c90d07e45348a2bfc6617a8b",
+    "_origin": "xiaosa",
+    "_since": "2026-11-27"
    },
    {
     "key": "蜡笔",
@@ -695,7 +773,9 @@
      ]
     },
     "timeout": 60,
-    "jar": "https://gh-proxy.com/https://raw.githubusercontent.com/qiujianwei-iptv/iptv-live/main/jar/qf_spider_merged.jar;md5;c58eed36c90d07e45348a2bfc6617a8b"
+    "jar": "https://gh-proxy.com/https://raw.githubusercontent.com/qiujianwei-iptv/iptv-live/main/jar/qf_spider_merged.jar;md5;c58eed36c90d07e45348a2bfc6617a8b",
+    "_origin": "xiaosa",
+    "_since": "2026-11-27"
    },
    {
     "key": "闪电",
@@ -713,7 +793,9 @@
      ]
     },
     "timeout": 60,
-    "jar": "https://gh-proxy.com/https://raw.githubusercontent.com/qiujianwei-iptv/iptv-live/main/jar/qf_spider_merged.jar;md5;c58eed36c90d07e45348a2bfc6617a8b"
+    "jar": "https://gh-proxy.com/https://raw.githubusercontent.com/qiujianwei-iptv/iptv-live/main/jar/qf_spider_merged.jar;md5;c58eed36c90d07e45348a2bfc6617a8b",
+    "_origin": "xiaosa",
+    "_since": "2026-11-27"
    },
    {
     "key": "多多",
@@ -732,7 +814,9 @@
      ]
     },
     "timeout": 60,
-    "jar": "https://gh-proxy.com/https://raw.githubusercontent.com/qiujianwei-iptv/iptv-live/main/jar/qf_spider_merged.jar;md5;c58eed36c90d07e45348a2bfc6617a8b"
+    "jar": "https://gh-proxy.com/https://raw.githubusercontent.com/qiujianwei-iptv/iptv-live/main/jar/qf_spider_merged.jar;md5;c58eed36c90d07e45348a2bfc6617a8b",
+    "_origin": "xiaosa",
+    "_since": "2026-11-27"
    },
    {
     "key": "虎斑",
@@ -750,7 +834,9 @@
      ]
     },
     "timeout": 60,
-    "jar": "https://gh-proxy.com/https://raw.githubusercontent.com/qiujianwei-iptv/iptv-live/main/jar/qf_spider_merged.jar;md5;c58eed36c90d07e45348a2bfc6617a8b"
+    "jar": "https://gh-proxy.com/https://raw.githubusercontent.com/qiujianwei-iptv/iptv-live/main/jar/qf_spider_merged.jar;md5;c58eed36c90d07e45348a2bfc6617a8b",
+    "_origin": "xiaosa",
+    "_since": "2026-11-27"
    },
    {
     "key": "花卷",
@@ -768,7 +854,9 @@
      ]
     },
     "timeout": 60,
-    "jar": "https://gh-proxy.com/https://raw.githubusercontent.com/qiujianwei-iptv/iptv-live/main/jar/qf_spider_merged.jar;md5;c58eed36c90d07e45348a2bfc6617a8b"
+    "jar": "https://gh-proxy.com/https://raw.githubusercontent.com/qiujianwei-iptv/iptv-live/main/jar/qf_spider_merged.jar;md5;c58eed36c90d07e45348a2bfc6617a8b",
+    "_origin": "xiaosa",
+    "_since": "2026-11-27"
    },
    {
     "key": "种子",
@@ -785,7 +873,9 @@
      ]
     },
     "timeout": 60,
-    "jar": "https://gh-proxy.com/https://raw.githubusercontent.com/qiujianwei-iptv/iptv-live/main/jar/qf_spider_merged.jar;md5;c58eed36c90d07e45348a2bfc6617a8b"
+    "jar": "https://gh-proxy.com/https://raw.githubusercontent.com/qiujianwei-iptv/iptv-live/main/jar/qf_spider_merged.jar;md5;c58eed36c90d07e45348a2bfc6617a8b",
+    "_origin": "xiaosa",
+    "_since": "2026-11-27"
    },
    {
     "key": "搬运",
@@ -796,7 +886,9 @@
     "quickSearch": 1,
     "filterable": 1,
     "timeout": 60,
-    "jar": "https://gh-proxy.com/https://raw.githubusercontent.com/qiujianwei-iptv/iptv-live/main/jar/qf_spider_merged.jar;md5;c58eed36c90d07e45348a2bfc6617a8b"
+    "jar": "https://gh-proxy.com/https://raw.githubusercontent.com/qiujianwei-iptv/iptv-live/main/jar/qf_spider_merged.jar;md5;c58eed36c90d07e45348a2bfc6617a8b",
+    "_origin": "xiaosa",
+    "_since": "2026-11-27"
    },
    {
     "key": "指南",
@@ -812,7 +904,9 @@
      ]
     },
     "timeout": 60,
-    "jar": "https://gh-proxy.com/https://raw.githubusercontent.com/qiujianwei-iptv/iptv-live/main/jar/qf_spider_merged.jar;md5;c58eed36c90d07e45348a2bfc6617a8b"
+    "jar": "https://gh-proxy.com/https://raw.githubusercontent.com/qiujianwei-iptv/iptv-live/main/jar/qf_spider_merged.jar;md5;c58eed36c90d07e45348a2bfc6617a8b",
+    "_origin": "xiaosa",
+    "_since": "2026-11-27"
    },
    {
     "key": "小丑",
@@ -828,7 +922,9 @@
      ]
     },
     "timeout": 60,
-    "jar": "https://gh-proxy.com/https://raw.githubusercontent.com/qiujianwei-iptv/iptv-live/main/jar/qf_spider_merged.jar;md5;c58eed36c90d07e45348a2bfc6617a8b"
+    "jar": "https://gh-proxy.com/https://raw.githubusercontent.com/qiujianwei-iptv/iptv-live/main/jar/qf_spider_merged.jar;md5;c58eed36c90d07e45348a2bfc6617a8b",
+    "_origin": "xiaosa",
+    "_since": "2026-11-27"
    },
    {
     "key": "茉莉",
@@ -845,7 +941,9 @@
      ]
     },
     "timeout": 60,
-    "jar": "https://gh-proxy.com/https://raw.githubusercontent.com/qiujianwei-iptv/iptv-live/main/jar/qf_spider_merged.jar;md5;c58eed36c90d07e45348a2bfc6617a8b"
+    "jar": "https://gh-proxy.com/https://raw.githubusercontent.com/qiujianwei-iptv/iptv-live/main/jar/qf_spider_merged.jar;md5;c58eed36c90d07e45348a2bfc6617a8b",
+    "_origin": "xiaosa",
+    "_since": "2026-11-27"
    },
    {
     "key": "爱盼",
@@ -856,7 +954,9 @@
     "quickSearch": 1,
     "filterable": 1,
     "timeout": 60,
-    "jar": "https://gh-proxy.com/https://raw.githubusercontent.com/qiujianwei-iptv/iptv-live/main/jar/qf_spider_merged.jar;md5;c58eed36c90d07e45348a2bfc6617a8b"
+    "jar": "https://gh-proxy.com/https://raw.githubusercontent.com/qiujianwei-iptv/iptv-live/main/jar/qf_spider_merged.jar;md5;c58eed36c90d07e45348a2bfc6617a8b",
+    "_origin": "xiaosa",
+    "_since": "2026-11-27"
    },
    {
     "key": "移动",
@@ -867,7 +967,9 @@
     "quickSearch": 1,
     "filterable": 1,
     "timeout": 60,
-    "jar": "https://gh-proxy.com/https://raw.githubusercontent.com/qiujianwei-iptv/iptv-live/main/jar/qf_spider_merged.jar;md5;c58eed36c90d07e45348a2bfc6617a8b"
+    "jar": "https://gh-proxy.com/https://raw.githubusercontent.com/qiujianwei-iptv/iptv-live/main/jar/qf_spider_merged.jar;md5;c58eed36c90d07e45348a2bfc6617a8b",
+    "_origin": "xiaosa",
+    "_since": "2026-11-27"
    },
    {
     "key": "即刻",
@@ -881,7 +983,9 @@
      "type": "list"
     },
     "timeout": 60,
-    "jar": "https://gh-proxy.com/https://raw.githubusercontent.com/qiujianwei-iptv/iptv-live/main/jar/qf_spider_merged.jar;md5;c58eed36c90d07e45348a2bfc6617a8b"
+    "jar": "https://gh-proxy.com/https://raw.githubusercontent.com/qiujianwei-iptv/iptv-live/main/jar/qf_spider_merged.jar;md5;c58eed36c90d07e45348a2bfc6617a8b",
+    "_origin": "xiaosa",
+    "_since": "2026-11-27"
    },
    {
     "key": "双星",
@@ -895,7 +999,9 @@
      "type": "list"
     },
     "timeout": 60,
-    "jar": "https://gh-proxy.com/https://raw.githubusercontent.com/qiujianwei-iptv/iptv-live/main/jar/qf_spider_merged.jar;md5;c58eed36c90d07e45348a2bfc6617a8b"
+    "jar": "https://gh-proxy.com/https://raw.githubusercontent.com/qiujianwei-iptv/iptv-live/main/jar/qf_spider_merged.jar;md5;c58eed36c90d07e45348a2bfc6617a8b",
+    "_origin": "xiaosa",
+    "_since": "2026-11-27"
    },
    {
     "key": "卡卡",
@@ -909,7 +1015,9 @@
      "type": "list"
     },
     "timeout": 60,
-    "jar": "https://gh-proxy.com/https://raw.githubusercontent.com/qiujianwei-iptv/iptv-live/main/jar/qf_spider_merged.jar;md5;c58eed36c90d07e45348a2bfc6617a8b"
+    "jar": "https://gh-proxy.com/https://raw.githubusercontent.com/qiujianwei-iptv/iptv-live/main/jar/qf_spider_merged.jar;md5;c58eed36c90d07e45348a2bfc6617a8b",
+    "_origin": "xiaosa",
+    "_since": "2026-11-27"
    },
    {
     "key": "七猫短剧",
@@ -917,7 +1025,9 @@
     "type": 3,
     "api": "csp_ShortQimao",
     "genre": "shortdrama",
-    "jar": "https://gh-proxy.com/https://raw.githubusercontent.com/qiujianwei-iptv/iptv-live/main/jar/qf_spider_merged.jar;md5;c58eed36c90d07e45348a2bfc6617a8b"
+    "jar": "https://gh-proxy.com/https://raw.githubusercontent.com/qiujianwei-iptv/iptv-live/main/jar/qf_spider_merged.jar;md5;c58eed36c90d07e45348a2bfc6617a8b",
+    "_origin": "xiaosa",
+    "_since": "2026-11-27"
    },
    {
     "key": "河马短剧",
@@ -925,7 +1035,9 @@
     "type": 3,
     "api": "csp_ShortHema",
     "genre": "shortdrama",
-    "jar": "https://gh-proxy.com/https://raw.githubusercontent.com/qiujianwei-iptv/iptv-live/main/jar/qf_spider_merged.jar;md5;c58eed36c90d07e45348a2bfc6617a8b"
+    "jar": "https://gh-proxy.com/https://raw.githubusercontent.com/qiujianwei-iptv/iptv-live/main/jar/qf_spider_merged.jar;md5;c58eed36c90d07e45348a2bfc6617a8b",
+    "_origin": "xiaosa",
+    "_since": "2026-11-27"
    },
    {
     "key": "围观短剧",
@@ -933,7 +1045,9 @@
     "type": 3,
     "api": "csp_ShortWeiguan",
     "genre": "shortdrama",
-    "jar": "https://gh-proxy.com/https://raw.githubusercontent.com/qiujianwei-iptv/iptv-live/main/jar/qf_spider_merged.jar;md5;c58eed36c90d07e45348a2bfc6617a8b"
+    "jar": "https://gh-proxy.com/https://raw.githubusercontent.com/qiujianwei-iptv/iptv-live/main/jar/qf_spider_merged.jar;md5;c58eed36c90d07e45348a2bfc6617a8b",
+    "_origin": "xiaosa",
+    "_since": "2026-11-27"
    },
    {
     "key": "好看短剧",
@@ -941,7 +1055,9 @@
     "type": 3,
     "api": "csp_ShortHaokan",
     "genre": "shortdrama",
-    "jar": "https://gh-proxy.com/https://raw.githubusercontent.com/qiujianwei-iptv/iptv-live/main/jar/qf_spider_merged.jar;md5;c58eed36c90d07e45348a2bfc6617a8b"
+    "jar": "https://gh-proxy.com/https://raw.githubusercontent.com/qiujianwei-iptv/iptv-live/main/jar/qf_spider_merged.jar;md5;c58eed36c90d07e45348a2bfc6617a8b",
+    "_origin": "xiaosa",
+    "_since": "2026-11-27"
    },
    {
     "key": "星芽短剧",
@@ -949,7 +1065,9 @@
     "type": 3,
     "api": "csp_ShortXingya",
     "genre": "shortdrama",
-    "jar": "https://gh-proxy.com/https://raw.githubusercontent.com/qiujianwei-iptv/iptv-live/main/jar/qf_spider_merged.jar;md5;c58eed36c90d07e45348a2bfc6617a8b"
+    "jar": "https://gh-proxy.com/https://raw.githubusercontent.com/qiujianwei-iptv/iptv-live/main/jar/qf_spider_merged.jar;md5;c58eed36c90d07e45348a2bfc6617a8b",
+    "_origin": "xiaosa",
+    "_since": "2026-11-27"
    },
    {
     "key": "果果短剧",
@@ -963,28 +1081,36 @@
      "分类url": "https://www.mochadj.com/i/{cateId}-{catePg}.html"
     },
     "genre": "shortdrama",
-    "jar": "https://gh-proxy.com/https://raw.githubusercontent.com/qiujianwei-iptv/iptv-live/main/jar/qf_spider_merged.jar;md5;c58eed36c90d07e45348a2bfc6617a8b"
+    "jar": "https://gh-proxy.com/https://raw.githubusercontent.com/qiujianwei-iptv/iptv-live/main/jar/qf_spider_merged.jar;md5;c58eed36c90d07e45348a2bfc6617a8b",
+    "_origin": "xiaosa",
+    "_since": "2026-11-27"
    },
    {
     "key": "看剧",
     "name": "看剧 • 影视",
     "type": 3,
     "api": "csp_KanJuAI",
-    "jar": "https://gh-proxy.com/https://raw.githubusercontent.com/qiujianwei-iptv/iptv-live/main/jar/qf_spider_merged.jar;md5;c58eed36c90d07e45348a2bfc6617a8b"
+    "jar": "https://gh-proxy.com/https://raw.githubusercontent.com/qiujianwei-iptv/iptv-live/main/jar/qf_spider_merged.jar;md5;c58eed36c90d07e45348a2bfc6617a8b",
+    "_origin": "xiaosa",
+    "_since": "2026-11-27"
    },
    {
     "key": "懂片",
     "name": "懂片 • 影视",
     "type": 3,
     "api": "csp_DongPian",
-    "jar": "https://gh-proxy.com/https://raw.githubusercontent.com/qiujianwei-iptv/iptv-live/main/jar/qf_spider_merged.jar;md5;c58eed36c90d07e45348a2bfc6617a8b"
+    "jar": "https://gh-proxy.com/https://raw.githubusercontent.com/qiujianwei-iptv/iptv-live/main/jar/qf_spider_merged.jar;md5;c58eed36c90d07e45348a2bfc6617a8b",
+    "_origin": "xiaosa",
+    "_since": "2026-11-27"
    },
    {
     "key": "星辰影视",
     "name": "星辰 • 影视",
     "type": 3,
     "api": "csp_XingChen",
-    "jar": "https://gh-proxy.com/https://raw.githubusercontent.com/qiujianwei-iptv/iptv-live/main/jar/qf_spider_merged.jar;md5;c58eed36c90d07e45348a2bfc6617a8b"
+    "jar": "https://gh-proxy.com/https://raw.githubusercontent.com/qiujianwei-iptv/iptv-live/main/jar/qf_spider_merged.jar;md5;c58eed36c90d07e45348a2bfc6617a8b",
+    "_origin": "xiaosa",
+    "_since": "2026-11-27"
    },
    {
     "key": "旺旺影视",
@@ -992,21 +1118,27 @@
     "type": 3,
     "api": "csp_Wwys",
     "ext": "https://vip.wwgz.cn:5200",
-    "jar": "https://gh-proxy.com/https://raw.githubusercontent.com/qiujianwei-iptv/iptv-live/main/jar/qf_spider_merged.jar;md5;c58eed36c90d07e45348a2bfc6617a8b"
+    "jar": "https://gh-proxy.com/https://raw.githubusercontent.com/qiujianwei-iptv/iptv-live/main/jar/qf_spider_merged.jar;md5;c58eed36c90d07e45348a2bfc6617a8b",
+    "_origin": "xiaosa",
+    "_since": "2026-11-27"
    },
    {
     "key": "独播影视",
     "name": "独播 • 影视",
     "type": 3,
     "api": "csp_Duboku",
-    "jar": "https://gh-proxy.com/https://raw.githubusercontent.com/qiujianwei-iptv/iptv-live/main/jar/qf_spider_merged.jar;md5;c58eed36c90d07e45348a2bfc6617a8b"
+    "jar": "https://gh-proxy.com/https://raw.githubusercontent.com/qiujianwei-iptv/iptv-live/main/jar/qf_spider_merged.jar;md5;c58eed36c90d07e45348a2bfc6617a8b",
+    "_origin": "xiaosa",
+    "_since": "2026-11-27"
    },
    {
     "key": "瓜子影视",
     "name": "瓜子 • 影视",
     "type": 3,
     "api": "csp_Gz360",
-    "jar": "https://gh-proxy.com/https://raw.githubusercontent.com/qiujianwei-iptv/iptv-live/main/jar/qf_spider_merged.jar;md5;c58eed36c90d07e45348a2bfc6617a8b"
+    "jar": "https://gh-proxy.com/https://raw.githubusercontent.com/qiujianwei-iptv/iptv-live/main/jar/qf_spider_merged.jar;md5;c58eed36c90d07e45348a2bfc6617a8b",
+    "_origin": "xiaosa",
+    "_since": "2026-11-27"
    },
    {
     "key": "厂长影视",
@@ -1017,7 +1149,9 @@
     "quickSearch": 1,
     "filterable": 1,
     "ext": "https://www.4kcz.com",
-    "jar": "https://gh-proxy.com/https://raw.githubusercontent.com/qiujianwei-iptv/iptv-live/main/jar/qf_spider_merged.jar;md5;c58eed36c90d07e45348a2bfc6617a8b"
+    "jar": "https://gh-proxy.com/https://raw.githubusercontent.com/qiujianwei-iptv/iptv-live/main/jar/qf_spider_merged.jar;md5;c58eed36c90d07e45348a2bfc6617a8b",
+    "_origin": "xiaosa",
+    "_since": "2026-11-27"
    },
    {
     "key": "金牌影视",
@@ -1025,7 +1159,9 @@
     "type": 3,
     "api": "csp_Jpys",
     "ext": "https://www.sunnafh.com,https://m.sizhengxt.com,https://m.jiabaide.cn",
-    "jar": "https://gh-proxy.com/https://raw.githubusercontent.com/qiujianwei-iptv/iptv-live/main/jar/qf_spider_merged.jar;md5;c58eed36c90d07e45348a2bfc6617a8b"
+    "jar": "https://gh-proxy.com/https://raw.githubusercontent.com/qiujianwei-iptv/iptv-live/main/jar/qf_spider_merged.jar;md5;c58eed36c90d07e45348a2bfc6617a8b",
+    "_origin": "xiaosa",
+    "_since": "2026-11-27"
    },
    {
     "key": "骚火影视",
@@ -1033,7 +1169,9 @@
     "type": 3,
     "api": "csp_SaoHuo",
     "ext": "https://shdy5.us",
-    "jar": "https://gh-proxy.com/https://raw.githubusercontent.com/qiujianwei-iptv/iptv-live/main/jar/qf_spider_merged.jar;md5;c58eed36c90d07e45348a2bfc6617a8b"
+    "jar": "https://gh-proxy.com/https://raw.githubusercontent.com/qiujianwei-iptv/iptv-live/main/jar/qf_spider_merged.jar;md5;c58eed36c90d07e45348a2bfc6617a8b",
+    "_origin": "xiaosa",
+    "_since": "2026-11-27"
    },
    {
     "key": "爱看机器人",
@@ -1043,7 +1181,9 @@
     "searchable": 1,
     "quickSearch": 1,
     "filterable": 1,
-    "jar": "https://gh-proxy.com/https://raw.githubusercontent.com/qiujianwei-iptv/iptv-live/main/jar/qf_spider_merged.jar;md5;c58eed36c90d07e45348a2bfc6617a8b"
+    "jar": "https://gh-proxy.com/https://raw.githubusercontent.com/qiujianwei-iptv/iptv-live/main/jar/qf_spider_merged.jar;md5;c58eed36c90d07e45348a2bfc6617a8b",
+    "_origin": "xiaosa",
+    "_since": "2026-11-27"
    },
    {
     "key": "1905",
@@ -1053,7 +1193,9 @@
     "searchable": 1,
     "quickSearch": 0,
     "filterable": 0,
-    "jar": "https://gh-proxy.com/https://raw.githubusercontent.com/qiujianwei-iptv/iptv-live/main/jar/qf_spider_merged.jar;md5;c58eed36c90d07e45348a2bfc6617a8b"
+    "jar": "https://gh-proxy.com/https://raw.githubusercontent.com/qiujianwei-iptv/iptv-live/main/jar/qf_spider_merged.jar;md5;c58eed36c90d07e45348a2bfc6617a8b",
+    "_origin": "xiaosa",
+    "_since": "2026-11-27"
    },
    {
     "key": "阿里云盘",
@@ -1067,7 +1209,9 @@
      "type": "list",
      "ratio": 1.433
     },
-    "jar": "https://gh-proxy.com/https://raw.githubusercontent.com/qiujianwei-iptv/iptv-live/main/jar/qf_spider_merged.jar;md5;c58eed36c90d07e45348a2bfc6617a8b"
+    "jar": "https://gh-proxy.com/https://raw.githubusercontent.com/qiujianwei-iptv/iptv-live/main/jar/qf_spider_merged.jar;md5;c58eed36c90d07e45348a2bfc6617a8b",
+    "_origin": "xiaosa",
+    "_since": "2026-11-27"
    },
    {
     "key": "夸克网盘",
@@ -1081,7 +1225,9 @@
      "type": "list",
      "ratio": 1.433
     },
-    "jar": "https://gh-proxy.com/https://raw.githubusercontent.com/qiujianwei-iptv/iptv-live/main/jar/qf_spider_merged.jar;md5;c58eed36c90d07e45348a2bfc6617a8b"
+    "jar": "https://gh-proxy.com/https://raw.githubusercontent.com/qiujianwei-iptv/iptv-live/main/jar/qf_spider_merged.jar;md5;c58eed36c90d07e45348a2bfc6617a8b",
+    "_origin": "xiaosa",
+    "_since": "2026-11-27"
    },
    {
     "key": "UC网盘",
@@ -1095,7 +1241,9 @@
      "type": "list",
      "ratio": 1.433
     },
-    "jar": "https://gh-proxy.com/https://raw.githubusercontent.com/qiujianwei-iptv/iptv-live/main/jar/qf_spider_merged.jar;md5;c58eed36c90d07e45348a2bfc6617a8b"
+    "jar": "https://gh-proxy.com/https://raw.githubusercontent.com/qiujianwei-iptv/iptv-live/main/jar/qf_spider_merged.jar;md5;c58eed36c90d07e45348a2bfc6617a8b",
+    "_origin": "xiaosa",
+    "_since": "2026-11-27"
    },
    {
     "key": "百度网盘",
@@ -1109,7 +1257,9 @@
      "type": "list",
      "ratio": 1.433
     },
-    "jar": "https://gh-proxy.com/https://raw.githubusercontent.com/qiujianwei-iptv/iptv-live/main/jar/qf_spider_merged.jar;md5;c58eed36c90d07e45348a2bfc6617a8b"
+    "jar": "https://gh-proxy.com/https://raw.githubusercontent.com/qiujianwei-iptv/iptv-live/main/jar/qf_spider_merged.jar;md5;c58eed36c90d07e45348a2bfc6617a8b",
+    "_origin": "xiaosa",
+    "_since": "2026-11-27"
    },
    {
     "key": "迅雷云盘",
@@ -1123,7 +1273,9 @@
      "type": "list",
      "ratio": 1.433
     },
-    "jar": "https://gh-proxy.com/https://raw.githubusercontent.com/qiujianwei-iptv/iptv-live/main/jar/qf_spider_merged.jar;md5;c58eed36c90d07e45348a2bfc6617a8b"
+    "jar": "https://gh-proxy.com/https://raw.githubusercontent.com/qiujianwei-iptv/iptv-live/main/jar/qf_spider_merged.jar;md5;c58eed36c90d07e45348a2bfc6617a8b",
+    "_origin": "xiaosa",
+    "_since": "2026-11-27"
    },
    {
     "key": "光鸭云盘",
@@ -1137,7 +1289,9 @@
      "type": "list",
      "ratio": 1.433
     },
-    "jar": "https://gh-proxy.com/https://raw.githubusercontent.com/qiujianwei-iptv/iptv-live/main/jar/qf_spider_merged.jar;md5;c58eed36c90d07e45348a2bfc6617a8b"
+    "jar": "https://gh-proxy.com/https://raw.githubusercontent.com/qiujianwei-iptv/iptv-live/main/jar/qf_spider_merged.jar;md5;c58eed36c90d07e45348a2bfc6617a8b",
+    "_origin": "xiaosa",
+    "_since": "2026-11-27"
    },
    {
     "key": "天翼云盘",
@@ -1151,7 +1305,9 @@
      "type": "list",
      "ratio": 1.433
     },
-    "jar": "https://gh-proxy.com/https://raw.githubusercontent.com/qiujianwei-iptv/iptv-live/main/jar/qf_spider_merged.jar;md5;c58eed36c90d07e45348a2bfc6617a8b"
+    "jar": "https://gh-proxy.com/https://raw.githubusercontent.com/qiujianwei-iptv/iptv-live/main/jar/qf_spider_merged.jar;md5;c58eed36c90d07e45348a2bfc6617a8b",
+    "_origin": "xiaosa",
+    "_since": "2026-11-27"
    },
    {
     "key": "123云盘",
@@ -1165,7 +1321,9 @@
      "type": "list",
      "ratio": 1.433
     },
-    "jar": "https://gh-proxy.com/https://raw.githubusercontent.com/qiujianwei-iptv/iptv-live/main/jar/qf_spider_merged.jar;md5;c58eed36c90d07e45348a2bfc6617a8b"
+    "jar": "https://gh-proxy.com/https://raw.githubusercontent.com/qiujianwei-iptv/iptv-live/main/jar/qf_spider_merged.jar;md5;c58eed36c90d07e45348a2bfc6617a8b",
+    "_origin": "xiaosa",
+    "_since": "2026-11-27"
    },
    {
     "key": "觅盘",
@@ -1176,7 +1334,9 @@
     "quickSearch": 0,
     "filterable": 0,
     "timeout": 60,
-    "jar": "https://gh-proxy.com/https://raw.githubusercontent.com/qiujianwei-iptv/iptv-live/main/jar/qf_spider_merged.jar;md5;c58eed36c90d07e45348a2bfc6617a8b"
+    "jar": "https://gh-proxy.com/https://raw.githubusercontent.com/qiujianwei-iptv/iptv-live/main/jar/qf_spider_merged.jar;md5;c58eed36c90d07e45348a2bfc6617a8b",
+    "_origin": "xiaosa",
+    "_since": "2026-11-27"
    },
    {
     "key": "盘搜",
@@ -1187,7 +1347,9 @@
     "quickSearch": 0,
     "filterable": 0,
     "timeout": 60,
-    "jar": "https://gh-proxy.com/https://raw.githubusercontent.com/qiujianwei-iptv/iptv-live/main/jar/qf_spider_merged.jar;md5;c58eed36c90d07e45348a2bfc6617a8b"
+    "jar": "https://gh-proxy.com/https://raw.githubusercontent.com/qiujianwei-iptv/iptv-live/main/jar/qf_spider_merged.jar;md5;c58eed36c90d07e45348a2bfc6617a8b",
+    "_origin": "xiaosa",
+    "_since": "2026-11-27"
    },
    {
     "key": "酷乐",
@@ -1198,7 +1360,9 @@
     "quickSearch": 0,
     "filterable": 0,
     "timeout": 60,
-    "jar": "https://gh-proxy.com/https://raw.githubusercontent.com/qiujianwei-iptv/iptv-live/main/jar/qf_spider_merged.jar;md5;c58eed36c90d07e45348a2bfc6617a8b"
+    "jar": "https://gh-proxy.com/https://raw.githubusercontent.com/qiujianwei-iptv/iptv-live/main/jar/qf_spider_merged.jar;md5;c58eed36c90d07e45348a2bfc6617a8b",
+    "_origin": "xiaosa",
+    "_since": "2026-11-27"
    },
    {
     "key": "百酷",
@@ -1209,7 +1373,9 @@
     "quickSearch": 0,
     "filterable": 0,
     "timeout": 60,
-    "jar": "https://gh-proxy.com/https://raw.githubusercontent.com/qiujianwei-iptv/iptv-live/main/jar/qf_spider_merged.jar;md5;c58eed36c90d07e45348a2bfc6617a8b"
+    "jar": "https://gh-proxy.com/https://raw.githubusercontent.com/qiujianwei-iptv/iptv-live/main/jar/qf_spider_merged.jar;md5;c58eed36c90d07e45348a2bfc6617a8b",
+    "_origin": "xiaosa",
+    "_since": "2026-11-27"
    },
    {
     "key": "趣盘",
@@ -1220,7 +1386,9 @@
     "quickSearch": 0,
     "filterable": 0,
     "timeout": 60,
-    "jar": "https://gh-proxy.com/https://raw.githubusercontent.com/qiujianwei-iptv/iptv-live/main/jar/qf_spider_merged.jar;md5;c58eed36c90d07e45348a2bfc6617a8b"
+    "jar": "https://gh-proxy.com/https://raw.githubusercontent.com/qiujianwei-iptv/iptv-live/main/jar/qf_spider_merged.jar;md5;c58eed36c90d07e45348a2bfc6617a8b",
+    "_origin": "xiaosa",
+    "_since": "2026-11-27"
    },
    {
     "key": "push_agent",
@@ -1231,7 +1399,9 @@
     "filterable": 0,
     "changeable": 0,
     "hide": 1,
-    "jar": "https://gh-proxy.com/https://raw.githubusercontent.com/qiujianwei-iptv/iptv-live/main/jar/qf_spider_merged.jar;md5;c58eed36c90d07e45348a2bfc6617a8b"
+    "jar": "https://gh-proxy.com/https://raw.githubusercontent.com/qiujianwei-iptv/iptv-live/main/jar/qf_spider_merged.jar;md5;c58eed36c90d07e45348a2bfc6617a8b",
+    "_origin": "xiaosa",
+    "_since": "2026-11-27"
    },
    {
     "key": "Douban",
@@ -1243,7 +1413,9 @@
     "quickSearch": 0,
     "filterable": 0,
     "ext": "https://cdn.waimaimingtang.com/file/images/bwc/20260414181247-ae51abfbfe.txt",
-    "jar": "https://gh-proxy.com/https://raw.githubusercontent.com/qiujianwei-iptv/iptv-live/main/jar/qf_spider_merged.jar;md5;c58eed36c90d07e45348a2bfc6617a8b"
+    "jar": "https://gh-proxy.com/https://raw.githubusercontent.com/qiujianwei-iptv/iptv-live/main/jar/qf_spider_merged.jar;md5;c58eed36c90d07e45348a2bfc6617a8b",
+    "_origin": "wex",
+    "_since": "2026-11-27"
    },
    {
     "key": "Doubanaaaa",
@@ -1255,33 +1427,9 @@
     "quickSearch": 0,
     "filterable": 0,
     "ext": "https://cdn.waimaimingtang.com/file/images/bwc/20260414181247-ae51abfbfe.txt",
-    "jar": "https://gh-proxy.com/https://raw.githubusercontent.com/qiujianwei-iptv/iptv-live/main/jar/qf_spider_merged.jar;md5;c58eed36c90d07e45348a2bfc6617a8b"
-   },
-   {
-    "key": "Wexconfig",
-    "name": "🐮配置┃中心🐮",
-    "type": 3,
-    "api": "csp_PanConfigGuard",
-    "searchable": 0,
-    "changeable": 0,
-    "indexs": 0,
-    "style": {
-     "type": "list"
-    },
-    "jar": "https://gh-proxy.com/https://raw.githubusercontent.com/qiujianwei-iptv/iptv-live/main/jar/qf_spider_merged.jar;md5;c58eed36c90d07e45348a2bfc6617a8b"
-   },
-   {
-    "key": "MyPan",
-    "name": "🐮我的┃网盘🐮",
-    "type": 3,
-    "api": "csp_MyPanGuard",
-    "searchable": 0,
-    "changeable": 0,
-    "indexs": 0,
-    "style": {
-     "type": "list"
-    },
-    "jar": "https://gh-proxy.com/https://raw.githubusercontent.com/qiujianwei-iptv/iptv-live/main/jar/qf_spider_merged.jar;md5;c58eed36c90d07e45348a2bfc6617a8b"
+    "jar": "https://gh-proxy.com/https://raw.githubusercontent.com/qiujianwei-iptv/iptv-live/main/jar/qf_spider_merged.jar;md5;c58eed36c90d07e45348a2bfc6617a8b",
+    "_origin": "wex",
+    "_since": "2026-11-27"
    },
    {
     "key": "AiQwMkv",
@@ -1291,7 +1439,9 @@
     "searchable": 1,
     "quickSearch": 1,
     "changeable": 0,
-    "jar": "https://gh-proxy.com/https://raw.githubusercontent.com/qiujianwei-iptv/iptv-live/main/jar/qf_spider_merged.jar;md5;c58eed36c90d07e45348a2bfc6617a8b"
+    "jar": "https://gh-proxy.com/https://raw.githubusercontent.com/qiujianwei-iptv/iptv-live/main/jar/qf_spider_merged.jar;md5;c58eed36c90d07e45348a2bfc6617a8b",
+    "_origin": "wex",
+    "_since": "2026-11-27"
    },
    {
     "key": "AiNewKuaiYing",
@@ -1301,7 +1451,9 @@
     "searchable": 1,
     "quickSearch": 1,
     "changeable": 0,
-    "jar": "https://gh-proxy.com/https://raw.githubusercontent.com/qiujianwei-iptv/iptv-live/main/jar/qf_spider_merged.jar;md5;c58eed36c90d07e45348a2bfc6617a8b"
+    "jar": "https://gh-proxy.com/https://raw.githubusercontent.com/qiujianwei-iptv/iptv-live/main/jar/qf_spider_merged.jar;md5;c58eed36c90d07e45348a2bfc6617a8b",
+    "_origin": "wex",
+    "_since": "2026-11-27"
    },
    {
     "key": "AiNewJuTou",
@@ -1311,7 +1463,9 @@
     "searchable": 1,
     "quickSearch": 1,
     "changeable": 0,
-    "jar": "https://gh-proxy.com/https://raw.githubusercontent.com/qiujianwei-iptv/iptv-live/main/jar/qf_spider_merged.jar;md5;c58eed36c90d07e45348a2bfc6617a8b"
+    "jar": "https://gh-proxy.com/https://raw.githubusercontent.com/qiujianwei-iptv/iptv-live/main/jar/qf_spider_merged.jar;md5;c58eed36c90d07e45348a2bfc6617a8b",
+    "_origin": "wex",
+    "_since": "2026-11-27"
    },
    {
     "key": "AiNewLibvio",
@@ -1321,7 +1475,9 @@
     "searchable": 1,
     "quickSearch": 1,
     "changeable": 0,
-    "jar": "https://gh-proxy.com/https://raw.githubusercontent.com/qiujianwei-iptv/iptv-live/main/jar/qf_spider_merged.jar;md5;c58eed36c90d07e45348a2bfc6617a8b"
+    "jar": "https://gh-proxy.com/https://raw.githubusercontent.com/qiujianwei-iptv/iptv-live/main/jar/qf_spider_merged.jar;md5;c58eed36c90d07e45348a2bfc6617a8b",
+    "_origin": "wex",
+    "_since": "2026-11-27"
    },
    {
     "key": "原盘",
@@ -1331,7 +1487,9 @@
     "searchable": 1,
     "quickSearch": 1,
     "changeable": 0,
-    "jar": "https://gh-proxy.com/https://raw.githubusercontent.com/qiujianwei-iptv/iptv-live/main/jar/qf_spider_merged.jar;md5;c58eed36c90d07e45348a2bfc6617a8b"
+    "jar": "https://gh-proxy.com/https://raw.githubusercontent.com/qiujianwei-iptv/iptv-live/main/jar/qf_spider_merged.jar;md5;c58eed36c90d07e45348a2bfc6617a8b",
+    "_origin": "wex",
+    "_since": "2026-11-27"
    },
    {
     "key": "AiPan1Me",
@@ -1341,7 +1499,9 @@
     "searchable": 1,
     "quickSearch": 1,
     "changeable": 0,
-    "jar": "https://gh-proxy.com/https://raw.githubusercontent.com/qiujianwei-iptv/iptv-live/main/jar/qf_spider_merged.jar;md5;c58eed36c90d07e45348a2bfc6617a8b"
+    "jar": "https://gh-proxy.com/https://raw.githubusercontent.com/qiujianwei-iptv/iptv-live/main/jar/qf_spider_merged.jar;md5;c58eed36c90d07e45348a2bfc6617a8b",
+    "_origin": "wex",
+    "_since": "2026-11-27"
    },
    {
     "key": "AiNewYiDong4K",
@@ -1351,7 +1511,9 @@
     "searchable": 1,
     "quickSearch": 1,
     "changeable": 0,
-    "jar": "https://gh-proxy.com/https://raw.githubusercontent.com/qiujianwei-iptv/iptv-live/main/jar/qf_spider_merged.jar;md5;c58eed36c90d07e45348a2bfc6617a8b"
+    "jar": "https://gh-proxy.com/https://raw.githubusercontent.com/qiujianwei-iptv/iptv-live/main/jar/qf_spider_merged.jar;md5;c58eed36c90d07e45348a2bfc6617a8b",
+    "_origin": "wex",
+    "_since": "2026-11-27"
    },
    {
     "key": "WexHanXiaoQuan",
@@ -1361,7 +1523,9 @@
     "searchable": 1,
     "quickSearch": 1,
     "changeable": 0,
-    "jar": "https://gh-proxy.com/https://raw.githubusercontent.com/qiujianwei-iptv/iptv-live/main/jar/qf_spider_merged.jar;md5;c58eed36c90d07e45348a2bfc6617a8b"
+    "jar": "https://gh-proxy.com/https://raw.githubusercontent.com/qiujianwei-iptv/iptv-live/main/jar/qf_spider_merged.jar;md5;c58eed36c90d07e45348a2bfc6617a8b",
+    "_origin": "wex",
+    "_since": "2026-11-27"
    },
    {
     "key": "WexAiWenCai",
@@ -1371,7 +1535,9 @@
     "searchable": 1,
     "quickSearch": 1,
     "changeable": 0,
-    "jar": "https://gh-proxy.com/https://raw.githubusercontent.com/qiujianwei-iptv/iptv-live/main/jar/qf_spider_merged.jar;md5;c58eed36c90d07e45348a2bfc6617a8b"
+    "jar": "https://gh-proxy.com/https://raw.githubusercontent.com/qiujianwei-iptv/iptv-live/main/jar/qf_spider_merged.jar;md5;c58eed36c90d07e45348a2bfc6617a8b",
+    "_origin": "wex",
+    "_since": "2026-11-27"
    },
    {
     "key": "WexFengYe4K",
@@ -1381,7 +1547,9 @@
     "searchable": 1,
     "quickSearch": 1,
     "changeable": 0,
-    "jar": "https://gh-proxy.com/https://raw.githubusercontent.com/qiujianwei-iptv/iptv-live/main/jar/qf_spider_merged.jar;md5;c58eed36c90d07e45348a2bfc6617a8b"
+    "jar": "https://gh-proxy.com/https://raw.githubusercontent.com/qiujianwei-iptv/iptv-live/main/jar/qf_spider_merged.jar;md5;c58eed36c90d07e45348a2bfc6617a8b",
+    "_origin": "wex",
+    "_since": "2026-11-27"
    },
    {
     "key": "賤賤",
@@ -1391,7 +1559,9 @@
     "searchable": 1,
     "quickSearch": 1,
     "changeable": 0,
-    "jar": "https://gh-proxy.com/https://raw.githubusercontent.com/qiujianwei-iptv/iptv-live/main/jar/qf_spider_merged.jar;md5;c58eed36c90d07e45348a2bfc6617a8b"
+    "jar": "https://gh-proxy.com/https://raw.githubusercontent.com/qiujianwei-iptv/iptv-live/main/jar/qf_spider_merged.jar;md5;c58eed36c90d07e45348a2bfc6617a8b",
+    "_origin": "wex",
+    "_since": "2026-11-27"
    },
    {
     "key": "下饭",
@@ -1401,7 +1571,9 @@
     "searchable": 1,
     "quickSearch": 1,
     "changeable": 0,
-    "jar": "https://gh-proxy.com/https://raw.githubusercontent.com/qiujianwei-iptv/iptv-live/main/jar/qf_spider_merged.jar;md5;c58eed36c90d07e45348a2bfc6617a8b"
+    "jar": "https://gh-proxy.com/https://raw.githubusercontent.com/qiujianwei-iptv/iptv-live/main/jar/qf_spider_merged.jar;md5;c58eed36c90d07e45348a2bfc6617a8b",
+    "_origin": "wex",
+    "_since": "2026-11-27"
    },
    {
     "key": "AppV7 | 粉猪追剧",
@@ -1415,7 +1587,9 @@
      "proxyImg": false
     },
     "timeout": 120,
-    "jar": "https://gh-proxy.com/https://raw.githubusercontent.com/qiujianwei-iptv/iptv-live/main/jar/qf_spider_merged.jar;md5;c58eed36c90d07e45348a2bfc6617a8b"
+    "jar": "https://gh-proxy.com/https://raw.githubusercontent.com/qiujianwei-iptv/iptv-live/main/jar/qf_spider_merged.jar;md5;c58eed36c90d07e45348a2bfc6617a8b",
+    "_origin": "wex",
+    "_since": "2026-11-27"
    },
    {
     "key": "AppV7 | 追剧达人",
@@ -1429,7 +1603,9 @@
      "proxyImg": false
     },
     "timeout": 120,
-    "jar": "https://gh-proxy.com/https://raw.githubusercontent.com/qiujianwei-iptv/iptv-live/main/jar/qf_spider_merged.jar;md5;c58eed36c90d07e45348a2bfc6617a8b"
+    "jar": "https://gh-proxy.com/https://raw.githubusercontent.com/qiujianwei-iptv/iptv-live/main/jar/qf_spider_merged.jar;md5;c58eed36c90d07e45348a2bfc6617a8b",
+    "_origin": "wex",
+    "_since": "2026-11-27"
    },
    {
     "key": "AppV7 | 小柚子",
@@ -1443,7 +1619,9 @@
      "proxyImg": false
     },
     "timeout": 120,
-    "jar": "https://gh-proxy.com/https://raw.githubusercontent.com/qiujianwei-iptv/iptv-live/main/jar/qf_spider_merged.jar;md5;c58eed36c90d07e45348a2bfc6617a8b"
+    "jar": "https://gh-proxy.com/https://raw.githubusercontent.com/qiujianwei-iptv/iptv-live/main/jar/qf_spider_merged.jar;md5;c58eed36c90d07e45348a2bfc6617a8b",
+    "_origin": "wex",
+    "_since": "2026-11-27"
    },
    {
     "key": "AppV7 | 蒙太奇",
@@ -1457,7 +1635,9 @@
      "proxyImg": false
     },
     "timeout": 120,
-    "jar": "https://gh-proxy.com/https://raw.githubusercontent.com/qiujianwei-iptv/iptv-live/main/jar/qf_spider_merged.jar;md5;c58eed36c90d07e45348a2bfc6617a8b"
+    "jar": "https://gh-proxy.com/https://raw.githubusercontent.com/qiujianwei-iptv/iptv-live/main/jar/qf_spider_merged.jar;md5;c58eed36c90d07e45348a2bfc6617a8b",
+    "_origin": "wex",
+    "_since": "2026-11-27"
    },
    {
     "key": "AppV7 | 小黄人",
@@ -1471,7 +1651,9 @@
      "proxyImg": false
     },
     "timeout": 120,
-    "jar": "https://gh-proxy.com/https://raw.githubusercontent.com/qiujianwei-iptv/iptv-live/main/jar/qf_spider_merged.jar;md5;c58eed36c90d07e45348a2bfc6617a8b"
+    "jar": "https://gh-proxy.com/https://raw.githubusercontent.com/qiujianwei-iptv/iptv-live/main/jar/qf_spider_merged.jar;md5;c58eed36c90d07e45348a2bfc6617a8b",
+    "_origin": "wex",
+    "_since": "2026-11-27"
    },
    {
     "key": "WexAiYiYs",
@@ -1481,7 +1663,9 @@
     "searchable": 1,
     "quickSearch": 1,
     "changeable": 0,
-    "jar": "https://gh-proxy.com/https://raw.githubusercontent.com/qiujianwei-iptv/iptv-live/main/jar/qf_spider_merged.jar;md5;c58eed36c90d07e45348a2bfc6617a8b"
+    "jar": "https://gh-proxy.com/https://raw.githubusercontent.com/qiujianwei-iptv/iptv-live/main/jar/qf_spider_merged.jar;md5;c58eed36c90d07e45348a2bfc6617a8b",
+    "_origin": "wex",
+    "_since": "2026-11-27"
    },
    {
     "key": "WexAiBoBo",
@@ -1491,7 +1675,9 @@
     "searchable": 1,
     "quickSearch": 1,
     "changeable": 0,
-    "jar": "https://gh-proxy.com/https://raw.githubusercontent.com/qiujianwei-iptv/iptv-live/main/jar/qf_spider_merged.jar;md5;c58eed36c90d07e45348a2bfc6617a8b"
+    "jar": "https://gh-proxy.com/https://raw.githubusercontent.com/qiujianwei-iptv/iptv-live/main/jar/qf_spider_merged.jar;md5;c58eed36c90d07e45348a2bfc6617a8b",
+    "_origin": "wex",
+    "_since": "2026-11-27"
    },
    {
     "key": "ManJuAiHongGuo",
@@ -1501,7 +1687,9 @@
     "api": "csp_ManJuAiHongGuoGuard",
     "searchable": 1,
     "changeable": 0,
-    "jar": "https://gh-proxy.com/https://raw.githubusercontent.com/qiujianwei-iptv/iptv-live/main/jar/qf_spider_merged.jar;md5;c58eed36c90d07e45348a2bfc6617a8b"
+    "jar": "https://gh-proxy.com/https://raw.githubusercontent.com/qiujianwei-iptv/iptv-live/main/jar/qf_spider_merged.jar;md5;c58eed36c90d07e45348a2bfc6617a8b",
+    "_origin": "wex",
+    "_since": "2026-11-27"
    },
    {
     "key": "ManJuAiHuoLong",
@@ -1511,7 +1699,9 @@
     "api": "csp_ManJuAiHuoLongGuard",
     "searchable": 1,
     "changeable": 0,
-    "jar": "https://gh-proxy.com/https://raw.githubusercontent.com/qiujianwei-iptv/iptv-live/main/jar/qf_spider_merged.jar;md5;c58eed36c90d07e45348a2bfc6617a8b"
+    "jar": "https://gh-proxy.com/https://raw.githubusercontent.com/qiujianwei-iptv/iptv-live/main/jar/qf_spider_merged.jar;md5;c58eed36c90d07e45348a2bfc6617a8b",
+    "_origin": "wex",
+    "_since": "2026-11-27"
    },
    {
     "key": "ManJuAiQiMao",
@@ -1521,7 +1711,9 @@
     "api": "csp_ManJuAiQiMaoGuard",
     "searchable": 1,
     "changeable": 0,
-    "jar": "https://gh-proxy.com/https://raw.githubusercontent.com/qiujianwei-iptv/iptv-live/main/jar/qf_spider_merged.jar;md5;c58eed36c90d07e45348a2bfc6617a8b"
+    "jar": "https://gh-proxy.com/https://raw.githubusercontent.com/qiujianwei-iptv/iptv-live/main/jar/qf_spider_merged.jar;md5;c58eed36c90d07e45348a2bfc6617a8b",
+    "_origin": "wex",
+    "_since": "2026-11-27"
    },
    {
     "key": "ManJuAiXiFan",
@@ -1531,7 +1723,9 @@
     "api": "csp_ManJuAiXiFanGuard",
     "searchable": 1,
     "changeable": 0,
-    "jar": "https://gh-proxy.com/https://raw.githubusercontent.com/qiujianwei-iptv/iptv-live/main/jar/qf_spider_merged.jar;md5;c58eed36c90d07e45348a2bfc6617a8b"
+    "jar": "https://gh-proxy.com/https://raw.githubusercontent.com/qiujianwei-iptv/iptv-live/main/jar/qf_spider_merged.jar;md5;c58eed36c90d07e45348a2bfc6617a8b",
+    "_origin": "wex",
+    "_since": "2026-11-27"
    },
    {
     "key": "ManJuAiHeMa",
@@ -1541,7 +1735,9 @@
     "api": "csp_ManJuAiHeMaGuard",
     "searchable": 1,
     "changeable": 0,
-    "jar": "https://gh-proxy.com/https://raw.githubusercontent.com/qiujianwei-iptv/iptv-live/main/jar/qf_spider_merged.jar;md5;c58eed36c90d07e45348a2bfc6617a8b"
+    "jar": "https://gh-proxy.com/https://raw.githubusercontent.com/qiujianwei-iptv/iptv-live/main/jar/qf_spider_merged.jar;md5;c58eed36c90d07e45348a2bfc6617a8b",
+    "_origin": "wex",
+    "_since": "2026-11-27"
    },
    {
     "key": "DuanJuAiHaoKan",
@@ -1551,7 +1747,9 @@
     "api": "csp_DuanJuAiHaoKanGuard",
     "searchable": 1,
     "changeable": 0,
-    "jar": "https://gh-proxy.com/https://raw.githubusercontent.com/qiujianwei-iptv/iptv-live/main/jar/qf_spider_merged.jar;md5;c58eed36c90d07e45348a2bfc6617a8b"
+    "jar": "https://gh-proxy.com/https://raw.githubusercontent.com/qiujianwei-iptv/iptv-live/main/jar/qf_spider_merged.jar;md5;c58eed36c90d07e45348a2bfc6617a8b",
+    "_origin": "wex",
+    "_since": "2026-11-27"
    },
    {
     "key": "DuanJuAiQiMiao",
@@ -1561,7 +1759,9 @@
     "api": "csp_DuanJuAiQiMiaoGuard",
     "searchable": 1,
     "changeable": 0,
-    "jar": "https://gh-proxy.com/https://raw.githubusercontent.com/qiujianwei-iptv/iptv-live/main/jar/qf_spider_merged.jar;md5;c58eed36c90d07e45348a2bfc6617a8b"
+    "jar": "https://gh-proxy.com/https://raw.githubusercontent.com/qiujianwei-iptv/iptv-live/main/jar/qf_spider_merged.jar;md5;c58eed36c90d07e45348a2bfc6617a8b",
+    "_origin": "wex",
+    "_since": "2026-11-27"
    },
    {
     "key": "DuanJuAiXingYa",
@@ -1571,7 +1771,9 @@
     "api": "csp_DuanJuAiXingYaGuard",
     "searchable": 1,
     "changeable": 0,
-    "jar": "https://gh-proxy.com/https://raw.githubusercontent.com/qiujianwei-iptv/iptv-live/main/jar/qf_spider_merged.jar;md5;c58eed36c90d07e45348a2bfc6617a8b"
+    "jar": "https://gh-proxy.com/https://raw.githubusercontent.com/qiujianwei-iptv/iptv-live/main/jar/qf_spider_merged.jar;md5;c58eed36c90d07e45348a2bfc6617a8b",
+    "_origin": "wex",
+    "_since": "2026-11-27"
    },
    {
     "key": "DuanJuAiWeiGuan",
@@ -1581,7 +1783,9 @@
     "api": "csp_DuanJuAiWeiGuanGuard",
     "searchable": 1,
     "changeable": 0,
-    "jar": "https://gh-proxy.com/https://raw.githubusercontent.com/qiujianwei-iptv/iptv-live/main/jar/qf_spider_merged.jar;md5;c58eed36c90d07e45348a2bfc6617a8b"
+    "jar": "https://gh-proxy.com/https://raw.githubusercontent.com/qiujianwei-iptv/iptv-live/main/jar/qf_spider_merged.jar;md5;c58eed36c90d07e45348a2bfc6617a8b",
+    "_origin": "wex",
+    "_since": "2026-11-27"
    },
    {
     "key": "ChildrenAiBaoBao",
@@ -1594,7 +1798,9 @@
      "type": "rect",
      "ratio": 2
     },
-    "jar": "https://gh-proxy.com/https://raw.githubusercontent.com/qiujianwei-iptv/iptv-live/main/jar/qf_spider_merged.jar;md5;c58eed36c90d07e45348a2bfc6617a8b"
+    "jar": "https://gh-proxy.com/https://raw.githubusercontent.com/qiujianwei-iptv/iptv-live/main/jar/qf_spider_merged.jar;md5;c58eed36c90d07e45348a2bfc6617a8b",
+    "_origin": "wex",
+    "_since": "2026-11-27"
    },
    {
     "key": "ChildrenAiBeiWa",
@@ -1607,7 +1813,9 @@
      "type": "rect",
      "ratio": 2
     },
-    "jar": "https://gh-proxy.com/https://raw.githubusercontent.com/qiujianwei-iptv/iptv-live/main/jar/qf_spider_merged.jar;md5;c58eed36c90d07e45348a2bfc6617a8b"
+    "jar": "https://gh-proxy.com/https://raw.githubusercontent.com/qiujianwei-iptv/iptv-live/main/jar/qf_spider_merged.jar;md5;c58eed36c90d07e45348a2bfc6617a8b",
+    "_origin": "wex",
+    "_since": "2026-11-27"
    },
    {
     "key": "ChildrenAiTuTu",
@@ -1620,7 +1828,9 @@
      "type": "rect",
      "ratio": 2
     },
-    "jar": "https://gh-proxy.com/https://raw.githubusercontent.com/qiujianwei-iptv/iptv-live/main/jar/qf_spider_merged.jar;md5;c58eed36c90d07e45348a2bfc6617a8b"
+    "jar": "https://gh-proxy.com/https://raw.githubusercontent.com/qiujianwei-iptv/iptv-live/main/jar/qf_spider_merged.jar;md5;c58eed36c90d07e45348a2bfc6617a8b",
+    "_origin": "wex",
+    "_since": "2026-11-27"
    },
    {
     "key": "MusicAiLunHui",
@@ -1629,7 +1839,9 @@
     "api": "csp_MusicAiLunHuiGuard",
     "searchable": 1,
     "changeable": 0,
-    "jar": "https://gh-proxy.com/https://raw.githubusercontent.com/qiujianwei-iptv/iptv-live/main/jar/qf_spider_merged.jar;md5;c58eed36c90d07e45348a2bfc6617a8b"
+    "jar": "https://gh-proxy.com/https://raw.githubusercontent.com/qiujianwei-iptv/iptv-live/main/jar/qf_spider_merged.jar;md5;c58eed36c90d07e45348a2bfc6617a8b",
+    "_origin": "wex",
+    "_since": "2026-11-27"
    },
    {
     "key": "FakeAi115Share",
@@ -1642,7 +1854,9 @@
     "style": {
      "type": "list"
     },
-    "jar": "https://gh-proxy.com/https://raw.githubusercontent.com/qiujianwei-iptv/iptv-live/main/jar/qf_spider_merged.jar;md5;c58eed36c90d07e45348a2bfc6617a8b"
+    "jar": "https://gh-proxy.com/https://raw.githubusercontent.com/qiujianwei-iptv/iptv-live/main/jar/qf_spider_merged.jar;md5;c58eed36c90d07e45348a2bfc6617a8b",
+    "_origin": "wex",
+    "_since": "2026-11-27"
    },
    {
     "key": "AList",
@@ -1651,7 +1865,9 @@
     "api": "csp_AListGuard",
     "searchable": 1,
     "changeable": 0,
-    "jar": "https://gh-proxy.com/https://raw.githubusercontent.com/qiujianwei-iptv/iptv-live/main/jar/qf_spider_merged.jar;md5;c58eed36c90d07e45348a2bfc6617a8b"
+    "jar": "https://gh-proxy.com/https://raw.githubusercontent.com/qiujianwei-iptv/iptv-live/main/jar/qf_spider_merged.jar;md5;c58eed36c90d07e45348a2bfc6617a8b",
+    "_origin": "wex",
+    "_since": "2026-11-27"
    },
    {
     "key": "webdav",
@@ -1660,7 +1876,9 @@
     "api": "csp_WebDAVGuard",
     "searchable": 1,
     "changeable": 0,
-    "jar": "https://gh-proxy.com/https://raw.githubusercontent.com/qiujianwei-iptv/iptv-live/main/jar/qf_spider_merged.jar;md5;c58eed36c90d07e45348a2bfc6617a8b"
+    "jar": "https://gh-proxy.com/https://raw.githubusercontent.com/qiujianwei-iptv/iptv-live/main/jar/qf_spider_merged.jar;md5;c58eed36c90d07e45348a2bfc6617a8b",
+    "_origin": "wex",
+    "_since": "2026-11-27"
    },
    {
     "key": "DiyVod",
@@ -1672,7 +1890,9 @@
     "style": {
      "type": "list"
     },
-    "jar": "https://gh-proxy.com/https://raw.githubusercontent.com/qiujianwei-iptv/iptv-live/main/jar/qf_spider_merged.jar;md5;c58eed36c90d07e45348a2bfc6617a8b"
+    "jar": "https://gh-proxy.com/https://raw.githubusercontent.com/qiujianwei-iptv/iptv-live/main/jar/qf_spider_merged.jar;md5;c58eed36c90d07e45348a2bfc6617a8b",
+    "_origin": "wex",
+    "_since": "2026-11-27"
    },
    {
     "key": "SoAiPanSoo",
@@ -1681,7 +1901,9 @@
     "api": "csp_SoAiPanSooGuard",
     "searchable": 1,
     "changeable": 0,
-    "jar": "https://gh-proxy.com/https://raw.githubusercontent.com/qiujianwei-iptv/iptv-live/main/jar/qf_spider_merged.jar;md5;c58eed36c90d07e45348a2bfc6617a8b"
+    "jar": "https://gh-proxy.com/https://raw.githubusercontent.com/qiujianwei-iptv/iptv-live/main/jar/qf_spider_merged.jar;md5;c58eed36c90d07e45348a2bfc6617a8b",
+    "_origin": "wex",
+    "_since": "2026-11-27"
    },
    {
     "key": "SoAiAiPanSo",
@@ -1690,7 +1912,9 @@
     "api": "csp_SoAiAiPanSoGuard",
     "searchable": 1,
     "changeable": 0,
-    "jar": "https://gh-proxy.com/https://raw.githubusercontent.com/qiujianwei-iptv/iptv-live/main/jar/qf_spider_merged.jar;md5;c58eed36c90d07e45348a2bfc6617a8b"
+    "jar": "https://gh-proxy.com/https://raw.githubusercontent.com/qiujianwei-iptv/iptv-live/main/jar/qf_spider_merged.jar;md5;c58eed36c90d07e45348a2bfc6617a8b",
+    "_origin": "wex",
+    "_since": "2026-11-27"
    },
    {
     "key": "SoAiQuanPanGuard",
@@ -1699,7 +1923,42 @@
     "api": "csp_SoAiQuanPanGuard",
     "searchable": 1,
     "changeable": 0,
-    "jar": "https://gh-proxy.com/https://raw.githubusercontent.com/qiujianwei-iptv/iptv-live/main/jar/qf_spider_merged.jar;md5;c58eed36c90d07e45348a2bfc6617a8b"
+    "jar": "https://gh-proxy.com/https://raw.githubusercontent.com/qiujianwei-iptv/iptv-live/main/jar/qf_spider_merged.jar;md5;c58eed36c90d07e45348a2bfc6617a8b",
+    "_origin": "wex",
+    "_since": "2026-11-27"
+   },
+   {
+    "key": "ffzy_cj",
+    "name": "非凡 • 高清",
+    "type": 3,
+    "api": "assets://js/lib/drpy2.min.js",
+    "searchable": 1,
+    "quickSearch": 1,
+    "filterable": 0,
+    "ext": "https://gh-proxy.com/https://raw.githubusercontent.com/qiujianwei-iptv/iptv-live/main/js/ffzy.js",
+    "_self": true
+   },
+   {
+    "key": "zy360_cj",
+    "name": "360 • 高清",
+    "type": 3,
+    "api": "assets://js/lib/drpy2.min.js",
+    "searchable": 1,
+    "quickSearch": 1,
+    "filterable": 0,
+    "ext": "https://gh-proxy.com/https://raw.githubusercontent.com/qiujianwei-iptv/iptv-live/main/js/360zy.js",
+    "_self": true
+   },
+   {
+    "key": "cz4k_js",
+    "name": "厂长 • 4K",
+    "type": 3,
+    "api": "assets://js/lib/drpy2.min.js",
+    "searchable": 0,
+    "quickSearch": 0,
+    "filterable": 0,
+    "ext": "https://gh-proxy.com/https://raw.githubusercontent.com/qiujianwei-iptv/iptv-live/main/js/4kcz.js",
+    "_self": true
    }
   ]
  }
