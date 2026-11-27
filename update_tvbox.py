@@ -53,6 +53,11 @@ WEX_JAR_URLS = [
     "http://oss4liview.moji.com/thd_file/2026/11/12/7b563c7039830e7c712e93f27fd2e102.jpg",
 ]
 
+# ---- 固化快照：站点做「自己的」----
+# 每次同步成功，把上游站点（潇洒+王二小合并后的最终版）落盘 own_sites.json；
+# 上游全挂时用它兜底照常生成——配置永远是自己的，上游死活不再影响出片。
+SNAPSHOT_FILE = "own_sites.json"
+
 # 这些站点是入口/配置页，不该参与搜索
 NO_SEARCH_APIS = {"csp_Config", "csp_MyDriveGuard"}
 
@@ -170,6 +175,21 @@ def decrypt_xiaosa(raw):
 def split_spider(spider):
     parts = spider.split(";md5;")
     return parts[0], (parts[1] if len(parts) > 1 else None)
+
+
+def load_snapshot():
+    """固化快照（上游兜底）。返回可当 xs 用的 dict；不可用返回 None。"""
+    if not os.path.exists(SNAPSHOT_FILE):
+        return None
+    try:
+        with open(SNAPSHOT_FILE, encoding="utf-8") as f:
+            snap = json.load(f)
+        xs = snap["xs"]
+        assert isinstance(xs.get("sites"), list) and len(xs["sites"]) >= MIN_SITES
+        return xs
+    except Exception as e:
+        print(f"   ⚠ 固化快照不可用（{e}）")
+        return None
 
 
 def jar_classes_and_md5(data):
@@ -309,23 +329,35 @@ def main(out_path="tvbox.json"):
     print(f"   合并 jar 来自 {jar_url} · {len(jar_classes)} 类 · md5={jar_md5}")
 
     print("→ 拉取潇洒配置…")
+    snapshot_mode = False
     try:
         xs = decrypt_xiaosa(http_get(XIAOSA_URL))
+        print(f"   潇洒站点 {len(xs['sites'])}")
     except Exception as e:
-        raise SystemExit(f"❌ 上游潇洒配置取不到（{e}），保留原文件不覆盖")
-    print(f"   潇洒站点 {len(xs['sites'])}")
+        snap_xs = load_snapshot()
+        if not snap_xs:
+            raise SystemExit(f"❌ 上游潇洒配置取不到（{e}），且固化快照不可用，保留原文件不覆盖")
+        snapshot_mode = True
+        xs = snap_xs
+        print(f"   ⚠ 上游潇洒取不到（{e}）")
+        print(f"   → 固化快照兜底：{len(xs['sites'])} 站照常出配置（上游死活不再影响）")
 
     # ---- 王二小：任何一环不对就整段跳过，绝不写半坏配置 ----
+    # 快照模式：王二小站点已固化在快照里，不再拉取（避免 Wexconfig/MyPan 等必驻站重复）
     wex_sites, wex_classes, wex_note = [], set(), "未启用"
-    print("→ 拉取王二小配置…")
-    try:
-        wex = json.loads(http_get(WEX_CFG_URL).decode("utf-8", "ignore"))
-        wex_sites = wex.get("sites", [])
-        print(f"   王二小站点 {len(wex_sites)}")
-    except Exception as e:
-        wex_sites = []
-        wex_note = f"配置取不到（{e}），跳过王二小"
+    if snapshot_mode:
+        wex_note = "快照模式：王二小站点已含在固化快照里"
         print(f"   ⚠ {wex_note}")
+    else:
+        print("→ 拉取王二小配置…")
+        try:
+            wex = json.loads(http_get(WEX_CFG_URL).decode("utf-8", "ignore"))
+            wex_sites = wex.get("sites", [])
+            print(f"   王二小站点 {len(wex_sites)}")
+        except Exception as e:
+            wex_sites = []
+            wex_note = f"配置取不到（{e}），跳过王二小"
+            print(f"   ⚠ {wex_note}")
 
     if wex_sites:
         print("→ 核对王二小 jar（合成前提）…")
@@ -473,6 +505,39 @@ def main(out_path="tvbox.json"):
         f.write(json.dumps(tpl, ensure_ascii=False, indent=1))
     print(f"   模板 {os.path.basename(tpl_path)}：{len(tpl['sites'])} 站 / "
           f"{os.path.getsize(tpl_path)} B / LOCALJAR {sum(1 for s in tpl['sites'] if s['jar']=='LOCALJAR')+1} 处")
+
+    # ---- 固化快照落盘（上游最终站点 + 顶层配置；自有站不入快照，恢复时再注入）----
+    own_keys = {"ffzy_cj", "zy360_cj", "cz4k_js", "QfUpdate"}
+    upstream_sites = [s for s in sites if s.get("key") not in own_keys]
+    try:
+        import datetime as _dt
+        snap = {
+            "_meta": {
+                "updated_at": _dt.datetime.now().strftime("%Y-%m-%d %H:%M"),
+                "source": "xiaosa+wex merged snapshot",
+                "note": "Upper-stream offline fallback; regenerated on every successful sync",
+            },
+            "xs": {
+                "wallpaper": out.get("wallpaper"),
+                "logo": out.get("logo"),
+                "danmaku": out.get("danmaku"),
+                "lives": lives,
+                "parses": out.get("parses") or [],
+                "rules": out.get("rules") or [],
+                "hosts": out.get("hosts") or [],
+                "doh": out.get("doh") or [],
+                "flags": out.get("flags") or [],
+                "ads": out.get("ads") or [],
+                "sites": upstream_sites,
+            },
+        }
+        snap_path = os.path.join(os.path.dirname(os.path.abspath(out_path)) or ".", SNAPSHOT_FILE)
+        with open(snap_path, "w", encoding="utf-8", newline="\n") as f:
+            json.dump(snap, f, ensure_ascii=False, indent=1)
+        print(f"   固化快照 {SNAPSHOT_FILE}：{len(upstream_sites)} 站"
+              + ("（本次来自快照，原样落盘）" if snapshot_mode else "已刷新"))
+    except Exception as e:
+        print(f"   ⚠ 快照落盘失败（{e}）")
 
     size = os.path.getsize(out_path)
     digest = hashlib.md5(open(out_path, "rb").read()).hexdigest()
