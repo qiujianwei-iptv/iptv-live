@@ -51,7 +51,12 @@ LIB_FILE = "own_sites.json"
 # ---- 存活探测 ----
 PROBE_TIMEOUT = 8        # 单地址超时（秒）
 PROBE_WORKERS = 16       # 并发线程
-PROBE_FAIL_LIMIT = 3     # 连续失效多少次算真死（防网络抖动误杀）
+PROBE_FAIL_LIMIT = 3     # 连续失效这么多次：先从配置里撤下（停用留档）
+PROBE_DELETE_LIMIT = 10  # 连续失效这么多天：才真正从库里删除（给足恢复窗口）
+# 整轮探测存活率低于这个比例，判定为「本轮网络异常」，结果作废不计数
+# （CI 跑在海外机房，到国内站偶尔大面积超时，不能拿这种结果当站点死了）
+PROBE_MIN_ALIVE_RATE = 0.5
+PROBE_MIN_SAMPLE = 10
 
 # 主流线路：真死时只停用留档（等你自己补新地址），不删
 PROTECTED_BRANDS = {"玩偶", "茉莉", "木偶", "咕噜", "快映", "虎斑",
@@ -258,16 +263,15 @@ def apply_probe_results(sites, probe_result):
         fails = int(s.get("_fails") or 0) + 1
         s["_fails"] = fails
         s["_last_fail"] = _now()[:10]
-        if fails < PROBE_FAIL_LIMIT:
+        if fails >= PROBE_DELETE_LIMIT and not is_protected(s):
+            sites.remove(s)
+            removed.append((key, s.get("name", "")))
             continue
-        if is_protected(s):
+        if fails >= PROBE_FAIL_LIMIT:
             if not s.get("_disabled"):
                 s["_disabled"] = True
                 s["_dead_by"] = "probe"
                 suspended.append((key, s.get("name", "")))
-        else:
-            sites.remove(s)
-            removed.append((key, s.get("name", "")))
     return removed, suspended, revived, switched
 
 
@@ -389,8 +393,12 @@ def main(out_path="tvbox.json"):
         print("→ 逐站存活探测…")
         probe_result, probeable = probe_sites(sites)
         dead_now = sum(1 for v in probe_result.values() if not v)
-        print(f"   可探测 {probeable} 站 · 本轮连不上 {dead_now} 站")
-        removed, suspended, revived, switched = apply_probe_results(sites, probe_result)
+        alive_rate = (probeable - dead_now) / probeable if probeable else 1.0
+        print(f"   可探测 {probeable} 站 · 本轮连不上 {dead_now} 站（存活率 {alive_rate:.0%}）")
+        if probeable >= PROBE_MIN_SAMPLE and alive_rate < PROBE_MIN_ALIVE_RATE:
+            print(f"   ⚠ 存活率低于 {PROBE_MIN_ALIVE_RATE:.0%}，判定本轮网络异常，探测结果作废（不计数不删除）")
+        else:
+            removed, suspended, revived, switched = apply_probe_results(sites, probe_result)
         if switched:
             print(f"   🔄 自动切域名 {len(switched)} 站："
                   + "、".join(f"{k}" for k, _ in switched[:8]))
