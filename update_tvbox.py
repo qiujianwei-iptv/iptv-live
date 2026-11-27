@@ -383,6 +383,49 @@ def main(out_path="tvbox.json"):
             "api": "csp_QfUpdate",
             "searchable": 0,
         })
+
+    # ---- 秋风影视自有「在线即点即播」采集站（type=1 直连苹果CMS采集接口，TVBox 原生支持，不依赖 jar）----
+    # 已实测可用的公开采集源：数据每日更新，m3u8 直链在线播放
+    OWN_CJ_SITES = [
+        {
+            "key": "ffzy_cj",
+            "name": "非凡 • 高清",
+            "type": 1,
+            "api": "http://ffzy5.tv/api.php/provide/vod/",
+            "searchable": 1,
+            "quickSearch": 1,
+            "filterable": 1,
+        },
+        {
+            "key": "zy360_cj",
+            "name": "360 • 高清",
+            "type": 1,
+            "api": "https://360zy.com/api.php/provide/vod/from/360azy/",
+            "searchable": 1,
+            "quickSearch": 1,
+            "filterable": 1,
+        },
+        {
+            # 厂长资源（4kcz.com）：4K 网盘资源站，在线解析播放 + 夸克/百度/迅雷网盘
+            # 爬虫文件在仓库 js/4kcz.js，改逻辑不用动电视端
+            "key": "cz4k_js",
+            "name": "厂长 • 4K",
+            "type": 3,
+            "api": "assets://js/lib/drpy2.min.js",
+            "searchable": 0,
+            "quickSearch": 0,
+            "filterable": 0,
+            "ext": "https://gh-proxy.com/https://raw.githubusercontent.com/qiujianwei-iptv/iptv-live/main/js/4kcz.js",
+        },
+    ]
+    # 插入位置：紧跟「本地 • 视频」之后，首页靠前；找不到就放末尾
+    insert_at = len(sites)
+    for i, s in enumerate(sites):
+        if s.get("key") == "本地":
+            insert_at = i + 1
+            break
+    sites[insert_at:insert_at] = OWN_CJ_SITES
+
     print(f"   并入 {len(kept)} 条 · 重复剔除 {len(wstat['dup'])} · 需他自己网盘授权剔除 "
           f"{len(wstat['auth'])} · 关键词剔除 {len(wstat['blocked'])} · 缺类剔除 {len(wstat['missing'])}")
 
