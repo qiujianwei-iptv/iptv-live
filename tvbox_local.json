@@ -34,6 +34,37 @@
    "jar": "LOCALJAR"
   },
   {
+   "key": "ffzy_cj",
+   "name": "非凡 • 高清",
+   "type": 1,
+   "api": "http://ffzy5.tv/api.php/provide/vod/",
+   "searchable": 1,
+   "quickSearch": 1,
+   "filterable": 1,
+   "jar": "LOCALJAR"
+  },
+  {
+   "key": "zy360_cj",
+   "name": "360 • 高清",
+   "type": 1,
+   "api": "https://360zy.com/api.php/provide/vod/from/360azy/",
+   "searchable": 1,
+   "quickSearch": 1,
+   "filterable": 1,
+   "jar": "LOCALJAR"
+  },
+  {
+   "key": "cz4k_js",
+   "name": "厂长 • 4K",
+   "type": 3,
+   "api": "assets://js/lib/drpy2.min.js",
+   "searchable": 0,
+   "quickSearch": 0,
+   "filterable": 0,
+   "ext": "https://gh-proxy.com/https://raw.githubusercontent.com/qiujianwei-iptv/iptv-live/main/js/4kcz.js",
+   "jar": "LOCALJAR"
+  },
+  {
    "key": "热播影视",
    "name": "热播 • APP",
    "type": 3,
@@ -951,7 +982,7 @@
   },
   {
    "key": "Doubanaaaa",
-   "name": "🐮【更新日期:20261126】🐮",
+   "name": "🐮【更新日期:20261127】🐮",
    "type": 3,
    "api": "csp_NewDouBanGuard",
    "indexs": 1,
