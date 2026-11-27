@@ -39,6 +39,11 @@
    "type": 3,
    "api": "csp_QfUpdate",
    "searchable": 0,
+   "changeable": 0,
+   "indexs": 0,
+   "style": {
+    "type": "list"
+   },
    "jar": "https://gh-proxy.com/https://raw.githubusercontent.com/qiujianwei-iptv/iptv-live/main/jar/qf_spider_merged.jar;md5;c58eed36c90d07e45348a2bfc6617a8b"
   },
   {
