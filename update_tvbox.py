@@ -57,6 +57,9 @@ WEX_JAR_URLS = [
 # 每次同步成功，把上游站点（潇洒+王二小合并后的最终版）落盘 own_sites.json；
 # 上游全挂时用它兜底照常生成——配置永远是自己的，上游死活不再影响出片。
 SNAPSHOT_FILE = "own_sites.json"
+# 兜底时若快照超过这个天数没刷新，说明上游长期异常，打印醒目告警（不阻断出片）
+SNAPSHOT_MAX_AGE_DAYS = 7
+# 快照必须一并提交到仓库（CI 里由 workflow git add），否则兜底用的永远是仓库里的旧快照
 
 # 这些站点是入口/配置页，不该参与搜索
 NO_SEARCH_APIS = {"csp_Config", "csp_MyDriveGuard"}
@@ -509,15 +512,27 @@ def main(out_path="tvbox.json"):
     # ---- 固化快照落盘（上游最终站点 + 顶层配置；自有站不入快照，恢复时再注入）----
     own_keys = {"ffzy_cj", "zy360_cj", "cz4k_js", "QfUpdate"}
     upstream_sites = [s for s in sites if s.get("key") not in own_keys]
+    snap_path = os.path.join(os.path.dirname(os.path.abspath(out_path)) or ".", SNAPSHOT_FILE)
     try:
         import datetime as _dt
-        snap = {
-            "_meta": {
-                "updated_at": _dt.datetime.now().strftime("%Y-%m-%d %H:%M"),
-                "source": "xiaosa+wex merged snapshot",
-                "note": "Upper-stream offline fallback; regenerated on every successful sync",
-            },
-            "xs": {
+        if snapshot_mode:
+            # 兜底模式：快照就是本次数据来源，绝不重写它
+            # （重写会把 updated_at 刷成今天，快照看起来是新的，实际已陈旧，等于自己骗自己）
+            age_days = None
+            try:
+                with open(snap_path, encoding="utf-8") as f:
+                    meta = json.load(f).get("_meta") or {}
+                up = _dt.datetime.strptime(meta.get("updated_at", ""), "%Y-%m-%d %H:%M")
+                age_days = (_dt.datetime.now() - up).days
+            except Exception:
+                pass
+            age_txt = "未知" if age_days is None else f"{age_days} 天"
+            print(f"   固化快照 {SNAPSHOT_FILE} 保持不动（{len(upstream_sites)} 站，快照龄 {age_txt}）")
+            if age_days is not None and age_days > SNAPSHOT_MAX_AGE_DAYS:
+                print(f"   ⚠⚠ 快照已 {age_days} 天没跟随上游刷新（阈值 {SNAPSHOT_MAX_AGE_DAYS} 天），"
+                      "上游疑似长期异常，需要人工看一眼")
+        else:
+            xs_snap = {
                 "wallpaper": out.get("wallpaper"),
                 "logo": out.get("logo"),
                 "danmaku": out.get("danmaku"),
@@ -529,13 +544,31 @@ def main(out_path="tvbox.json"):
                 "flags": out.get("flags") or [],
                 "ads": out.get("ads") or [],
                 "sites": upstream_sites,
-            },
-        }
-        snap_path = os.path.join(os.path.dirname(os.path.abspath(out_path)) or ".", SNAPSHOT_FILE)
-        with open(snap_path, "w", encoding="utf-8", newline="\n") as f:
-            json.dump(snap, f, ensure_ascii=False, indent=1)
-        print(f"   固化快照 {SNAPSHOT_FILE}：{len(upstream_sites)} 站"
-              + ("（本次来自快照，原样落盘）" if snapshot_mode else "已刷新"))
+            }
+            # 内容与旧快照完全一致时不动文件：避免仅时间戳变化导致每天一次无意义提交
+            prev = None
+            try:
+                with open(snap_path, encoding="utf-8") as f:
+                    prev = json.load(f)
+            except Exception:
+                prev = None
+            if prev and (prev.get("xs") or {}) == xs_snap:
+                old_meta = prev.get("_meta") or {}
+                print(f"   固化快照 {SNAPSHOT_FILE}：内容与上一版一致（{len(upstream_sites)} 站），"
+                      f"沿用更新时间 {old_meta.get('updated_at', '?')}")
+            else:
+                snap = {
+                    "_meta": {
+                        "updated_at": _dt.datetime.now().strftime("%Y-%m-%d %H:%M"),
+                        "sites": len(upstream_sites),
+                        "source": "xiaosa+wex merged snapshot",
+                        "note": "上游兜底快照：每次成功同步自动刷新，CI 随 tvbox.json 一起提交",
+                    },
+                    "xs": xs_snap,
+                }
+                with open(snap_path, "w", encoding="utf-8", newline="\n") as f:
+                    json.dump(snap, f, ensure_ascii=False, indent=1)
+                print(f"   固化快照 {SNAPSHOT_FILE}：{len(upstream_sites)} 站已刷新（随上游更新）")
     except Exception as e:
         print(f"   ⚠ 快照落盘失败（{e}）")
 
