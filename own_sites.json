@@ -1,8 +1,8 @@
 {
  "_meta": {
-  "updated_at": "2026-11-27 22:16",
-  "sites": 117,
-  "live": 117,
+  "updated_at": "2026-11-27 22:28",
+  "sites": 118,
+  "live": 111,
   "note": "自有线路库（唯一真相）：每天探测存活，活域名自动切换，连续失效自动清理"
  },
  "xs": {
@@ -337,6 +337,14 @@
     "_since": "2026-11-27"
    },
    {
+    "key": "QfUpdate",
+    "name": "🔄 线路包更新",
+    "type": 3,
+    "api": "csp_QfUpdate",
+    "searchable": 0,
+    "_self": true
+   },
+   {
     "key": "玩偶",
     "name": "玩偶 • 4K",
     "type": 3,
@@ -505,8 +513,10 @@
     "jar": "https://gh-proxy.com/https://raw.githubusercontent.com/qiujianwei-iptv/iptv-live/main/jar/qf_spider_merged.jar;md5;c58eed36c90d07e45348a2bfc6617a8b",
     "_origin": "xiaosa",
     "_since": "2026-11-27",
-    "_fails": 2,
-    "_last_fail": "2026-11-27"
+    "_fails": 3,
+    "_last_fail": "2026-11-27",
+    "_disabled": true,
+    "_dead_by": "probe"
    },
    {
     "key": "剧圈99",
@@ -651,8 +661,10 @@
     "jar": "https://gh-proxy.com/https://raw.githubusercontent.com/qiujianwei-iptv/iptv-live/main/jar/qf_spider_merged.jar;md5;c58eed36c90d07e45348a2bfc6617a8b",
     "_origin": "xiaosa",
     "_since": "2026-11-27",
-    "_fails": 2,
-    "_last_fail": "2026-11-27"
+    "_fails": 3,
+    "_last_fail": "2026-11-27",
+    "_disabled": true,
+    "_dead_by": "probe"
    },
    {
     "key": "蓝鸟",
@@ -687,8 +699,10 @@
     "jar": "https://gh-proxy.com/https://raw.githubusercontent.com/qiujianwei-iptv/iptv-live/main/jar/qf_spider_merged.jar;md5;c58eed36c90d07e45348a2bfc6617a8b",
     "_origin": "xiaosa",
     "_since": "2026-11-27",
-    "_fails": 2,
-    "_last_fail": "2026-11-27"
+    "_fails": 3,
+    "_last_fail": "2026-11-27",
+    "_disabled": true,
+    "_dead_by": "probe"
    },
    {
     "key": "茉莉Get",
@@ -878,8 +892,10 @@
     "jar": "https://gh-proxy.com/https://raw.githubusercontent.com/qiujianwei-iptv/iptv-live/main/jar/qf_spider_merged.jar;md5;c58eed36c90d07e45348a2bfc6617a8b",
     "_origin": "xiaosa",
     "_since": "2026-11-27",
-    "_fails": 2,
-    "_last_fail": "2026-11-27"
+    "_fails": 3,
+    "_last_fail": "2026-11-27",
+    "_disabled": true,
+    "_dead_by": "probe"
    },
    {
     "key": "搬运",
@@ -1090,8 +1106,10 @@
     "jar": "https://gh-proxy.com/https://raw.githubusercontent.com/qiujianwei-iptv/iptv-live/main/jar/qf_spider_merged.jar;md5;c58eed36c90d07e45348a2bfc6617a8b",
     "_origin": "xiaosa",
     "_since": "2026-11-27",
-    "_fails": 2,
-    "_last_fail": "2026-11-27"
+    "_fails": 3,
+    "_last_fail": "2026-11-27",
+    "_disabled": true,
+    "_dead_by": "probe"
    },
    {
     "key": "看剧",
@@ -1170,8 +1188,10 @@
     "jar": "https://gh-proxy.com/https://raw.githubusercontent.com/qiujianwei-iptv/iptv-live/main/jar/qf_spider_merged.jar;md5;c58eed36c90d07e45348a2bfc6617a8b",
     "_origin": "xiaosa",
     "_since": "2026-11-27",
-    "_fails": 2,
-    "_last_fail": "2026-11-27"
+    "_fails": 3,
+    "_last_fail": "2026-11-27",
+    "_disabled": true,
+    "_dead_by": "probe"
    },
    {
     "key": "骚火影视",
@@ -1182,8 +1202,10 @@
     "jar": "https://gh-proxy.com/https://raw.githubusercontent.com/qiujianwei-iptv/iptv-live/main/jar/qf_spider_merged.jar;md5;c58eed36c90d07e45348a2bfc6617a8b",
     "_origin": "xiaosa",
     "_since": "2026-11-27",
-    "_fails": 2,
-    "_last_fail": "2026-11-27"
+    "_fails": 3,
+    "_last_fail": "2026-11-27",
+    "_disabled": true,
+    "_dead_by": "probe"
    },
    {
     "key": "爱看机器人",
