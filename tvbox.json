@@ -50,32 +50,6 @@
    "jar": "https://gh-proxy.com/https://raw.githubusercontent.com/qiujianwei-iptv/iptv-live/main/jar/qf_spider_merged.jar;md5;c58eed36c90d07e45348a2bfc6617a8b"
   },
   {
-   "key": "Wexconfig",
-   "name": "🔑 网盘授权（王二小）",
-   "type": 3,
-   "api": "csp_PanConfigGuard",
-   "searchable": 0,
-   "changeable": 0,
-   "indexs": 0,
-   "style": {
-    "type": "list"
-   },
-   "jar": "https://gh-proxy.com/https://raw.githubusercontent.com/qiujianwei-iptv/iptv-live/main/jar/qf_spider_merged.jar;md5;c58eed36c90d07e45348a2bfc6617a8b"
-  },
-  {
-   "key": "MyPan",
-   "name": "🔑 已授权网盘",
-   "type": 3,
-   "api": "csp_MyPanGuard",
-   "searchable": 0,
-   "changeable": 0,
-   "indexs": 0,
-   "style": {
-    "type": "list"
-   },
-   "jar": "https://gh-proxy.com/https://raw.githubusercontent.com/qiujianwei-iptv/iptv-live/main/jar/qf_spider_merged.jar;md5;c58eed36c90d07e45348a2bfc6617a8b"
-  },
-  {
    "key": "热播影视",
    "name": "热播 • APP",
    "type": 3,
@@ -1070,83 +1044,6 @@
    "jar": "https://gh-proxy.com/https://raw.githubusercontent.com/qiujianwei-iptv/iptv-live/main/jar/qf_spider_merged.jar;md5;c58eed36c90d07e45348a2bfc6617a8b"
   },
   {
-   "key": "AiQwMkv",
-   "name": "💓‍七味┃4K💓‍",
-   "type": 3,
-   "api": "csp_AiQwMkvGuard",
-   "searchable": 1,
-   "quickSearch": 1,
-   "changeable": 0,
-   "jarnote": "LOCALJAR",
-   "jar": "https://gh-proxy.com/https://raw.githubusercontent.com/qiujianwei-iptv/iptv-live/main/jar/qf_spider_merged.jar;md5;c58eed36c90d07e45348a2bfc6617a8b"
-  },
-  {
-   "key": "AiNewKuaiYing",
-   "name": "💓快影┃4K💓",
-   "type": 3,
-   "api": "csp_AiNewKuaiYingGuard",
-   "searchable": 1,
-   "quickSearch": 1,
-   "changeable": 0,
-   "jarnote": "LOCALJAR",
-   "jar": "https://gh-proxy.com/https://raw.githubusercontent.com/qiujianwei-iptv/iptv-live/main/jar/qf_spider_merged.jar;md5;c58eed36c90d07e45348a2bfc6617a8b"
-  },
-  {
-   "key": "AiNewJuTou",
-   "name": "💓剧透┃4K💓",
-   "type": 3,
-   "api": "csp_AiNewJuTouGuard",
-   "searchable": 1,
-   "quickSearch": 1,
-   "changeable": 0,
-   "jarnote": "LOCALJAR",
-   "jar": "https://gh-proxy.com/https://raw.githubusercontent.com/qiujianwei-iptv/iptv-live/main/jar/qf_spider_merged.jar;md5;c58eed36c90d07e45348a2bfc6617a8b"
-  },
-  {
-   "key": "AiNewLibvio",
-   "name": "💓立播┃4K💓",
-   "type": 3,
-   "api": "csp_AiNewLibvioGuard",
-   "searchable": 1,
-   "quickSearch": 1,
-   "changeable": 0,
-   "jarnote": "LOCALJAR",
-   "jar": "https://gh-proxy.com/https://raw.githubusercontent.com/qiujianwei-iptv/iptv-live/main/jar/qf_spider_merged.jar;md5;c58eed36c90d07e45348a2bfc6617a8b"
-  },
-  {
-   "key": "原盘",
-   "name": "💓‍原盘┃4K💓‍",
-   "type": 3,
-   "api": "csp_AiNewZhiNan4KGuard",
-   "searchable": 1,
-   "quickSearch": 1,
-   "changeable": 0,
-   "jarnote": "LOCALJAR",
-   "jar": "https://gh-proxy.com/https://raw.githubusercontent.com/qiujianwei-iptv/iptv-live/main/jar/qf_spider_merged.jar;md5;c58eed36c90d07e45348a2bfc6617a8b"
-  },
-  {
-   "key": "AiPan1Me",
-   "name": "💓盘迷┃4K💓",
-   "type": 3,
-   "api": "csp_AiPan1MeGuard",
-   "searchable": 1,
-   "quickSearch": 1,
-   "changeable": 0,
-   "jarnote": "LOCALJAR",
-   "jar": "https://gh-proxy.com/https://raw.githubusercontent.com/qiujianwei-iptv/iptv-live/main/jar/qf_spider_merged.jar;md5;c58eed36c90d07e45348a2bfc6617a8b"
-  },
-  {
-   "key": "AiNewYiDong4K",
-   "name": "💓逸动┃4K💓",
-   "type": 3,
-   "api": "csp_AiNewYiDong4KGuard",
-   "searchable": 1,
-   "quickSearch": 1,
-   "changeable": 0,
-   "jarnote": "LOCALJAR",
-   "jar": "https://gh-proxy.com/https://raw.githubusercontent.com/qiujianwei-iptv/iptv-live/main/jar/qf_spider_merged.jar;md5;c58eed36c90d07e45348a2bfc6617a8b"
-  },
-  {
    "key": "WexHanXiaoQuan",
    "name": "💥韩剧┃秒播💥",
    "type": 3,
@@ -1508,83 +1405,6 @@
    "name": "🎼轮回┃舞曲🎼",
    "type": 3,
    "api": "csp_MusicAiLunHuiGuard",
-   "searchable": 1,
-   "changeable": 0,
-   "jarnote": "LOCALJAR",
-   "jar": "https://gh-proxy.com/https://raw.githubusercontent.com/qiujianwei-iptv/iptv-live/main/jar/qf_spider_merged.jar;md5;c58eed36c90d07e45348a2bfc6617a8b"
-  },
-  {
-   "key": "FakeAi115Share",
-   "name": "💓115┃分享💓‍",
-   "type": 3,
-   "api": "csp_FakeAi115ShareGuard",
-   "searchable": 1,
-   "changeable": 0,
-   "timeout": 50,
-   "style": {
-    "type": "list"
-   },
-   "jarnote": "LOCALJAR",
-   "jar": "https://gh-proxy.com/https://raw.githubusercontent.com/qiujianwei-iptv/iptv-live/main/jar/qf_spider_merged.jar;md5;c58eed36c90d07e45348a2bfc6617a8b"
-  },
-  {
-   "key": "AList",
-   "name": "👁️Alist┃DIY👁️",
-   "type": 3,
-   "api": "csp_AListGuard",
-   "searchable": 1,
-   "changeable": 0,
-   "jarnote": "LOCALJAR",
-   "jar": "https://gh-proxy.com/https://raw.githubusercontent.com/qiujianwei-iptv/iptv-live/main/jar/qf_spider_merged.jar;md5;c58eed36c90d07e45348a2bfc6617a8b"
-  },
-  {
-   "key": "webdav",
-   "name": "👁️WebDav┃DIY👁️",
-   "type": 3,
-   "api": "csp_WebDAVGuard",
-   "searchable": 1,
-   "changeable": 0,
-   "jarnote": "LOCALJAR",
-   "jar": "https://gh-proxy.com/https://raw.githubusercontent.com/qiujianwei-iptv/iptv-live/main/jar/qf_spider_merged.jar;md5;c58eed36c90d07e45348a2bfc6617a8b"
-  },
-  {
-   "key": "DiyVod",
-   "name": "👁Vod┃DIY👁️",
-   "type": 3,
-   "api": "csp_DiyVodGuard",
-   "searchable": 1,
-   "changeable": 0,
-   "style": {
-    "type": "list"
-   },
-   "jarnote": "LOCALJAR",
-   "jar": "https://gh-proxy.com/https://raw.githubusercontent.com/qiujianwei-iptv/iptv-live/main/jar/qf_spider_merged.jar;md5;c58eed36c90d07e45348a2bfc6617a8b"
-  },
-  {
-   "key": "SoAiPanSoo",
-   "name": "🎠九七┃综合🎠",
-   "type": 3,
-   "api": "csp_SoAiPanSooGuard",
-   "searchable": 1,
-   "changeable": 0,
-   "jarnote": "LOCALJAR",
-   "jar": "https://gh-proxy.com/https://raw.githubusercontent.com/qiujianwei-iptv/iptv-live/main/jar/qf_spider_merged.jar;md5;c58eed36c90d07e45348a2bfc6617a8b"
-  },
-  {
-   "key": "SoAiAiPanSo",
-   "name": "🎠爱盘┃综合🎠",
-   "type": 3,
-   "api": "csp_SoAiAiPanSoGuard",
-   "searchable": 1,
-   "changeable": 0,
-   "jarnote": "LOCALJAR",
-   "jar": "https://gh-proxy.com/https://raw.githubusercontent.com/qiujianwei-iptv/iptv-live/main/jar/qf_spider_merged.jar;md5;c58eed36c90d07e45348a2bfc6617a8b"
-  },
-  {
-   "key": "SoAiQuanPanGuard",
-   "name": "🎠全盘┃综合🎠",
-   "type": 3,
-   "api": "csp_SoAiQuanPanGuard",
    "searchable": 1,
    "changeable": 0,
    "jarnote": "LOCALJAR",
