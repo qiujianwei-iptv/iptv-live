@@ -1,8 +1,8 @@
 {
  "_meta": {
-  "updated_at": "2026-11-28 16:15",
-  "sites": 126,
-  "live": 121,
+  "updated_at": "2026-11-28 16:41",
+  "sites": 128,
+  "live": 123,
   "note": "自有线路库（唯一真相）：每天探测存活，活域名自动切换，连续失效自动清理"
  },
  "xs": {
@@ -341,6 +341,32 @@
     "name": "🔄 线路包更新",
     "type": 3,
     "api": "csp_QfUpdate",
+    "searchable": 0,
+    "changeable": 0,
+    "indexs": 0,
+    "style": {
+     "type": "list"
+    },
+    "_self": true
+   },
+   {
+    "key": "Wexconfig",
+    "name": "🔑 网盘授权（王二小）",
+    "type": 3,
+    "api": "csp_PanConfigGuard",
+    "searchable": 0,
+    "changeable": 0,
+    "indexs": 0,
+    "style": {
+     "type": "list"
+    },
+    "_self": true
+   },
+   {
+    "key": "MyPan",
+    "name": "🔑 已授权网盘",
+    "type": 3,
+    "api": "csp_MyPanGuard",
     "searchable": 0,
     "changeable": 0,
     "indexs": 0,
@@ -1044,7 +1070,7 @@
     "name": "卡卡 • 4K",
     "type": 3,
     "api": "csp_KKPan",
-    "searchable": 1,
+    "searchable": 0,
     "quickSearch": 0,
     "filterable": 0,
     "style": {
@@ -1399,7 +1425,7 @@
     "name": "觅盘 • 搜索",
     "type": 3,
     "api": "csp_MiPan",
-    "searchable": 1,
+    "searchable": 0,
     "quickSearch": 0,
     "filterable": 0,
     "timeout": 60,
@@ -1412,7 +1438,7 @@
     "name": "盘搜 • 搜索",
     "type": 3,
     "api": "csp_PanSou",
-    "searchable": 1,
+    "searchable": 0,
     "quickSearch": 0,
     "filterable": 0,
     "timeout": 60,
