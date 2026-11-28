@@ -38,7 +38,7 @@
   },
   {
    "key": "QfUpdate",
-   "name": "🔄 线路包更新",
+   "name": "线路包更新",
    "type": 3,
    "api": "csp_QfUpdate",
    "searchable": 0,
