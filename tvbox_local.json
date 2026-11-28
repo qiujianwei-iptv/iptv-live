@@ -50,6 +50,32 @@
    "jar": "LOCALJAR"
   },
   {
+   "key": "Wexconfig",
+   "name": "🔑 网盘授权（王二小）",
+   "type": 3,
+   "api": "csp_PanConfigGuard",
+   "searchable": 0,
+   "changeable": 0,
+   "indexs": 0,
+   "style": {
+    "type": "list"
+   },
+   "jar": "LOCALJAR"
+  },
+  {
+   "key": "MyPan",
+   "name": "🔑 已授权网盘",
+   "type": 3,
+   "api": "csp_MyPanGuard",
+   "searchable": 0,
+   "changeable": 0,
+   "indexs": 0,
+   "style": {
+    "type": "list"
+   },
+   "jar": "LOCALJAR"
+  },
+  {
    "key": "热播影视",
    "name": "热播 • APP",
    "type": 3,
@@ -655,7 +681,7 @@
    "name": "卡卡 • 4K",
    "type": 3,
    "api": "csp_KKPan",
-   "searchable": 1,
+   "searchable": 0,
    "quickSearch": 0,
    "filterable": 0,
    "style": {
@@ -950,7 +976,7 @@
    "name": "觅盘 • 搜索",
    "type": 3,
    "api": "csp_MiPan",
-   "searchable": 1,
+   "searchable": 0,
    "quickSearch": 0,
    "filterable": 0,
    "timeout": 60,
@@ -962,7 +988,7 @@
    "name": "盘搜 • 搜索",
    "type": 3,
    "api": "csp_PanSou",
-   "searchable": 1,
+   "searchable": 0,
    "quickSearch": 0,
    "filterable": 0,
    "timeout": 60,
