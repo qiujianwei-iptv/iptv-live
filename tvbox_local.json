@@ -1333,58 +1333,6 @@
    "jar": "LOCALJAR"
   },
   {
-   "key": "ChildrenAiBaoBao",
-   "name": "宝宝 • 儿歌",
-   "type": 3,
-   "api": "csp_ChildrenAiBaoBaoGuard",
-   "searchable": 1,
-   "changeable": 0,
-   "style": {
-    "type": "rect",
-    "ratio": 2
-   },
-   "jarnote": "LOCALJAR",
-   "jar": "LOCALJAR"
-  },
-  {
-   "key": "ChildrenAiBeiWa",
-   "name": "贝贝 • 儿歌",
-   "type": 3,
-   "api": "csp_ChildrenAiBeiWaGuard",
-   "searchable": 1,
-   "changeable": 0,
-   "style": {
-    "type": "rect",
-    "ratio": 2
-   },
-   "jarnote": "LOCALJAR",
-   "jar": "LOCALJAR"
-  },
-  {
-   "key": "ChildrenAiTuTu",
-   "name": "兔兔 • 儿歌",
-   "type": 3,
-   "api": "csp_ChildrenAiTuTuGuard",
-   "searchable": 1,
-   "changeable": 0,
-   "style": {
-    "type": "rect",
-    "ratio": 2
-   },
-   "jarnote": "LOCALJAR",
-   "jar": "LOCALJAR"
-  },
-  {
-   "key": "MusicAiLunHui",
-   "name": "轮回 • 舞曲",
-   "type": 3,
-   "api": "csp_MusicAiLunHuiGuard",
-   "searchable": 1,
-   "changeable": 0,
-   "jarnote": "LOCALJAR",
-   "jar": "LOCALJAR"
-  },
-  {
    "key": "ffzy_cj",
    "name": "非凡 • 高清",
    "type": 3,
