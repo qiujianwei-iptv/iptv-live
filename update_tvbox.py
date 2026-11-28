@@ -525,9 +525,9 @@ def pretty_name(name):
 
 
 def normalize_names(sites):
-    """所有站点名统一成「名称 • 类别」，跟潇洒的命名完全一致"""
+    """所有站点名统一成「名称 • 类别」，跟潇洒的命名完全一致（含线路包更新，不带图标）"""
     for s in sites:
-        if s.get("api") == "csp_Douban" or s.get("key") == "QfUpdate":
+        if s.get("api") == "csp_Douban":
             continue
         s["name"] = pretty_name(s.get("name"))
     return sites
