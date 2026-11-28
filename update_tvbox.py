@@ -471,12 +471,22 @@ def inject_own_sites(sites, jar_classes):
     if "QfUpdate" in jar_classes:
         item = {
             "key": "QfUpdate", "name": "🔄 线路包更新", "type": 3,
-            "api": "csp_QfUpdate", "searchable": 0, "_self": True,
+            "api": "csp_QfUpdate", "searchable": 0, "changeable": 0, "indexs": 0,
+            "style": {"type": "list"}, "_self": True,
         }
-        if "QfUpdate" in index:
-            sites[index["QfUpdate"]].update(item)
-        else:
-            sites.insert(3, item)  # 首页第 4 位，跟前几位入口放一起
+        # 固定放首页第 4 位：老配置里它被排到最后一站（第 124 位），要滚到底才看得见
+        old = next((s for s in sites if s.get("key") == "QfUpdate"), None)
+        if old is not None:
+            sites.remove(old)
+        sites.insert(3, item)
+    return sites
+
+
+def rename_douban(sites):
+    """首页第一站（csp_Douban）固定叫「秋风线路」，这是电视端认的名字，不能变"""
+    for s in sites:
+        if s.get("api") == "csp_Douban":
+            s["name"] = "秋风线路"
     return sites
 
 
@@ -573,6 +583,7 @@ def main(out_path="tvbox.json"):
 
     sites = inject_own_sites(sites, jar_classes)
     sites = unify_config(sites)
+    sites = rename_douban(sites)
 
     live = [s for s in sites if not s.get("_disabled")]
     if len(live) < MIN_SITES:
