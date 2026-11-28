@@ -1,6 +1,6 @@
 {
  "_meta": {
-  "updated_at": "2026-11-28 21:47",
+  "updated_at": "2026-11-28 22:07",
   "sites": 110,
   "live": 105,
   "note": "自有线路库（唯一真相）：每天探测存活，活域名自动切换，连续失效自动清理"
@@ -338,7 +338,7 @@
    },
    {
     "key": "QfUpdate",
-    "name": "🔄 线路包更新",
+    "name": "线路包更新",
     "type": 3,
     "api": "csp_QfUpdate",
     "searchable": 0,
