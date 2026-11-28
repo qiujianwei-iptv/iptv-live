@@ -1,8 +1,8 @@
 {
  "_meta": {
-  "updated_at": "2026-11-28 16:41",
-  "sites": 128,
-  "live": 123,
+  "updated_at": "2026-11-28 16:53",
+  "sites": 112,
+  "live": 107,
   "note": "自有线路库（唯一真相）：每天探测存活，活域名自动切换，连续失效自动清理"
  },
  "xs": {
@@ -341,32 +341,6 @@
     "name": "🔄 线路包更新",
     "type": 3,
     "api": "csp_QfUpdate",
-    "searchable": 0,
-    "changeable": 0,
-    "indexs": 0,
-    "style": {
-     "type": "list"
-    },
-    "_self": true
-   },
-   {
-    "key": "Wexconfig",
-    "name": "🔑 网盘授权（王二小）",
-    "type": 3,
-    "api": "csp_PanConfigGuard",
-    "searchable": 0,
-    "changeable": 0,
-    "indexs": 0,
-    "style": {
-     "type": "list"
-    },
-    "_self": true
-   },
-   {
-    "key": "MyPan",
-    "name": "🔑 已授权网盘",
-    "type": 3,
-    "api": "csp_MyPanGuard",
     "searchable": 0,
     "changeable": 0,
     "indexs": 0,
@@ -1527,90 +1501,6 @@
     "_since": "2026-11-27"
    },
    {
-    "key": "AiQwMkv",
-    "name": "💓‍七味┃4K💓‍",
-    "type": 3,
-    "api": "csp_AiQwMkvGuard",
-    "searchable": 1,
-    "quickSearch": 1,
-    "changeable": 0,
-    "jarnote": "LOCALJAR",
-    "_origin": "wex",
-    "_since": "2026-11-27"
-   },
-   {
-    "key": "AiNewKuaiYing",
-    "name": "💓快影┃4K💓",
-    "type": 3,
-    "api": "csp_AiNewKuaiYingGuard",
-    "searchable": 1,
-    "quickSearch": 1,
-    "changeable": 0,
-    "jarnote": "LOCALJAR",
-    "_origin": "wex",
-    "_since": "2026-11-27"
-   },
-   {
-    "key": "AiNewJuTou",
-    "name": "💓剧透┃4K💓",
-    "type": 3,
-    "api": "csp_AiNewJuTouGuard",
-    "searchable": 1,
-    "quickSearch": 1,
-    "changeable": 0,
-    "jarnote": "LOCALJAR",
-    "_origin": "wex",
-    "_since": "2026-11-27"
-   },
-   {
-    "key": "AiNewLibvio",
-    "name": "💓立播┃4K💓",
-    "type": 3,
-    "api": "csp_AiNewLibvioGuard",
-    "searchable": 1,
-    "quickSearch": 1,
-    "changeable": 0,
-    "jarnote": "LOCALJAR",
-    "_origin": "wex",
-    "_since": "2026-11-27"
-   },
-   {
-    "key": "原盘",
-    "name": "💓‍原盘┃4K💓‍",
-    "type": 3,
-    "api": "csp_AiNewZhiNan4KGuard",
-    "searchable": 1,
-    "quickSearch": 1,
-    "changeable": 0,
-    "jarnote": "LOCALJAR",
-    "_origin": "wex",
-    "_since": "2026-11-27"
-   },
-   {
-    "key": "AiPan1Me",
-    "name": "💓盘迷┃4K💓",
-    "type": 3,
-    "api": "csp_AiPan1MeGuard",
-    "searchable": 1,
-    "quickSearch": 1,
-    "changeable": 0,
-    "jarnote": "LOCALJAR",
-    "_origin": "wex",
-    "_since": "2026-11-27"
-   },
-   {
-    "key": "AiNewYiDong4K",
-    "name": "💓逸动┃4K💓",
-    "type": 3,
-    "api": "csp_AiNewYiDong4KGuard",
-    "searchable": 1,
-    "quickSearch": 1,
-    "changeable": 0,
-    "jarnote": "LOCALJAR",
-    "_origin": "wex",
-    "_since": "2026-11-27"
-   },
-   {
     "key": "WexHanXiaoQuan",
     "name": "💥韩剧┃秒播💥",
     "type": 3,
@@ -2000,90 +1890,6 @@
     "name": "🎼轮回┃舞曲🎼",
     "type": 3,
     "api": "csp_MusicAiLunHuiGuard",
-    "searchable": 1,
-    "changeable": 0,
-    "jarnote": "LOCALJAR",
-    "_origin": "wex",
-    "_since": "2026-11-27"
-   },
-   {
-    "key": "FakeAi115Share",
-    "name": "💓115┃分享💓‍",
-    "type": 3,
-    "api": "csp_FakeAi115ShareGuard",
-    "searchable": 1,
-    "changeable": 0,
-    "timeout": 50,
-    "style": {
-     "type": "list"
-    },
-    "jarnote": "LOCALJAR",
-    "_origin": "wex",
-    "_since": "2026-11-27"
-   },
-   {
-    "key": "AList",
-    "name": "👁️Alist┃DIY👁️",
-    "type": 3,
-    "api": "csp_AListGuard",
-    "searchable": 1,
-    "changeable": 0,
-    "jarnote": "LOCALJAR",
-    "_origin": "wex",
-    "_since": "2026-11-27"
-   },
-   {
-    "key": "webdav",
-    "name": "👁️WebDav┃DIY👁️",
-    "type": 3,
-    "api": "csp_WebDAVGuard",
-    "searchable": 1,
-    "changeable": 0,
-    "jarnote": "LOCALJAR",
-    "_origin": "wex",
-    "_since": "2026-11-27"
-   },
-   {
-    "key": "DiyVod",
-    "name": "👁Vod┃DIY👁️",
-    "type": 3,
-    "api": "csp_DiyVodGuard",
-    "searchable": 1,
-    "changeable": 0,
-    "style": {
-     "type": "list"
-    },
-    "jarnote": "LOCALJAR",
-    "_origin": "wex",
-    "_since": "2026-11-27"
-   },
-   {
-    "key": "SoAiPanSoo",
-    "name": "🎠九七┃综合🎠",
-    "type": 3,
-    "api": "csp_SoAiPanSooGuard",
-    "searchable": 1,
-    "changeable": 0,
-    "jarnote": "LOCALJAR",
-    "_origin": "wex",
-    "_since": "2026-11-27"
-   },
-   {
-    "key": "SoAiAiPanSo",
-    "name": "🎠爱盘┃综合🎠",
-    "type": 3,
-    "api": "csp_SoAiAiPanSoGuard",
-    "searchable": 1,
-    "changeable": 0,
-    "jarnote": "LOCALJAR",
-    "_origin": "wex",
-    "_since": "2026-11-27"
-   },
-   {
-    "key": "SoAiQuanPanGuard",
-    "name": "🎠全盘┃综合🎠",
-    "type": 3,
-    "api": "csp_SoAiQuanPanGuard",
     "searchable": 1,
     "changeable": 0,
     "jarnote": "LOCALJAR",
