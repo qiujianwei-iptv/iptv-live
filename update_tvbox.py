@@ -93,6 +93,9 @@ DROP_GUARD_APIS = {
     "csp_AListGuard", "csp_WebDAVGuard", "csp_DiyVodGuard",
     # 王二小的豆瓣分享列表（名字带【免费分享】【更新日期】，与潇洒的「秋风线路」重复）
     "csp_NewDouBanGuard",
+    # 内容屏蔽：儿歌、舞曲（用户要求不展示）
+    "csp_ChildrenAiBaoBaoGuard", "csp_ChildrenAiBeiWaGuard", "csp_ChildrenAiTuTuGuard",
+    "csp_MusicAiLunHuiGuard",
 }
 
 # ---- 自建采集站（drpy2 爬虫，规则全在自己仓库 js/ 下）----
