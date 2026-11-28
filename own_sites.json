@@ -1,8 +1,8 @@
 {
  "_meta": {
-  "updated_at": "2026-11-28 22:07",
-  "sites": 110,
-  "live": 105,
+  "updated_at": "2026-11-28 22:09",
+  "sites": 106,
+  "live": 101,
   "note": "自有线路库（唯一真相）：每天探测存活，活域名自动切换，连续失效自动清理"
  },
  "xs": {
@@ -1806,62 +1806,6 @@
     "type": 3,
     "类型": "短剧",
     "api": "csp_DuanJuAiWeiGuanGuard",
-    "searchable": 1,
-    "changeable": 0,
-    "jarnote": "LOCALJAR",
-    "_origin": "wex",
-    "_since": "2026-11-27"
-   },
-   {
-    "key": "ChildrenAiBaoBao",
-    "name": "宝宝 • 儿歌",
-    "type": 3,
-    "api": "csp_ChildrenAiBaoBaoGuard",
-    "searchable": 1,
-    "changeable": 0,
-    "style": {
-     "type": "rect",
-     "ratio": 2
-    },
-    "jarnote": "LOCALJAR",
-    "_origin": "wex",
-    "_since": "2026-11-27"
-   },
-   {
-    "key": "ChildrenAiBeiWa",
-    "name": "贝贝 • 儿歌",
-    "type": 3,
-    "api": "csp_ChildrenAiBeiWaGuard",
-    "searchable": 1,
-    "changeable": 0,
-    "style": {
-     "type": "rect",
-     "ratio": 2
-    },
-    "jarnote": "LOCALJAR",
-    "_origin": "wex",
-    "_since": "2026-11-27"
-   },
-   {
-    "key": "ChildrenAiTuTu",
-    "name": "兔兔 • 儿歌",
-    "type": 3,
-    "api": "csp_ChildrenAiTuTuGuard",
-    "searchable": 1,
-    "changeable": 0,
-    "style": {
-     "type": "rect",
-     "ratio": 2
-    },
-    "jarnote": "LOCALJAR",
-    "_origin": "wex",
-    "_since": "2026-11-27"
-   },
-   {
-    "key": "MusicAiLunHui",
-    "name": "轮回 • 舞曲",
-    "type": 3,
-    "api": "csp_MusicAiLunHuiGuard",
     "searchable": 1,
     "changeable": 0,
     "jarnote": "LOCALJAR",
