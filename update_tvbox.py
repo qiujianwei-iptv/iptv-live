@@ -91,6 +91,8 @@ DROP_GUARD_APIS = {
     "csp_SoAiPanSooGuard", "csp_SoAiAiPanSoGuard", "csp_SoAiQuanPanGuard",
     # 需要自己填地址的 DIY 类（换成潇洒一套后没有配置入口，留着就是死入口）
     "csp_AListGuard", "csp_WebDAVGuard", "csp_DiyVodGuard",
+    # 王二小的豆瓣分享列表（名字带【免费分享】【更新日期】，与潇洒的「秋风线路」重复）
+    "csp_NewDouBanGuard",
 }
 
 # ---- 自建采集站（drpy2 爬虫，规则全在自己仓库 js/ 下）----
@@ -508,6 +510,29 @@ def rename_douban(sites):
     return sites
 
 
+# 站点命名统一成潇洒风格：「名称 • 类别」，不带表情、不用 ┃
+_EMOJI_RE = re.compile("[\U0001F000-\U0001FAFF\u2190-\u21FF\u2300-\u23FF\u2600-\u27BF"
+                       "\u2B00-\u2BFF\uFE0F\u200D\u20E3]")
+
+
+def pretty_name(name):
+    s = _EMOJI_RE.sub("", str(name or ""))
+    s = s.replace("【", "").replace("】", "")
+    s = re.sub(r"[┃|｜]", " • ", s)
+    s = re.sub(r"\s*[·•]\s*", " • ", s)
+    s = re.sub(r"\s+", " ", s).strip(" •")
+    return s or str(name or "")
+
+
+def normalize_names(sites):
+    """所有站点名统一成「名称 • 类别」，跟潇洒的命名完全一致"""
+    for s in sites:
+        if s.get("api") == "csp_Douban" or s.get("key") == "QfUpdate":
+            continue
+        s["name"] = pretty_name(s.get("name"))
+    return sites
+
+
 def unify_config(sites):
     """只留潇洒一个配置中心 csp_Config；王二小授权那套整体下线（DROP_GUARD_APIS）
     网盘类统一开启搜索"""
@@ -603,6 +628,7 @@ def main(out_path="tvbox.json"):
     sites = inject_own_sites(sites, jar_classes)
     sites = unify_config(sites)
     sites = rename_douban(sites)
+    sites = normalize_names(sites)
 
     live = [s for s in sites if not s.get("_disabled")]
     if len(live) < MIN_SITES:
