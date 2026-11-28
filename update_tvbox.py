@@ -72,8 +72,22 @@ MIN_SITES = 60
 
 # ---- 统一配置中心 ----
 CONFIG_CENTER_API = "csp_Config"
-UNIFIED_DROP_APIS = {"csp_PanConfigGuard", "csp_MyPanGuard"}
-NO_SEARCH_APIS = {"csp_Config", "csp_MyDriveGuard"}
+NO_SEARCH_APIS = {"csp_Config", "csp_MyDriveGuard", "csp_PanConfigGuard", "csp_MyPanGuard",
+                  "csp_Pan", "csp_KKPan", "csp_MiPan", "csp_PanSou"}
+
+# ---- 王二小 Guard 类线路的授权入口 ----
+# 实测：王二小那批 Guard 类（七味/剧透/快影/立播/原盘/盘迷/逸动…）不读潇洒 csp_Config 的
+# 存储，它们靠自己的 PanConfigGuard / MyPanGuard 落授权。两套入口必须都留，缺一个就
+# 有一半网盘线路扫了码用不了。
+WEX_CENTER_APIS = ("csp_PanConfigGuard", "csp_MyPanGuard")
+WEX_CENTER_SITES = [
+    {"key": "Wexconfig", "name": "🔑 网盘授权（王二小）", "type": 3,
+     "api": "csp_PanConfigGuard", "searchable": 0, "changeable": 0, "indexs": 0,
+     "style": {"type": "list"}, "_self": True},
+    {"key": "MyPan", "name": "🔑 已授权网盘", "type": 3,
+     "api": "csp_MyPanGuard", "searchable": 0, "changeable": 0, "indexs": 0,
+     "style": {"type": "list"}, "_self": True},
+]
 
 # ---- 自建采集站（drpy2 爬虫，规则全在自己仓库 js/ 下）----
 GH_RAW = "https://gh-proxy.com/https://raw.githubusercontent.com/qiujianwei-iptv/iptv-live/main"
@@ -491,14 +505,23 @@ def rename_douban(sites):
 
 
 def unify_config(sites):
-    """统一配置中心：只留一个 csp_Config，网盘类统一开启搜索"""
-    out = [s for s in sites if s.get("api") not in UNIFIED_DROP_APIS]
+    """配置中心：潇洒 csp_Config 管潇洒类；王二小 Guard 类另有授权入口，两组都保留
+    网盘类统一开启搜索"""
+    out = [s for s in sites]
     if not any(s.get("api") == CONFIG_CENTER_API for s in out):
         out.insert(0, {
             "key": "配置中心", "name": "配置 • 中心", "type": 3,
             "api": CONFIG_CENTER_API, "searchable": 0, "changeable": 0, "indexs": 0,
             "style": {"type": "rect", "ratio": 1.618}, "_self": True,
         })
+    # 王二小的授权入口：清掉重复定义，再固定插到 QfUpdate 后面（第 5、6 位）
+    for api in WEX_CENTER_APIS:
+        for dup in [s for s in out if s.get("api") == api]:
+            out.remove(dup)
+    anchor = next((i for i, s in enumerate(out) if s.get("key") == "QfUpdate"), None)
+    pos = (anchor + 1) if anchor is not None else min(4, len(out))
+    for item in reversed(WEX_CENTER_SITES):
+        out.insert(pos, dict(item))
     for s in out:
         api = str(s.get("api") or "")
         if api in NO_SEARCH_APIS:
