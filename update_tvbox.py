@@ -72,22 +72,26 @@ MIN_SITES = 60
 
 # ---- 统一配置中心 ----
 CONFIG_CENTER_API = "csp_Config"
-NO_SEARCH_APIS = {"csp_Config", "csp_MyDriveGuard", "csp_PanConfigGuard", "csp_MyPanGuard",
+NO_SEARCH_APIS = {"csp_Config", "csp_MyDriveGuard",
                   "csp_Pan", "csp_KKPan", "csp_MiPan", "csp_PanSou"}
 
-# ---- 王二小 Guard 类线路的授权入口 ----
-# 实测：王二小那批 Guard 类（七味/剧透/快影/立播/原盘/盘迷/逸动…）不读潇洒 csp_Config 的
-# 存储，它们靠自己的 PanConfigGuard / MyPanGuard 落授权。两套入口必须都留，缺一个就
-# 有一半网盘线路扫了码用不了。
-WEX_CENTER_APIS = ("csp_PanConfigGuard", "csp_MyPanGuard")
-WEX_CENTER_SITES = [
-    {"key": "Wexconfig", "name": "🔑 网盘授权（王二小）", "type": 3,
-     "api": "csp_PanConfigGuard", "searchable": 0, "changeable": 0, "indexs": 0,
-     "style": {"type": "list"}, "_self": True},
-    {"key": "MyPan", "name": "🔑 已授权网盘", "type": 3,
-     "api": "csp_MyPanGuard", "searchable": 0, "changeable": 0, "indexs": 0,
-     "style": {"type": "list"}, "_self": True},
-]
+# ---- 王二小网盘授权那套：整体下线 ----
+# 实测两套授权存储不互通（王二小 Guard 类不读潇洒 csp_Config 的存储），
+# 且它们的站点域名封在加密包 wexshinidie.guard 里，无法改造成潇洒的 PanWebShare。
+# 决策：只留潇洒一套授权 + 一个配置中心，下列线路连同两个授权入口一起下线。
+# 潇洒已有同类 4K/云盘/搜索线路覆盖（玩偶/快映/木偶/蜡笔/闪电/多多/虎斑/花卷/种子/
+# 搬运/指南/小丑/茉莉/爱盼/移动/即刻/双星/卡卡 + 8 云盘 + 5 搜索）。
+DROP_GUARD_APIS = {
+    # 两个授权入口
+    "csp_PanConfigGuard", "csp_MyPanGuard",
+    # 网盘扫码类（无授权就不可用）
+    "csp_AiQwMkvGuard", "csp_AiNewKuaiYingGuard", "csp_AiNewJuTouGuard",
+    "csp_AiNewLibvioGuard", "csp_AiNewZhiNan4KGuard", "csp_AiPan1MeGuard",
+    "csp_AiNewYiDong4KGuard", "csp_FakeAi115ShareGuard",
+    "csp_SoAiPanSooGuard", "csp_SoAiAiPanSoGuard", "csp_SoAiQuanPanGuard",
+    # 需要自己填地址的 DIY 类（换成潇洒一套后没有配置入口，留着就是死入口）
+    "csp_AListGuard", "csp_WebDAVGuard", "csp_DiyVodGuard",
+}
 
 # ---- 自建采集站（drpy2 爬虫，规则全在自己仓库 js/ 下）----
 GH_RAW = "https://gh-proxy.com/https://raw.githubusercontent.com/qiujianwei-iptv/iptv-live/main"
@@ -505,23 +509,15 @@ def rename_douban(sites):
 
 
 def unify_config(sites):
-    """配置中心：潇洒 csp_Config 管潇洒类；王二小 Guard 类另有授权入口，两组都保留
+    """只留潇洒一个配置中心 csp_Config；王二小授权那套整体下线（DROP_GUARD_APIS）
     网盘类统一开启搜索"""
-    out = [s for s in sites]
+    out = [s for s in sites if str(s.get("api") or "") not in DROP_GUARD_APIS]
     if not any(s.get("api") == CONFIG_CENTER_API for s in out):
         out.insert(0, {
             "key": "配置中心", "name": "配置 • 中心", "type": 3,
             "api": CONFIG_CENTER_API, "searchable": 0, "changeable": 0, "indexs": 0,
             "style": {"type": "rect", "ratio": 1.618}, "_self": True,
         })
-    # 王二小的授权入口：清掉重复定义，再固定插到 QfUpdate 后面（第 5、6 位）
-    for api in WEX_CENTER_APIS:
-        for dup in [s for s in out if s.get("api") == api]:
-            out.remove(dup)
-    anchor = next((i for i, s in enumerate(out) if s.get("key") == "QfUpdate"), None)
-    pos = (anchor + 1) if anchor is not None else min(4, len(out))
-    for item in reversed(WEX_CENTER_SITES):
-        out.insert(pos, dict(item))
     for s in out:
         api = str(s.get("api") or "")
         if api in NO_SEARCH_APIS:
